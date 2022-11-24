@@ -11,7 +11,8 @@
     "lint": "eslint src/**/*.ts src/**/*.tsx --fix",
     "format": "prettier --write src/**/*.{ts,tsx,json} --config .prettierrc.json",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy": "tsc && vite build && surge ./dist dnd.t2pellet.me"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,json}": [
@@ -20,12 +21,8 @@
     ]
   },
   "dependencies": {
-    "@googlemaps/react-wrapper": "^1.1.35",
-    "@react-google-maps/api": "^2.12.2",
     "react": "^18.2.0",
-    "react-collapsible": "^2.10.0",
-    "react-dom": "^18.2.0",
-    "react-simple-maps": "^3.0.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
