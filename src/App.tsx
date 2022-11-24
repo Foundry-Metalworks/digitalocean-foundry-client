@@ -29,16 +29,18 @@ class App extends React.Component<Props, State> {
   }
 
   private async getIP() {
-    let url;
+    let url = FOUNDRY_URL;
     try {
-      const reachableCheck = await fetch(FOUNDRY_URL, { mode: 'no-cors' });
-      if (reachableCheck.status != 404) url = FOUNDRY_URL;
-    } finally {
-      if (!url) {
-        const result = await fetch(getUrl('ip'));
-        const ip = (await result.json()).ip;
-        url = `http://${ip}:30000`;
-      }
+      const controller = new AbortController();
+      const id = setTimeout(async () => {
+        controller.abort();
+      }, 3000);
+      await fetch(FOUNDRY_URL, { mode: 'no-cors', signal: controller.signal });
+      clearTimeout(id);
+    } catch (e) {
+      const result = await fetch(getUrl('ip'));
+      const ip = (await result.json()).ip;
+      url = `http://${ip}:30000`;
     }
     return url;
   }
