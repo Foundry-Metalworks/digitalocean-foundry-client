@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Button, CircularProgress, Grid, Stack } from '@mui/material';
+import { Button, CircularProgress, Stack } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 
 const ORCHESTRATOR_URL = 'https://dnd-orchestrator.t2pellet.me';
 const FOUNDRY_URL = 'https://foundry.t2pellet.me';
@@ -50,7 +51,7 @@ class App extends React.Component<Props, State> {
       method: 'POST'
     };
     await fetch(getUrl('start'), options);
-    this.setState({ executing: false });
+    this.setState({ executing: false, serverStatus: 'active' });
   }
 
   private async stopFoundry() {
@@ -59,6 +60,15 @@ class App extends React.Component<Props, State> {
       method: 'POST'
     };
     await fetch(getUrl('stop'), options);
+    this.setState({ executing: false });
+  }
+
+  private async saveFoundry() {
+    this.setState({ executing: true });
+    const options = {
+      method: 'POST'
+    };
+    await fetch(getUrl('save'), options);
     this.setState({ executing: false });
   }
 
@@ -94,11 +104,9 @@ class App extends React.Component<Props, State> {
 
     return (
       <div className="App">
-        <Stack spacing={4}>
-          <img src="/logo192.png" alt="Foundry Logo" />
-          <Grid container alignItems="center" justifyContent="center">
-            {body}
-          </Grid>
+        <Stack spacing={4} justifyContent="center" alignItems="center">
+          <img src="/logo192.png" alt="Foundry Logo" width="192" />
+          {body}
         </Stack>
       </div>
     );
@@ -106,15 +114,32 @@ class App extends React.Component<Props, State> {
 
   renderActive(): ReactNode {
     return (
-      <>
-        <Button onClick={this.goToFoundry.bind(this)}>Go to Server</Button>
-        <Button onClick={this.stopFoundry.bind(this)}>Stop Server</Button>
-      </>
+      <Grid container spacing={2} columns={12} maxWidth="100%" justifyContent="center">
+        <Grid xs={12} md={4}>
+          <Button variant="contained" fullWidth onClick={this.goToFoundry.bind(this)}>
+            Go to Server
+          </Button>
+        </Grid>
+        <Grid xs={12} md={4}>
+          <Button variant="outlined" fullWidth onClick={this.saveFoundry.bind(this)}>
+            Save Server
+          </Button>
+        </Grid>
+        <Grid xs={12} md={4}>
+          <Button variant="outlined" color="error" fullWidth onClick={this.stopFoundry.bind(this)}>
+            Stop Server
+          </Button>
+        </Grid>
+      </Grid>
     );
   }
 
   renderOff(): ReactNode {
-    return <Button onClick={this.startFoundry.bind(this)}>Start Server</Button>;
+    return (
+      <Button variant="contained" onClick={this.startFoundry.bind(this)}>
+        Start Server
+      </Button>
+    );
   }
 
   renderLoading(): ReactNode {
