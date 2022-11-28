@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import './App.css';
+import { Button, CircularProgress, Grid, Stack } from '@mui/material';
 
 const ORCHESTRATOR_URL = 'https://dnd-orchestrator.t2pellet.me';
 const FOUNDRY_URL = 'https://foundry.t2pellet.me';
@@ -7,8 +7,8 @@ const getUrl = (path: string) => ORCHESTRATOR_URL + `/api/${path}`;
 
 type State = {
   loaded: boolean;
+  executing: boolean;
   serverStatus: string;
-  serverIP: string;
 };
 
 type Props = {};
@@ -18,8 +18,8 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       loaded: false,
-      serverStatus: 'off',
-      serverIP: FOUNDRY_URL
+      executing: false,
+      serverStatus: 'off'
     };
   }
 
@@ -29,7 +29,6 @@ class App extends React.Component<Props, State> {
   }
 
   private async getIP() {
-    let url = FOUNDRY_URL;
     try {
       const controller = new AbortController();
       const id = setTimeout(async () => {
@@ -37,60 +36,89 @@ class App extends React.Component<Props, State> {
       }, 3000);
       await fetch(FOUNDRY_URL, { mode: 'no-cors', signal: controller.signal });
       clearTimeout(id);
+      return FOUNDRY_URL;
     } catch (e) {
       const result = await fetch(getUrl('ip'));
       const ip = (await result.json()).ip;
-      url = `http://${ip}:30000`;
+      return `http://${ip}:30000`;
     }
-    return url;
   }
 
   private async startFoundry() {
+    this.setState({ executing: true });
     const options = {
       method: 'POST'
     };
     await fetch(getUrl('start'), options);
+    this.setState({ executing: false });
+  }
+
+  private async stopFoundry() {
+    this.setState({ executing: true });
+    const options = {
+      method: 'POST'
+    };
+    await fetch(getUrl('stop'), options);
+    this.setState({ executing: false });
+  }
+
+  private async goToFoundry() {
+    this.setState({ executing: true });
+    const ip = await this.getIP();
+    window.location.replace(ip);
   }
 
   async componentDidMount(): Promise<void> {
-    let statusResponse = await this.getStatus();
-    if (statusResponse.status === 'deleted') {
-      this.setState({ loaded: true, serverStatus: statusResponse.status });
-      await this.startFoundry();
-      statusResponse = await this.getStatus();
-    }
-    const serverIP = await this.getIP();
-    this.setState({ loaded: true, serverStatus: statusResponse.status, serverIP });
+    const statusResponse = await this.getStatus();
+    this.setState({ loaded: true, serverStatus: statusResponse.status });
   }
 
   render(): ReactNode {
-    const { loaded, serverStatus, serverIP } = this.state;
+    const { loaded, executing, serverStatus } = this.state;
 
     console.log('Loaded: ' + loaded);
     console.log('Status: ' + serverStatus);
-    console.log('IP: ' + serverIP);
 
-    if (loaded) {
+    let body;
+    if (loaded && !executing) {
       if (serverStatus === 'active') {
-        window.location.replace(serverIP);
-        return (
-          <div className="App">
-            <p>Redirecting...</p>
-          </div>
-        );
+        body = this.renderActive();
+      } else if (serverStatus === 'deleted') {
+        body = this.renderOff();
+      } else {
+        body = this.renderLoading();
       }
-      return (
-        <div className="App">
-          <p>Server is Starting...</p>
-        </div>
-      );
     } else {
-      return (
-        <div className="App">
-          <p>Loading...</p>
-        </div>
-      );
+      body = this.renderLoading();
     }
+
+    return (
+      <div className="App">
+        <Stack spacing={4}>
+          <img src="/logo192.png" alt="Foundry Logo" />
+          <Grid container alignItems="center" justifyContent="center">
+            {body}
+          </Grid>
+        </Stack>
+      </div>
+    );
+  }
+
+  renderActive(): ReactNode {
+    return (
+      <>
+        <Button onClick={this.goToFoundry.bind(this)}>Go to Server</Button>
+        <Button onClick={this.stopFoundry.bind(this)}>Stop Server</Button>
+      </>
+    );
+  }
+
+  renderOff(): ReactNode {
+    return <Button onClick={this.startFoundry.bind(this)}>Start Server</Button>;
+  }
+
+  renderLoading(): ReactNode {
+    return <CircularProgress size="4rem" />;
   }
 }
 
