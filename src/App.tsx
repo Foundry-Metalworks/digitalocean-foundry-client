@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import { Button, CircularProgress, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
-const ORCHESTRATOR_URL = import.meta.env.ORCHESTRATOR_URL;
-const FOUNDRY_URL = import.meta.env.FOUNDRY_URL;
+const ORCHESTRATOR_URL = import.meta.env.VITE_ORCHESTRATOR_URL;
+const FOUNDRY_URL = import.meta.env.VITE_FOUNDRY_URL;
 const getUrl = (path: string) => ORCHESTRATOR_URL + `/api/${path}`;
 
 type State = {
