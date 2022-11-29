@@ -12,7 +12,7 @@
     "format": "prettier --write src/**/*.{ts,tsx,json} --config .prettierrc.json",
     "preview": "vite preview",
     "prepare": "husky install",
-    "deploy": "tsc && vite build && surge ./dist dnd.t2pellet.me"
+    "deploy": "tsc && vite build && surge ./dist"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,json}": [
