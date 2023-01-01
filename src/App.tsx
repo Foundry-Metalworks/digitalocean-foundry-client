@@ -3,7 +3,8 @@ import { Button, CircularProgress, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const ORCHESTRATOR_URL = import.meta.env.VITE_ORCHESTRATOR_URL;
-const FOUNDRY_URL = import.meta.env.VITE_FOUNDRY_URL;
+const BASE_URL = import.meta.env.VITE_BASE_NAME;
+const NAME = import.meta.env.VITE_NAME;
 const getUrl = (path: string) => ORCHESTRATOR_URL + `/api/${path}`;
 
 type State = {
@@ -25,7 +26,7 @@ class App extends React.Component<Props, State> {
   }
 
   private async getStatus() {
-    const result = await fetch(getUrl('status'));
+    const result = await fetch(getUrl(`${NAME}/status`));
     return await result.json();
   }
 
@@ -35,11 +36,11 @@ class App extends React.Component<Props, State> {
       const id = setTimeout(async () => {
         controller.abort();
       }, 3000);
-      await fetch(FOUNDRY_URL, { mode: 'no-cors', signal: controller.signal });
+      await fetch(`${NAME}.${BASE_URL}`, { mode: 'no-cors', signal: controller.signal });
       clearTimeout(id);
-      return FOUNDRY_URL;
+      return `${NAME}.${BASE_URL}`;
     } catch (e) {
-      const result = await fetch(getUrl('ip'));
+      const result = await fetch(getUrl(`${NAME}/ip`));
       const ip = (await result.json()).ip;
       return `http://${ip}:30000`;
     }
@@ -50,7 +51,7 @@ class App extends React.Component<Props, State> {
     const options = {
       method: 'POST'
     };
-    await fetch(getUrl('start'), options);
+    await fetch(getUrl(`${NAME}/start`), options);
     this.setState({ executing: false, serverStatus: 'active' });
   }
 
@@ -59,7 +60,7 @@ class App extends React.Component<Props, State> {
     const options = {
       method: 'POST'
     };
-    await fetch(getUrl('stop'), options);
+    await fetch(getUrl(`${NAME}/stop`), options);
     this.setState({ executing: false });
   }
 
@@ -68,7 +69,7 @@ class App extends React.Component<Props, State> {
     const options = {
       method: 'POST'
     };
-    await fetch(getUrl('save'), options);
+    await fetch(getUrl(`${NAME}/save`), options);
     this.setState({ executing: false });
   }
 
