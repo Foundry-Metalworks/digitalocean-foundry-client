@@ -1,31 +1,31 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode, useEffect, useState } from 'react';
 import { Button, CircularProgress, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { getCookie } from 'typescript-cookie';
+import network from '../util/network';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Navigate } from 'react-router';
 
 const NAME = import.meta.env.VITE_NAME;
 const FOUNDRY_URL = `https://${NAME}.t2pellet.me`;
-const ORCHESTRATOR_URL = 'https://dnd-orchestrator.t2pellet.me';
-const getApiUrl = (path: string) => ORCHESTRATOR_URL + `/api/${path}`;
 const headers: Headers = new Headers({
   Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`
 });
 
+type Props = {
+  token: string;
+  name: string;
+};
+
 type State = {
-  loggedIn: boolean;
   loaded: boolean;
   executing: boolean;
   serverStatus: string;
 };
 
-type Props = {};
-
-class Panel extends React.Component<Props, State> {
-  constructor(props: never) {
+class Panel extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      loggedIn: false,
       loaded: false,
       executing: false,
       serverStatus: 'off'
@@ -33,13 +33,14 @@ class Panel extends React.Component<Props, State> {
   }
 
   private async getStatus() {
-    const result = await fetch(getApiUrl(`${NAME}/status`));
-    return await result.json();
+    const { token, name } = this.props;
+    return (await network.get(`instance/${name}/status`, token)).data.status;
   }
 
   private async getIP() {
+    const { token, name } = this.props;
+    const controller = new AbortController();
     try {
-      const controller = new AbortController();
       const id = setTimeout(async () => {
         controller.abort();
       }, 3000);
@@ -51,39 +52,28 @@ class Panel extends React.Component<Props, State> {
       clearTimeout(id);
       return FOUNDRY_URL;
     } catch (e) {
-      const result = await fetch(getApiUrl(`${NAME}/ip`), { headers });
-      const ip = (await result.json()).ip;
-      return `http://${ip}:30000`;
+      return (await network.get(`instance/${name}/ip`, token)).data.ip;
     }
   }
 
   private async startFoundry() {
+    const { token, name } = this.props;
     this.setState({ executing: true });
-    const options = {
-      method: 'POST',
-      headers
-    };
-    await fetch(getApiUrl(`${NAME}/start`), options);
+    await network.post(`instance/${name}/start`, token);
     this.setState({ executing: false, serverStatus: 'active' });
   }
 
   private async stopFoundry() {
+    const { token, name } = this.props;
     this.setState({ executing: true });
-    const options = {
-      method: 'POST',
-      headers
-    };
-    await fetch(getApiUrl(`${NAME}/stop`), options);
-    this.setState({ executing: false });
+    await network.post(`instance/${name}/stop`, token);
+    this.setState({ executing: false, serverStatus: 'deleted' });
   }
 
   private async saveFoundry() {
+    const { token, name } = this.props;
     this.setState({ executing: true });
-    const options = {
-      method: 'POST',
-      headers
-    };
-    await fetch(getApiUrl(`${NAME}/save`), options);
+    await network.post(`instance/${name}/save`, token);
     this.setState({ executing: false });
   }
 
@@ -94,45 +84,29 @@ class Panel extends React.Component<Props, State> {
   }
 
   async componentDidMount(): Promise<void> {
-    const password = getCookie('PASSWORD');
-    if (password != import.meta.env.VITE_PASSWORD) {
-      return;
-    }
-    this.setState({ loggedIn: true });
-
-    const statusResponse = await this.getStatus();
-    this.setState({ loaded: true, serverStatus: statusResponse.status });
+    const serverStatus = await this.getStatus();
+    this.setState({ loaded: true, serverStatus });
   }
 
   render(): ReactNode {
-    const { loggedIn, loaded, executing, serverStatus } = this.state;
+    const { name } = this.props;
+    const { executing, serverStatus, loaded } = this.state;
 
-    if (!loggedIn) {
-      console.warn('At panel but not logged in.. redirecting');
-      return <Navigate to="/login" replace={true} />;
+    if (!name) {
+      return <Navigate to="/setup" />;
     }
 
-    let body;
     if (loaded && !executing) {
       if (serverStatus === 'active') {
-        body = this.renderActive();
+        return this.renderActive();
       } else if (serverStatus === 'deleted') {
-        body = this.renderOff();
+        return this.renderOff();
       } else {
-        body = this.renderLoading();
+        return this.renderLoading();
       }
     } else {
-      body = this.renderLoading();
+      return this.renderLoading();
     }
-
-    return (
-      <div className="App">
-        <Stack spacing={4} justifyContent="center" alignItems="center">
-          <img src="/logo192.png" alt="Foundry Logo" width="192" />
-          {body}
-        </Stack>
-      </div>
-    );
   }
 
   renderActive(): ReactNode {
@@ -170,4 +144,41 @@ class Panel extends React.Component<Props, State> {
   }
 }
 
-export default Panel;
+export default function ConnectedPanel(): React.ReactElement {
+  const [token, setToken] = useState('');
+  const [name, setName] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const { isLoading, user, getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
+    useAuth0();
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+      setToken(token);
+      return await getAccessTokenSilently();
+    };
+    if (!isLoading) {
+      if (!isAuthenticated) loginWithRedirect();
+      else {
+        getToken()
+          .catch(console.error)
+          .then(async (result) => {
+            const token = result as string;
+            const email = user?.email as string;
+            const name = (await network.get(`servers/user/${email}`, token)).data.server;
+            setToken(token);
+            setName(name);
+            setLoaded(true);
+          });
+      }
+    }
+  }, [isLoading]);
+
+  return (
+    <div className="App">
+      <Stack spacing={4} justifyContent="center" alignItems="center">
+        <img src="/logo192.png" alt="Foundry Logo" width="192" />
+        {loaded ? <Panel token={token} name={name} /> : <CircularProgress size="4rem" />}
+      </Stack>
+    </div>
+  );
+}
