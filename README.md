@@ -1,9 +1,14 @@
-# DO FVTT Client
+# Metalworks Client
 
-CLient for ease-of-use hosting FoundryVTT on DigitalOcean
+Open source alternative to The Forge.
+
+Using DigitalOcean, you only pay for the time your server is on. From personal use it only ends up costing 2.50 a month to host with Metalworks.
+
+Server Specs: https://pcr.cloud-mercato.com/providers/digitalocean/flavors/s-2vcpu-2gb
+
 
 Functionality is simple. 
-- When the underlying FVTT Server is "off" (DigitalOcean instance deleted and snapshotted), it shows a button to turn it on.
+- When the underlying FVTT Server is "off", it shows a button to turn it on.
 - When the underlying FVTT server is on, it shows 3 buttons:
 ![image](https://user-images.githubusercontent.com/4323034/204411283-25f08de4-3ed9-45ac-9f1d-df927bebb999.png)
 Save updates the snapshot. Closing the server will always update the snapshot.
@@ -12,6 +17,12 @@ Save updates the snapshot. Closing the server will always update the snapshot.
 ## Deployment
 
 1. Clone the repo
-2. Add a .env file at the root directory, with VITE_FOUNDRY_URL pointing to your foundry URL and VITE_ORCHESTRATOR_URL pointing to your deployed https://github.com/t2pellet/digitalocean-orchestrator URL
+2. Add a .env file at the root directory, with the following fields:
+```
+VITE_BASE_NAME=t2pellet.me
+VITE_ORCHESTRATOR_URL=https://dnd-orchestrator.t2pellet.me
+VITE_NAME={your server name here}
+DIGITALOCEAN_TOKEN={your digital ocean token here - read & write}
+```
 3. npm install
 4. npm run deploy, specify the URL, can use custom subdomain if you wish, you'll just have to point to surge DNS
