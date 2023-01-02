@@ -6,6 +6,9 @@ const ORCHESTRATOR_URL = import.meta.env.VITE_ORCHESTRATOR_URL;
 const BASE_URL = import.meta.env.VITE_BASE_NAME;
 const NAME = import.meta.env.VITE_NAME;
 const getUrl = (path: string) => ORCHESTRATOR_URL + `/api/${path}`;
+const headers: Headers = new Headers({
+  Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`
+});
 
 type State = {
   loaded: boolean;
@@ -36,11 +39,11 @@ class App extends React.Component<Props, State> {
       const id = setTimeout(async () => {
         controller.abort();
       }, 3000);
-      await fetch(`${NAME}.${BASE_URL}`, { mode: 'no-cors', signal: controller.signal });
+      await fetch(`${NAME}.${BASE_URL}`, { mode: 'no-cors', signal: controller.signal, headers });
       clearTimeout(id);
       return `${NAME}.${BASE_URL}`;
     } catch (e) {
-      const result = await fetch(getUrl(`${NAME}/ip`));
+      const result = await fetch(getUrl(`${NAME}/ip`), { headers });
       const ip = (await result.json()).ip;
       return `http://${ip}:30000`;
     }
@@ -49,7 +52,8 @@ class App extends React.Component<Props, State> {
   private async startFoundry() {
     this.setState({ executing: true });
     const options = {
-      method: 'POST'
+      method: 'POST',
+      headers
     };
     await fetch(getUrl(`${NAME}/start`), options);
     this.setState({ executing: false, serverStatus: 'active' });
@@ -58,7 +62,8 @@ class App extends React.Component<Props, State> {
   private async stopFoundry() {
     this.setState({ executing: true });
     const options = {
-      method: 'POST'
+      method: 'POST',
+      headers
     };
     await fetch(getUrl(`${NAME}/stop`), options);
     this.setState({ executing: false });
@@ -67,7 +72,8 @@ class App extends React.Component<Props, State> {
   private async saveFoundry() {
     this.setState({ executing: true });
     const options = {
-      method: 'POST'
+      method: 'POST',
+      headers
     };
     await fetch(getUrl(`${NAME}/save`), options);
     this.setState({ executing: false });
