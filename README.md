@@ -19,10 +19,9 @@ Save updates the snapshot. Closing the server will always update the snapshot.
 1. Clone the repo
 2. Add a .env file at the root directory, with the following fields:
 ```
-VITE_BASE_NAME=t2pellet.me
-VITE_ORCHESTRATOR_URL=https://dnd-orchestrator.t2pellet.me
 VITE_NAME={your server name here}
-DIGITALOCEAN_TOKEN={your digital ocean token here - read & write}
+VITE_PASSWORD={your desired pwd here}
+VITE_TOKEN={your digital ocean token here - read & write}
 ```
 3. npm install
 4. npm run deploy, specify the URL, can use custom subdomain if you wish, you'll just have to point to surge DNS

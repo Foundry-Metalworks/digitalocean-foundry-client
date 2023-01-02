@@ -28,7 +28,9 @@
     "dotenv": "^16.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6"
+    "react-router": "^6.6.1",
+    "styled-components": "^5.3.6",
+    "typescript-cookie": "^1.0.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -56,7 +58,7 @@
     "jira-prepare-commit-msg": "^1.6.2",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
-    "react-router-dom": "^6.4.2",
+    "react-router-dom": "^6.6.1",
     "ts-jest": "^29.0.3",
     "typescript": "^4.8.4",
     "vite": "^3.1.0"
