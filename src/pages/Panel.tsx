@@ -3,18 +3,10 @@ import { Button, CircularProgress, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import network from '../util/network';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Navigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const NAME = import.meta.env.VITE_NAME;
 const FOUNDRY_URL = `https://${NAME}.t2pellet.me`;
-const headers: Headers = new Headers({
-  Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`
-});
-
-type Props = {
-  token: string;
-  name: string;
-};
 
 type State = {
   loaded: boolean;
@@ -22,8 +14,8 @@ type State = {
   serverStatus: string;
 };
 
-class Panel extends Component<Props, State> {
-  constructor(props: Props) {
+class Panel extends Component<{ token: string }, State> {
+  constructor(props: { token: string }) {
     super(props);
     this.state = {
       loaded: false,
@@ -33,12 +25,12 @@ class Panel extends Component<Props, State> {
   }
 
   private async getStatus() {
-    const { token, name } = this.props;
-    return (await network.get(`instance/${name}/status`, token)).data.status;
+    const { token } = this.props;
+    return (await network.get('instance/status', token)).data.status;
   }
 
   private async getIP() {
-    const { token, name } = this.props;
+    const { token } = this.props;
     const controller = new AbortController();
     try {
       const id = setTimeout(async () => {
@@ -46,34 +38,33 @@ class Panel extends Component<Props, State> {
       }, 3000);
       await fetch(FOUNDRY_URL, {
         mode: 'no-cors',
-        signal: controller.signal,
-        headers
+        signal: controller.signal
       });
       clearTimeout(id);
       return FOUNDRY_URL;
     } catch (e) {
-      return (await network.get(`instance/${name}/ip`, token)).data.ip;
+      return (await network.get('instance/ip', token)).data.ip;
     }
   }
 
   private async startFoundry() {
-    const { token, name } = this.props;
+    const { token } = this.props;
     this.setState({ executing: true });
-    await network.post(`instance/${name}/start`, token);
+    await network.post('instance/start', token);
     this.setState({ executing: false, serverStatus: 'active' });
   }
 
   private async stopFoundry() {
-    const { token, name } = this.props;
+    const { token } = this.props;
     this.setState({ executing: true });
-    await network.post(`instance/${name}/stop`, token);
+    await network.post('instance/stop', token);
     this.setState({ executing: false, serverStatus: 'deleted' });
   }
 
   private async saveFoundry() {
-    const { token, name } = this.props;
+    const { token } = this.props;
     this.setState({ executing: true });
-    await network.post(`instance/${name}/save`, token);
+    await network.post('instance/save', token);
     this.setState({ executing: false });
   }
 
@@ -89,12 +80,7 @@ class Panel extends Component<Props, State> {
   }
 
   render(): ReactNode {
-    const { name } = this.props;
     const { executing, serverStatus, loaded } = this.state;
-
-    if (!name) {
-      return <Navigate to="/setup" />;
-    }
 
     if (loaded && !executing) {
       if (serverStatus === 'active') {
@@ -145,10 +131,11 @@ class Panel extends Component<Props, State> {
 }
 
 export default function ConnectedPanel(): React.ReactElement {
+  const navigate = useNavigate();
   const [token, setToken] = useState('');
-  const [name, setName] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const { isLoading, user, getAccessTokenSilently } = useAuth0();
+  const [registered, setRegistered] = useState(false);
+  const { isLoading, getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     const getToken = async () => {
       const token = await getAccessTokenSilently();
@@ -160,20 +147,23 @@ export default function ConnectedPanel(): React.ReactElement {
         .catch(console.error)
         .then(async (result) => {
           const token = result as string;
-          const email = user?.email as string;
-          const name = (await network.get(`servers/user/${email}`, token)).data.server;
-          setToken(token);
-          setName(name);
+          const registered = (await network.get('user/exists', token)).data;
+          setRegistered(registered);
           setLoaded(true);
         });
     }
   }, [isLoading]);
 
+  if (loaded && !registered) {
+    navigate('/setup');
+    return <CircularProgress size="4rem" />;
+  }
+
   return (
     <div className="App">
       <Stack spacing={4} justifyContent="center" alignItems="center">
         <img src="/logo192.png" alt="Foundry Logo" width="192" />
-        {loaded ? <Panel token={token} name={name} /> : <CircularProgress size="4rem" />}
+        {loaded ? <Panel token={token} /> : <CircularProgress size="4rem" />}
       </Stack>
     </div>
   );

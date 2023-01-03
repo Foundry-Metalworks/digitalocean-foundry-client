@@ -6,19 +6,18 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 export default function Setup(): React.ReactElement {
   const navigate = useNavigate();
-  const { isLoading, getAccessTokenSilently, user } = useAuth0();
+  const { isLoading, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState('');
   const [doToken, setDoToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const token = await getAccessTokenSilently({ audience: import.meta.env.VITE_AUTH_AUDIENCE });
-    await network.post('servers/', token, {
+    const token = await getAccessTokenSilently();
+    await network.post('servers', token, {
       name,
       doToken
     });
-    await network.post('servers/user', token, {
-      email: user?.email,
+    await network.post('user', token, {
       server: name
     });
     navigate('/panel');
