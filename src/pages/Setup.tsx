@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import network from '../util/network';
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 export default function Setup(): React.ReactElement {
   const navigate = useNavigate();
-  const { isLoading, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+  const { isLoading, getAccessTokenSilently, user } = useAuth0();
   const [name, setName] = useState('');
   const [doToken, setDoToken] = useState('');
 
@@ -27,8 +27,6 @@ export default function Setup(): React.ReactElement {
 
   if (isLoading) {
     return <CircularProgress size="4rem" />;
-  } else if (!isAuthenticated) {
-    return <Navigate to="/" />;
   }
   return (
     <div className="Setup">

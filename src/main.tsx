@@ -15,6 +15,8 @@ ReactDOM.render(
       domain="metalworks.us.auth0.com"
       clientId={import.meta.env.VITE_AUTH_CLIENT}
       audience={import.meta.env.VITE_AUTH_AUDIENCE}
+      useRefreshTokens
+      cacheLocation="localstorage"
       scope="read:current_user"
       redirectUri={`${window.location.origin}/panel`}>
       <ThemeProvider theme={theme}>

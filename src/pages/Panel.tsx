@@ -148,28 +148,24 @@ export default function ConnectedPanel(): React.ReactElement {
   const [token, setToken] = useState('');
   const [name, setName] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const { isLoading, user, getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
-    useAuth0();
+  const { isLoading, user, getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     const getToken = async () => {
       const token = await getAccessTokenSilently();
       setToken(token);
-      return await getAccessTokenSilently();
+      return token;
     };
     if (!isLoading) {
-      if (!isAuthenticated) loginWithRedirect();
-      else {
-        getToken()
-          .catch(console.error)
-          .then(async (result) => {
-            const token = result as string;
-            const email = user?.email as string;
-            const name = (await network.get(`servers/user/${email}`, token)).data.server;
-            setToken(token);
-            setName(name);
-            setLoaded(true);
-          });
-      }
+      getToken()
+        .catch(console.error)
+        .then(async (result) => {
+          const token = result as string;
+          const email = user?.email as string;
+          const name = (await network.get(`servers/user/${email}`, token)).data.server;
+          setToken(token);
+          setName(name);
+          setLoaded(true);
+        });
     }
   }, [isLoading]);
 
