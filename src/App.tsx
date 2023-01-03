@@ -5,6 +5,11 @@ import Home from './pages/Home';
 import Error from './pages/Error';
 import Setup from './pages/Setup';
 
+// TODO : Change interaction with backend to ONLY send tokens, backend will deal with getting email from auth0
+// TODO : Logout functionality
+// TODO : Invite people (guest, admin accs)
+// TODO : Settings change
+
 export default function App(): React.ReactElement {
   return (
     <BrowserRouter>
