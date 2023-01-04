@@ -4,6 +4,8 @@ import App from './App';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { Auth0Provider } from '@auth0/auth0-react';
 import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import AuthProvider from './component/AuthProvider';
 
 const theme = createTheme({
   palette: { mode: 'dark' }
@@ -12,7 +14,7 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <Auth0Provider
-      domain="metalworks.us.auth0.com"
+      domain={import.meta.env.VITE_AUTH_DOMAIN}
       clientId={import.meta.env.VITE_AUTH_CLIENT}
       audience={import.meta.env.VITE_AUTH_AUDIENCE}
       useRefreshTokens
@@ -20,9 +22,13 @@ ReactDOM.render(
       scope="read:current_user"
       redirectUri={`${window.location.origin}/panel`}>
       <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme>
-          <App />
-        </CssBaseline>
+        <BrowserRouter>
+          <AuthProvider>
+            <CssBaseline enableColorScheme>
+              <App />
+            </CssBaseline>
+          </AuthProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </Auth0Provider>
   </React.StrictMode>,

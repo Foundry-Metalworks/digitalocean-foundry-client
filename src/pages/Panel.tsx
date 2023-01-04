@@ -4,6 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import network from '../util/network';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router';
+import { authWrapper } from '../util/auth';
 
 const NAME = import.meta.env.VITE_NAME;
 const FOUNDRY_URL = `https://${NAME}.t2pellet.me`;
@@ -130,7 +131,7 @@ class Panel extends Component<{ token: string }, State> {
   }
 }
 
-export default function ConnectedPanel(): React.ReactElement {
+function ConnectedPanel(): React.ReactElement {
   const navigate = useNavigate();
   const [token, setToken] = useState('');
   const [loaded, setLoaded] = useState(false);
@@ -168,3 +169,5 @@ export default function ConnectedPanel(): React.ReactElement {
     </div>
   );
 }
+
+export default authWrapper(ConnectedPanel);

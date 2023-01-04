@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router';
 import network from '../util/network';
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import { authWrapper } from '../util/auth';
 
-export default function Setup(): React.ReactElement {
+function Setup(): React.ReactElement {
   const navigate = useNavigate();
   const { isLoading, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState('');
@@ -12,7 +13,7 @@ export default function Setup(): React.ReactElement {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently({ audience: import.meta.env.VITE_AUDIENCE });
     await network.post('servers', token, {
       name,
       doToken
@@ -38,3 +39,5 @@ export default function Setup(): React.ReactElement {
     </div>
   );
 }
+
+export default authWrapper(Setup);

@@ -9,7 +9,15 @@ export default function Home(): React.ReactElement {
     <div className="Home">
       <Stack>
         <img src="/logo192.png" alt="Foundry Logo" width="192" />
-        <Button onClick={() => loginWithRedirect()}>Log In</Button>
+        <Button onClick={() => loginWithRedirect({ appState: { returnTo: 'panel' } })}>
+          Log In
+        </Button>
+        <Button
+          onClick={() =>
+            loginWithRedirect({ appState: { returnTo: 'setup' }, screen_hint: 'signup' })
+          }>
+          Sign Up
+        </Button>
       </Stack>
     </div>
   );
