@@ -1,37 +1,47 @@
-import React, { Component, ReactNode, useEffect, useState } from 'react';
-import { Button, CircularProgress, Stack } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Button, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import network from '../util/network';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router';
 import { authWrapper } from '../util/auth';
+import Loading from '../component/Loading';
 
 const NAME = import.meta.env.VITE_NAME;
 const FOUNDRY_URL = `https://${NAME}.t2pellet.me`;
 
-type State = {
-  loaded: boolean;
-  executing: boolean;
-  serverStatus: string;
-};
+function Panel(props: { token: string }) {
+  const { token } = props;
+  const navigate = useNavigate();
+  const [loaded, setLoaded] = useState(false);
+  const [executing, setExecuting] = useState(false);
+  const [serverStatus, setServerStatus] = useState('off');
 
-class Panel extends Component<{ token: string }, State> {
-  constructor(props: { token: string }) {
-    super(props);
-    this.state = {
-      loaded: false,
-      executing: false,
-      serverStatus: 'off'
-    };
-  }
+  const getHelper = async (path: string) => {
+    setExecuting(true);
+    try {
+      const result = await network.get(path, token);
+      setExecuting(false);
+      return result;
+    } catch (e) {
+      navigate('/error');
+      throw e;
+    }
+  };
 
-  private async getStatus() {
-    const { token } = this.props;
-    return (await network.get('instance/status', token)).data.status;
-  }
+  const postHelper = async (path: string) => {
+    setExecuting(true);
+    try {
+      return await network.post(path, token);
+    } catch (e) {
+      console.error(e);
+      navigate('/error');
+    }
+    setExecuting(false);
+  };
 
-  private async getIP() {
-    const { token } = this.props;
+  const getIP = async () => {
+    setExecuting(true);
     const controller = new AbortController();
     try {
       const id = setTimeout(async () => {
@@ -44,91 +54,64 @@ class Panel extends Component<{ token: string }, State> {
       clearTimeout(id);
       return FOUNDRY_URL;
     } catch (e) {
-      return (await network.get('instance/ip', token)).data.ip;
+      const result = await getHelper('instance.ip');
+      return result?.data.ip;
     }
-  }
+  };
 
-  private async startFoundry() {
-    const { token } = this.props;
-    this.setState({ executing: true });
-    await network.post('instance/start', token);
-    this.setState({ executing: false, serverStatus: 'active' });
-  }
+  useEffect(() => {
+    getHelper('instance/status').then((result) => {
+      setServerStatus(result?.data.status);
+      setLoaded(true);
+    });
+  });
 
-  private async stopFoundry() {
-    const { token } = this.props;
-    this.setState({ executing: true });
-    await network.post('instance/stop', token);
-    this.setState({ executing: false, serverStatus: 'deleted' });
-  }
-
-  private async saveFoundry() {
-    const { token } = this.props;
-    this.setState({ executing: true });
-    await network.post('instance/save', token);
-    this.setState({ executing: false });
-  }
-
-  private async goToFoundry() {
-    this.setState({ executing: true });
-    const ip = await this.getIP();
-    window.location.replace(ip);
-  }
-
-  async componentDidMount(): Promise<void> {
-    const serverStatus = await this.getStatus();
-    this.setState({ loaded: true, serverStatus });
-  }
-
-  render(): ReactNode {
-    const { executing, serverStatus, loaded } = this.state;
-
-    if (loaded && !executing) {
-      if (serverStatus === 'active') {
-        return this.renderActive();
-      } else if (serverStatus === 'deleted') {
-        return this.renderOff();
-      } else {
-        return this.renderLoading();
-      }
-    } else {
-      return this.renderLoading();
+  if (loaded && !executing) {
+    if (serverStatus == 'off') {
+      return <Loading />;
     }
-  }
-
-  renderActive(): ReactNode {
+    const isDeleted = serverStatus == 'deleted';
     return (
       <Grid container spacing={2} columns={12} maxWidth="100%" justifyContent="center">
         <Grid xs={12} md={4}>
-          <Button variant="contained" fullWidth onClick={this.goToFoundry.bind(this)}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={async () => {
+              const ip = await getIP();
+              window.location.replace(ip);
+            }}
+            disabled={isDeleted}>
             Go to Server
           </Button>
         </Grid>
         <Grid xs={12} md={4}>
-          <Button variant="outlined" fullWidth onClick={this.saveFoundry.bind(this)}>
-            Save Server
+          <Button
+            variant="outlined"
+            color="error"
+            fullWidth
+            onClick={async () => {
+              await postHelper(`instance/${isDeleted ? 'start' : 'stop'}`);
+              const newStatus = isDeleted ? 'active' : 'deleted';
+              setServerStatus(newStatus);
+            }}>
+            {isDeleted ? 'Start Server' : 'Stop Server'}
           </Button>
         </Grid>
         <Grid xs={12} md={4}>
-          <Button variant="outlined" color="error" fullWidth onClick={this.stopFoundry.bind(this)}>
-            Stop Server
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={async () => {
+              await postHelper('instance/save');
+            }}
+            disabled={isDeleted}>
+            Save Server
           </Button>
         </Grid>
       </Grid>
     );
-  }
-
-  renderOff(): ReactNode {
-    return (
-      <Button variant="contained" onClick={this.startFoundry.bind(this)}>
-        Start Server
-      </Button>
-    );
-  }
-
-  renderLoading(): ReactNode {
-    return <CircularProgress size="4rem" />;
-  }
+  } else return <Loading />;
 }
 
 function ConnectedPanel(): React.ReactElement {
@@ -157,14 +140,14 @@ function ConnectedPanel(): React.ReactElement {
 
   if (loaded && !registered) {
     navigate('/setup');
-    return <CircularProgress size="4rem" />;
+    return <Loading />;
   }
 
   return (
-    <div className="App">
+    <div className="Panel">
       <Stack spacing={4} justifyContent="center" alignItems="center">
         <img src="/logo192.png" alt="Foundry Logo" width="192" />
-        {loaded ? <Panel token={token} /> : <CircularProgress size="4rem" />}
+        {loaded ? <Panel token={token} /> : <Loading />}
       </Stack>
     </div>
   );

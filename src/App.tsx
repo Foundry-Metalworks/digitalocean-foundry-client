@@ -6,6 +6,7 @@ import Error from './pages/Error';
 import Setup from './pages/Setup';
 
 // TODO : Logout functionality
+// TODO : Error page
 // TODO : Invite people (guest, admin accs)
 // TODO : Settings change
 
