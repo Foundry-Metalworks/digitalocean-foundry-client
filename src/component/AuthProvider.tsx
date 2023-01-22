@@ -18,7 +18,7 @@ export default function AuthProvider(props: PropsWithChildren): React.ReactEleme
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
       cacheLocation="localstorage"
-      scope="read:current_user">
+      useRefreshTokens>
       {children}
     </Auth0Provider>
   );

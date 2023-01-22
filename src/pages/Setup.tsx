@@ -13,8 +13,8 @@ function Setup(): React.ReactElement {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const token = await getAccessTokenSilently({ audience: import.meta.env.VITE_AUDIENCE });
-    await network.post('servers', token, {
+    const token = await getAccessTokenSilently();
+    await network.post('server', token, {
       name,
       doToken
     });
