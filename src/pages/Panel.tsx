@@ -13,7 +13,6 @@ function Panel(props: { token: string }) {
   const { logout } = useAuth0();
   const [loaded, setLoaded] = useState(false);
   const [executing, setExecuting] = useState(false);
-  const [name, setName] = useState('');
   const [serverStatus, setServerStatus] = useState('off');
 
   const getHelper = async (path: string) => {
@@ -40,30 +39,15 @@ function Panel(props: { token: string }) {
   };
 
   const getIP = async () => {
-    setExecuting(true);
-    const controller = new AbortController();
-    try {
-      const id = setTimeout(async () => {
-        controller.abort();
-      }, 3000);
-      await fetch(`https://${name}.${import.meta.env.VITE_DOMAIN}`, {
-        mode: 'no-cors',
-        signal: controller.signal
-      });
-      clearTimeout(id);
-      return `https://${name}.${process.env.DOMAIN_NAME}`;
-    } catch (e) {
-      const result = await getHelper('instance/ip');
-      return `http://${result?.data.ip}:30000`;
-    }
+    const result = await getHelper('instance/ip');
+    console.log(`Got IP: ${result.data.ip}`);
+    return result.data.ip;
   };
 
   const loadStatus = () => {
     const doLoad = async () => {
       const status = await getHelper('instance/status');
-      const name = await getHelper('user');
       setServerStatus(status?.data.status);
-      setName(name?.data.server);
       setLoaded(true);
     };
     doLoad().catch((e) => {
@@ -93,9 +77,7 @@ function Panel(props: { token: string }) {
             <Button
               variant="contained"
               fullWidth
-              onClick={async () => {
-                window.location.href = await getIP();
-              }}
+              onClick={async () => (window.location.href = await getIP())}
               disabled={isDeleted}>
               Go to Server
             </Button>
@@ -145,10 +127,13 @@ function ConnectedPanel(): React.ReactElement {
       .catch(console.error)
       .then(async (result) => {
         const token = result as string;
-        network.get('user/exists', token).then(result => {
-          setRegistered(result.data);
-          setLoaded(true);
-        }).catch(e => navigate('/error'));
+        network
+          .get('user/exists', token)
+          .then((result) => {
+            setRegistered(result.data);
+            setLoaded(true);
+          })
+          .catch((e) => navigate('/error'));
       });
   }, []);
 
