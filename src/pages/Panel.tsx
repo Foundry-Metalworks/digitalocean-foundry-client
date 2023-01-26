@@ -145,9 +145,10 @@ function ConnectedPanel(): React.ReactElement {
       .catch(console.error)
       .then(async (result) => {
         const token = result as string;
-        const registered = (await network.get('user/exists', token)).data;
-        setRegistered(registered);
-        setLoaded(true);
+        network.get('user/exists', token).then(result => {
+          setRegistered(result.data);
+          setLoaded(true);
+        }).catch(e => navigate('/error'));
       });
   }, []);
 
