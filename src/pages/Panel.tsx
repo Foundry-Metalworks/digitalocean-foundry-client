@@ -61,9 +61,7 @@ function Panel(props: { token: string }) {
   }, []);
 
   if (loaded && !executing) {
-    if (serverStatus == 'off') {
-      return <Loading />;
-    }
+    const isOff = serverStatus == 'off';
     const isDeleted = serverStatus == 'deleted';
     return (
       <div className="Panel">
@@ -78,7 +76,7 @@ function Panel(props: { token: string }) {
               variant="contained"
               fullWidth
               onClick={async () => (window.location.href = await getIP())}
-              disabled={isDeleted}>
+              disabled={isOff || isDeleted}>
               Go to Server
             </Button>
           </Grid>
@@ -91,6 +89,7 @@ function Panel(props: { token: string }) {
                 await postHelper(`instance/${isDeleted ? 'start' : 'stop'}`);
                 loadStatus();
               }}>
+              disabled={isOff}
               {isDeleted ? 'Start Server' : 'Stop Server'}
             </Button>
           </Grid>
@@ -101,7 +100,7 @@ function Panel(props: { token: string }) {
               onClick={async () => {
                 await postHelper('instance/save');
               }}
-              disabled={isDeleted}>
+              disabled={isOff || isDeleted}>
               Save Server
             </Button>
           </Grid>
