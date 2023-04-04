@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "./src/**/*.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

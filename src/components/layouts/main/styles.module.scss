@@ -1,0 +1,33 @@
+@import '@/styles/tokens.scss';
+
+.root {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 80vh;
+  top: 20vh;
+}
+
+.logo {
+  max-width: 256px;
+  margin-bottom: 1rem;
+}
+
+.content {
+  position: relative;
+}
+
+.mainContent {
+  width: 100%;
+  text-align: center;
+
+  // font
+  font-family: $font-body;
+  h1 {
+    font-family: $font-h1;
+  }
+  h2 {
+    font-family: $font-h2;
+  }
+}
