@@ -28,9 +28,6 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
             <Head>
                 <title>Metalworks</title>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Signika" />
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine" />
             </Head>
             <QueryClientProvider client={queryClient}>
                 <CustomUserProvider {...pageProps}>

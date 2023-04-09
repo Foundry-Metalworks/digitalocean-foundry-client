@@ -123,7 +123,7 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     return <Provider value={contextValue}>{children}</Provider>
 }
 
-export const CustomUserProvider: React.FC = ({ children, ...rest }: PropsWithChildren<any>) => {
+export const CustomUserProvider: React.FC<PropsWithChildren> = ({ children, ...rest }: PropsWithChildren<any>) => {
     return (
         <ClerkProvider {...rest}>
             <InnerUserProvider>{children}</InnerUserProvider>
