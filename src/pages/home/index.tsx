@@ -39,7 +39,7 @@ const Home: NextPage = () => {
                     <Link href="/panel">
                         <Button component="a">Go to Panel</Button>
                     </Link>
-                    <Button component="a" color="red" onClick={signOut}>
+                    <Button component="a" color="red" onClick={() => signOut()}>
                         Logout
                     </Button>
                 </>

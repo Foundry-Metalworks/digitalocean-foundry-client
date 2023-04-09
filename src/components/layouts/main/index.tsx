@@ -8,7 +8,10 @@ interface MainLayoutProps {
     showLogo: boolean
 }
 
-function MainLayout({ children, showLogo }: PropsWithChildren<MainLayoutProps>): React.ReactNode {
+const MainLayout: React.FC<PropsWithChildren<MainLayoutProps>> = ({
+    children,
+    showLogo,
+}: PropsWithChildren<MainLayoutProps>) => {
     return (
         <div className={styles.root}>
             <Stack className={styles.content}>

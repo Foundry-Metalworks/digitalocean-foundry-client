@@ -76,9 +76,10 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     const {
         isLoading: setupLoading,
         isFetching: setupFetching,
-        data: { isSetup: fetchedIsSetup, server },
+        data,
         error,
     } = useQuery<UserDetails>(fetchIsSetup, details)
+    const { isSetup: fetchedIsSetup, server } = data as UserDetails
     const isLoading = !isLoaded || setupLoading || setupFetching
     if (!isSetup && !isLoading && fetchedIsSetup && !!server) {
         setServerName(server)
@@ -122,8 +123,7 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     return <Provider value={contextValue}>{children}</Provider>
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function CustomUserProvider({ children, ...rest }): React.ReactNode {
+export const CustomUserProvider: React.FC = ({ children, ...rest }: PropsWithChildren<any>) => {
     return (
         <ClerkProvider {...rest}>
             <InnerUserProvider>{children}</InnerUserProvider>

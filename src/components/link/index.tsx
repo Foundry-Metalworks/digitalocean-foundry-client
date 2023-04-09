@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import NextLink, { LinkProps } from 'next/link'
 
-function Link({
+const Link: React.FC<PropsWithChildren<LinkProps>> = ({
     as,
     children,
     href,
@@ -11,7 +11,7 @@ function Link({
     shallow,
     passHref = true,
     legacyBehavior = true,
-}: LinkProps): React.ReactNode {
+}: PropsWithChildren<LinkProps>) => {
     return (
         <NextLink
             href={href}

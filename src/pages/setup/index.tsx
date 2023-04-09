@@ -21,13 +21,11 @@ const fetchIsTaken = async (name: string) => {
 const Setup: NextPage = () => {
     const { signOut } = useClerk()
     const {
-        data: {
-            user: { server },
-            isSetup,
-        },
+        data: { user, isSetup },
         dispatch: { setupUser },
     } = useContext(UserContext)
-    const [name, setName] = useState<string>(server)
+    const server = user?.server
+    const [name, setName] = useState<string>(server || '')
     const [doToken, setDoToken] = useState<string>('')
     const isTakenFunc = useCallback(() => fetchIsTaken(name), [name])
     const { data: isNameTaken } = useQuery<boolean>(isTakenFunc, {

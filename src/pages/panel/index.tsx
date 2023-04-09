@@ -20,10 +20,9 @@ const Panel: NextPage = () => {
     const [serverStatus, setServerStatus] = useState<ServerStatusType>('off')
     const [isLoading, setIsLoading] = useState(false)
     const {
-        data: {
-            user: { server },
-        },
+        data: { user },
     } = useContext(UserContext)
+    const server = user?.server
     const isOn = serverStatus == 'active'
 
     useEffect(() => {

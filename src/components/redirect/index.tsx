@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 type RedirectProps = { path: string; replace?: boolean }
 
-function RedirectTo({ path, replace }: RedirectProps): React.ReactNode {
+const RedirectTo: React.FC<RedirectProps> = ({ path, replace }: RedirectProps) => {
     const { push, replace: replaceRoute } = useRouter()
     useEffect(() => {
         if (replace) replaceRoute(path)
