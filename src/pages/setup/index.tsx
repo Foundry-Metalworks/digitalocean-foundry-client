@@ -1,60 +1,42 @@
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
-import { Button, Stack, Text, TextInput } from '@mantine/core'
+import { Button, Space, Stack } from '@mantine/core'
 import { NextPage } from 'next'
 
-import { bffService, useQuery } from '@/api/network'
 import RedirectTo from '@/components/redirect'
 import { PATHS } from '@/constants'
 import UserContext from '@/context/user'
+import SetupCreate from '@/pages/setup/create-setup'
+import SetupJoin from '@/pages/setup/join-setup'
+import SelectType from '@/pages/setup/select-type'
 
 import styles from './styles.module.scss'
 
-const fetchIsTaken = async (name: string) => {
-    const {
-        data: { isTaken },
-    } = await bffService.get(`/server/${name}/exists`)
-    return isTaken
-}
-
 const Setup: NextPage = () => {
     const {
-        data: { user, isSetup },
-        dispatch: { setupUser, signOut },
+        data: { isSetup },
+        dispatch: { createServer, joinServer, signOut },
     } = useContext(UserContext)
-    const server = user?.server
-    const [name, setName] = useState<string>(server || '')
-    const [doToken, setDoToken] = useState<string>('')
-    const isTakenFunc = useCallback(() => fetchIsTaken(name), [name])
-    const { data: isNameTaken } = useQuery<boolean>(isTakenFunc, {
-        key: `is-taken-${name}`,
-        enabled: !!name && !isSetup,
-        initialData: false,
-    })
+    const [setupType, setSetupType] = useState<'create' | 'join' | null>(null)
 
     if (isSetup) return <RedirectTo path={PATHS.HOME} replace />
 
-    const handleSubmit = async () => {
-        await setupUser(name, doToken)
+    console.log('setupType: ' + setupType)
+    const renderContent = () => {
+        if (!setupType) return <SelectType onTypeSelected={setSetupType} />
+        if (setupType == 'create') {
+            return <SetupCreate onSubmit={createServer} />
+        }
+        return <SetupJoin onSubmit={joinServer} />
     }
 
     return (
         <div className={styles.setupContent}>
             <Stack>
-                <TextInput label="Server Name" placeholder="foundry" onChange={(e) => setName(e.target.value)} />
-                <Text display={isNameTaken ? 'inherit' : 'none'} color="red" size="xs">
-                    That name is taken
-                </Text>
-                <TextInput
-                    label="DigitalOcean Token"
-                    placeholder="dop_v1_sdfugsdf8dsgffug8e48afhu3i934uhf9hfw9hfofeh"
-                    onChange={(e) => setDoToken(e.target.value)}
-                />
-                <Button disabled={isNameTaken} component="a" onClick={handleSubmit}>
-                    Submit
-                </Button>
-                <Button color="red" component="a" onClick={signOut}>
-                    Cancel & Sign Out
+                {renderContent()}
+                <Space h="xs" />
+                <Button component="a" color="red" onClick={signOut}>
+                    Sign Out
                 </Button>
             </Stack>
         </div>

@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                     <MantineProvider
                         theme={{
                             colorScheme: 'dark',
-                            fontFamily: 'Signika, Palatino Linotype, sans-serif',
+                            fontFamily: 'Signika, sans-serif',
                             headings: { fontFamily: 'Domine, serif' },
                         }}
                         withGlobalStyles
@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                                     const { data } = value
                                     const { isLoading, isAuthenticated, isSetup, error } = data
                                     if (error) {
-                                        return <div>{error}</div>
+                                        return <div>{error.message}</div>
                                     }
                                     if (isLoading) {
                                         return <Loading />

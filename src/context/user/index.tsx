@@ -27,7 +27,8 @@ interface UserDetails {
 }
 
 interface UserDispatch {
-    setupUser: (name: string, token: string) => void
+    createServer: (name: string, doApiToken: string) => void
+    joinServer: (inviteToken: string) => void
     signIn: () => void
     signOut: () => void
 }
@@ -44,7 +45,8 @@ const defaultValue: UserContextType = {
         isLoading: true,
     },
     dispatch: {
-        setupUser: () => undefined,
+        createServer: () => undefined,
+        joinServer: () => undefined,
         signIn: () => undefined,
         signOut: () => undefined,
     },
@@ -55,15 +57,10 @@ const { Provider } = UserContext
 
 const fetchIsSetup = async (): Promise<UserDetails> => {
     console.log('refetched isSetup')
-    const { data: setup } = await bffService.get('/user/setup')
-    console.log('setup data: ' + setup)
-    if (!!setup) {
-        const {
-            data: { server },
-        } = await bffService.get('/user')
-        return { isSetup: true, server }
-    }
-    return { isSetup: false, server: '' }
+    const {
+        data: { server },
+    } = await bffService.get('/server')
+    return { isSetup: !!server, server: server || '' }
 }
 
 function InnerUserProvider({ children }: PropsWithChildren) {
@@ -76,10 +73,10 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     const details: QueryDetails<UserDetails> = useMemo(() => {
         return {
             key: `user-setup-${user?.id}`,
-            enabled: !!isSignedIn,
+            enabled: !!isSignedIn && !isSetup,
             initialData: { server: '', isSetup: false },
         }
-    }, [user?.id, isSignedIn])
+    }, [user?.id, isSignedIn, isSetup])
 
     console.log('query details: ' + JSON.stringify(details))
     const {
@@ -88,23 +85,25 @@ function InnerUserProvider({ children }: PropsWithChildren) {
         data,
         error,
     } = useQuery<UserDetails>(fetchIsSetup, details)
-    const { isSetup: fetchedIsSetup, server } = data as UserDetails
+    const { isSetup: fetchedIsSetup, server: fetchedServer } = data as UserDetails
     const isLoading = !isLoaded || setupLoading || setupFetching
-    if (!isSetup && !isLoading && fetchedIsSetup && !!server) {
-        setServerName(server)
+    if (!isSetup && !isLoading && fetchedIsSetup && !!fetchedServer) {
+        setServerName(fetchedServer)
         setIsSetup(true)
     }
 
-    const contextValue: UserContextType = useMemo(() => {
-        const contextUser = isLoaded
+    const contextUser = useMemo(() => {
+        return isLoaded
             ? {
                   email: user?.primaryEmailAddress?.emailAddress,
                   name: user?.username || undefined,
                   id: user?.id,
-                  server,
+                  server: serverName,
               }
             : undefined
+    }, [isLoaded, user?.id, serverName])
 
+    const contextValue: UserContextType = useMemo(() => {
         return {
             data: {
                 user: contextUser,
@@ -114,27 +113,28 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                 error: error || undefined,
             },
             dispatch: {
-                setupUser: async (name: string, token: string) => {
-                    await bffService.post('/server', {
-                        name,
-                        doToken: token,
-                    })
-                    await bffService.post('/user', {
-                        server: name,
-                    })
+                createServer: async (name: string, doApiToken: string) => {
+                    await bffService.post('/server/create', { name, doApiToken })
                     setServerName(name)
+                    setIsSetup(true)
+                },
+                joinServer: async (inviteToken: string) => {
+                    const {
+                        data: { server },
+                    } = await bffService.post('/server/join', { inviteToken })
+                    setServerName(server)
                     setIsSetup(true)
                 },
                 signIn: async () => {
                     await push(PATHS.SIGN_IN)
                 },
                 signOut: async () => {
-                    await push(PATHS.HOME)
                     await signOut()
+                    await push(PATHS.HOME)
                 },
             },
         }
-    }, [isLoading, isSignedIn, serverName])
+    }, [contextUser?.id, serverName, isSignedIn, isLoading, error])
 
     console.log('rerendered provider: ' + JSON.stringify(contextValue))
     return <Provider value={contextValue}>{children}</Provider>
