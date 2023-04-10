@@ -1,11 +1,9 @@
 import React, { useContext } from 'react'
 
-import { useClerk, useUser } from '@clerk/nextjs'
 import { Button, Stack, Title } from '@mantine/core'
 import { NextPage } from 'next'
 
 import Link from '@/components/link'
-import Loading from '@/components/loading'
 import { PATHS } from '@/constants'
 import UserContext from '@/context/user'
 
@@ -13,20 +11,16 @@ import styles from './styles.module.scss'
 
 const Home: NextPage = () => {
     const {
-        data: { error, isLoading, isAuthenticated },
+        data: { user, isAuthenticated },
+        dispatch: { signOut },
     } = useContext(UserContext)
-    const { signOut } = useClerk()
-    const { user } = useUser()
-
-    if (isLoading) return <Loading />
-    if (error) return <div>{error.message}</div>
 
     console.log('rerendered home')
     return (
         <Stack className={styles.homeContent}>
-            {!!user?.username && (
+            {!!user?.name && (
                 <Title className={styles.userTitle} order={3}>
-                    Welcome, {user.username}
+                    Welcome, {user.name}
                 </Title>
             )}
             {!isAuthenticated && (
@@ -39,7 +33,7 @@ const Home: NextPage = () => {
                     <Link href="/panel">
                         <Button component="a">Go to Panel</Button>
                     </Link>
-                    <Button component="a" color="red" onClick={() => signOut()}>
+                    <Button component="a" color="red" onClick={signOut}>
                         Logout
                     </Button>
                 </>

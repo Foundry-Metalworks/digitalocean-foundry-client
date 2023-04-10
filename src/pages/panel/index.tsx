@@ -1,31 +1,27 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
-import { useClerk } from '@clerk/nextjs'
 import { Button, MantineColor, Stack, Text, Title } from '@mantine/core'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
 
 import { bffService } from '@/api/network'
 import Loading from '@/components/loading'
-import { PATHS } from '@/constants'
 import UserContext from '@/context/user'
 
 import styles from './styles.module.scss'
 
-type ServerStatusType = 'active' | 'off' | 'on'
+type ServerStatusType = 'active' | 'off' | 'deleted'
 
 const Panel: NextPage = () => {
-    const { push } = useRouter()
-    const { signOut } = useClerk()
     const [serverStatus, setServerStatus] = useState<ServerStatusType>('off')
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const {
         data: { user },
+        dispatch: { signOut },
     } = useContext(UserContext)
     const server = user?.server
     const isOn = serverStatus == 'active'
 
-    useEffect(() => {
+    const fetchStatus = useCallback(() => {
         setIsLoading(true)
         bffService.get('/instance/status').then((response) => {
             const { status } = response.data
@@ -34,16 +30,22 @@ const Panel: NextPage = () => {
         })
     }, [])
 
+    useEffect(() => {
+        fetchStatus()
+        const interval = setInterval(fetchStatus, 60000)
+        return () => clearInterval(interval)
+    }, [fetchStatus])
+
     const handleStart = async () => {
         setIsLoading(true)
         await bffService.post('/instance/start')
-        setIsLoading(false)
+        fetchStatus()
     }
 
     const handleStop = async () => {
         setIsLoading(true)
         await bffService.post('/instance/stop')
-        setIsLoading(false)
+        fetchStatus()
     }
 
     const handleSave = async () => {
@@ -56,12 +58,8 @@ const Panel: NextPage = () => {
         setIsLoading(true)
         const result = await bffService.get('/instance/ip')
         const { ip } = result.data
-        window.location.assign(ip)
-    }
-
-    const handleCancel = async () => {
-        await signOut()
-        await push(PATHS.HOME)
+        window.open(ip, '_blank')
+        setIsLoading(false)
     }
 
     if (isLoading) return <Loading />
@@ -95,7 +93,7 @@ const Panel: NextPage = () => {
                         <Button component="a" color="green" onClick={handleStart}>
                             Start Server
                         </Button>
-                        <Button component="a" color="red" onClick={handleCancel}>
+                        <Button component="a" color="red" onClick={signOut}>
                             Logout
                         </Button>
                     </>

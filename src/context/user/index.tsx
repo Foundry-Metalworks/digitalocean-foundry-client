@@ -1,11 +1,14 @@
 import React, { createContext, PropsWithChildren, useMemo, useState } from 'react'
 
-import { ClerkProvider, useUser } from '@clerk/nextjs'
+import { ClerkProvider, useClerk, useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/router'
 
 import { bffService, QueryDetails, useQuery } from '@/api/network'
+import { PATHS } from '@/constants'
 
 export interface UserProfile {
     email?: string | undefined
+    name?: string | undefined
     id?: string | undefined
     server?: string | undefined
 }
@@ -25,6 +28,8 @@ interface UserDetails {
 
 interface UserDispatch {
     setupUser: (name: string, token: string) => void
+    signIn: () => void
+    signOut: () => void
 }
 
 interface UserContextType {
@@ -40,6 +45,8 @@ const defaultValue: UserContextType = {
     },
     dispatch: {
         setupUser: () => undefined,
+        signIn: () => undefined,
+        signOut: () => undefined,
     },
 }
 
@@ -60,6 +67,8 @@ const fetchIsSetup = async (): Promise<UserDetails> => {
 }
 
 function InnerUserProvider({ children }: PropsWithChildren) {
+    const { push } = useRouter()
+    const { signOut } = useClerk()
     const { isLoaded, isSignedIn, user } = useUser()
     const [serverName, setServerName] = useState('')
     const [isSetup, setIsSetup] = useState(false)
@@ -90,6 +99,7 @@ function InnerUserProvider({ children }: PropsWithChildren) {
         const contextUser = isLoaded
             ? {
                   email: user?.primaryEmailAddress?.emailAddress,
+                  name: user?.username || undefined,
                   id: user?.id,
                   server,
               }
@@ -114,6 +124,13 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                     })
                     setServerName(name)
                     setIsSetup(true)
+                },
+                signIn: async () => {
+                    await push(PATHS.SIGN_IN)
+                },
+                signOut: async () => {
+                    await push(PATHS.HOME)
+                    await signOut()
                 },
             },
         }

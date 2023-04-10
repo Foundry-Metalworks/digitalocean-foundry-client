@@ -44,7 +44,10 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                             <UserContext.Consumer>
                                 {(value) => {
                                     const { data } = value
-                                    const { isLoading, isAuthenticated, isSetup } = data
+                                    const { isLoading, isAuthenticated, isSetup, error } = data
+                                    if (error) {
+                                        return <div>{error}</div>
+                                    }
                                     if (isLoading) {
                                         return <Loading />
                                     }

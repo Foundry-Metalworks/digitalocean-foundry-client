@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react'
 
-import { useClerk } from '@clerk/nextjs'
 import { Button, Stack, Text, TextInput } from '@mantine/core'
 import { NextPage } from 'next'
 
@@ -19,10 +18,9 @@ const fetchIsTaken = async (name: string) => {
 }
 
 const Setup: NextPage = () => {
-    const { signOut } = useClerk()
     const {
         data: { user, isSetup },
-        dispatch: { setupUser },
+        dispatch: { setupUser, signOut },
     } = useContext(UserContext)
     const server = user?.server
     const [name, setName] = useState<string>(server || '')
@@ -40,10 +38,6 @@ const Setup: NextPage = () => {
         await setupUser(name, doToken)
     }
 
-    const handleCancel = async () => {
-        await signOut()
-    }
-
     return (
         <div className={styles.setupContent}>
             <Stack>
@@ -59,7 +53,7 @@ const Setup: NextPage = () => {
                 <Button disabled={isNameTaken} component="a" onClick={handleSubmit}>
                     Submit
                 </Button>
-                <Button color="red" component="a" onClick={handleCancel}>
+                <Button color="red" component="a" onClick={signOut}>
                     Cancel & Sign Out
                 </Button>
             </Stack>
