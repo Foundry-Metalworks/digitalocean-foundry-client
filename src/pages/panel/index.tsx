@@ -1,9 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 
+import { useAuth } from '@clerk/nextjs'
 import { Button, MantineColor, Stack, Text, Title } from '@mantine/core'
 import { NextPage } from 'next'
 
-import { bffService } from '@/api/network'
+import { query } from '@/api/network'
 import Loading from '@/components/loading'
 import UserContext from '@/context/user'
 
@@ -13,29 +14,34 @@ type ServerStatusType = 'active' | 'off' | 'deleted'
 
 const Panel: NextPage = () => {
     const [serverStatus, setServerStatus] = useState<ServerStatusType>('off')
-    const [token, setToken] = useState('')
+    const [inviteToken, setInviteToken] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const {
         data: { user },
         dispatch: { signOut },
     } = useContext(UserContext)
+    const { getToken } = useAuth()
     const server = user?.server
     const isOn = serverStatus == 'active'
 
     const fetchStatus = useCallback(() => {
         setIsLoading(true)
-        bffService.get('/instance/status').then((response) => {
-            const { status } = response.data
-            setServerStatus(status)
-            setIsLoading(false)
-        })
+        getToken().then((token) =>
+            query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token }).then((data) => {
+                const { status } = data
+                setServerStatus(status)
+                setIsLoading(false)
+            }),
+        )
     }, [])
 
     const fetchToken = useCallback(() => {
-        bffService.get('/server/token').then((response) => {
-            const { token } = response.data
-            setToken(token)
-        })
+        getToken().then((token) =>
+            query<{ token: string }>({ endpoint: '/server/token', token }).then((data) => {
+                const { token } = data
+                setInviteToken(token)
+            }),
+        )
     }, [])
 
     // fetch status on interval
@@ -53,26 +59,30 @@ const Panel: NextPage = () => {
 
     const handleStart = async () => {
         setIsLoading(true)
-        await bffService.post('/instance/start')
+        const token = await getToken()
+        await query({ endpoint: '/instance/start', method: 'POST', token })
         fetchStatus()
     }
 
     const handleStop = async () => {
         setIsLoading(true)
-        await bffService.post('/instance/stop')
+        const token = await getToken()
+        await query({ endpoint: '/instance/stop', method: 'POST', token })
         fetchStatus()
     }
 
     const handleSave = async () => {
         setIsLoading(true)
-        await bffService.post('/instance/save')
+        const token = await getToken()
+        await query({ endpoint: '/instance/save', method: 'POST', token })
         setIsLoading(false)
     }
 
     const handleGoTo = async () => {
         setIsLoading(true)
-        const result = await bffService.get('/instance/ip')
-        const { ip } = result.data
+        const token = await getToken()
+        const result = await query<{ ip: string }>({ endpoint: '/instance/ip', token })
+        const { ip } = result
         window.open(ip, '_blank')
         setIsLoading(false)
     }
@@ -114,7 +124,7 @@ const Panel: NextPage = () => {
                     TOKEN:
                 </Title>
                 <Text className={styles.tokenBody} color="blue">
-                    {token}
+                    {inviteToken}
                 </Text>
                 <Button component="a" color="red" onClick={signOut}>
                     Logout

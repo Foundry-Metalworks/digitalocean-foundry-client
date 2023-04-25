@@ -1,9 +1,9 @@
 import React, { createContext, PropsWithChildren, useMemo, useState } from 'react'
 
-import { ClerkProvider, useClerk, useUser } from '@clerk/nextjs'
+import { ClerkProvider, useAuth, useClerk, useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/router'
 
-import { bffService, QueryDetails, useQuery } from '@/api/network'
+import { query, useQuery, UseQueryDetails } from '@/api/network'
 import { PATHS } from '@/constants'
 
 export interface UserProfile {
@@ -55,23 +55,17 @@ const defaultValue: UserContextType = {
 const UserContext = createContext<UserContextType>(defaultValue)
 const { Provider } = UserContext
 
-const fetchIsSetup = async (): Promise<UserDetails> => {
-    console.log('refetched isSetup')
-    const {
-        data: { server },
-    } = await bffService.get('/server')
-    return { isSetup: !!server, server: server || '' }
-}
-
 function InnerUserProvider({ children }: PropsWithChildren) {
     const { push } = useRouter()
     const { signOut } = useClerk()
     const { isLoaded, isSignedIn, user } = useUser()
+    const { getToken } = useAuth()
     const [serverName, setServerName] = useState('')
     const [isSetup, setIsSetup] = useState(false)
 
-    const details: QueryDetails<UserDetails> = useMemo(() => {
+    const details: UseQueryDetails<UserDetails> = useMemo(() => {
         return {
+            endpoint: '/server',
             key: `user-setup-${user?.id}`,
             enabled: !!isSignedIn && !isSetup,
             initialData: { server: '', isSetup: false },
@@ -79,15 +73,10 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     }, [user?.id, isSignedIn, isSetup])
 
     console.log('query details: ' + JSON.stringify(details))
-    const {
-        isLoading: setupLoading,
-        isFetching: setupFetching,
-        data,
-        error,
-    } = useQuery<UserDetails>(fetchIsSetup, details)
-    const { isSetup: fetchedIsSetup, server: fetchedServer } = data as UserDetails
+    const { isLoading: setupLoading, isFetching: setupFetching, data, error } = useQuery<{ server: string }>(details)
+    const fetchedServer: string | undefined = data?.server
     const isLoading = !isLoaded || setupLoading || setupFetching
-    if (!isSetup && !isLoading && fetchedIsSetup && !!fetchedServer) {
+    if (!isSetup && !isLoading && !!fetchedServer) {
         setServerName(fetchedServer)
         setIsSetup(true)
     }
@@ -114,14 +103,19 @@ function InnerUserProvider({ children }: PropsWithChildren) {
             },
             dispatch: {
                 createServer: async (name: string, doApiToken: string) => {
-                    await bffService.post('/server/create', { name, doApiToken })
+                    const token = await getToken()
+                    await query({ endpoint: '/server/create', method: 'POST', body: { name, doApiToken }, token })
                     setServerName(name)
                     setIsSetup(true)
                 },
                 joinServer: async (inviteToken: string) => {
-                    const {
-                        data: { server },
-                    } = await bffService.post('/server/join', { inviteToken })
+                    const token = await getToken()
+                    const { server } = await query<{ server: string }>({
+                        endpoint: '/server/join',
+                        method: 'POST',
+                        body: { inviteToken },
+                        token,
+                    })
                     setServerName(server)
                     setIsSetup(true)
                 },

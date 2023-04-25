@@ -1,33 +1,29 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Button, Text, TextInput } from '@mantine/core'
 
-import { bffService, useQuery } from '@/api/network'
+import { useQuery } from '@/api/network'
 
 type SetupCreateProps = {
     onSubmit: (name: string, doApiToken: string) => void
-}
-
-const fetchIsTaken = async (name: string) => {
-    const { data: exists } = await bffService.get(`/server/${name}/exists`)
-    return exists
 }
 
 const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     const [name, setName] = useState<string>('')
     const [doApiToken, setDoApiToken] = useState<string>('')
 
-    const isTakenFunc = useCallback(() => fetchIsTaken(name), [name])
-    const { data: isNameTaken } = useQuery<boolean>(isTakenFunc, {
+    const { data } = useQuery<{ exists: boolean }>({
         key: `is-taken-${name}`,
+        endpoint: `/server/${name}/exists`,
         enabled: !!name,
-        initialData: false,
+        initialData: { exists: false },
     })
+    const exists = !!data?.exists
 
     return (
         <>
             <TextInput label="Server Name" placeholder="foundry" onChange={(e) => setName(e.target.value)} />
-            <Text display={isNameTaken ? 'inherit' : 'none'} color="red" size="xs">
+            <Text display={exists ? 'inherit' : 'none'} color="red" size="xs">
                 That name is taken
             </Text>
             <TextInput
@@ -35,7 +31,7 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
                 placeholder="dop_v1_sdfugsdf8dsgffug8e48afhu3i934uhf9hfw9hfofeh"
                 onChange={(e) => setDoApiToken(e.target.value)}
             />
-            <Button disabled={isNameTaken} component="a" onClick={() => onSubmit(name, doApiToken)}>
+            <Button disabled={exists} component="a" onClick={() => onSubmit(name, doApiToken)}>
                 Submit
             </Button>
         </>
