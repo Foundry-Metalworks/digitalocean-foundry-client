@@ -46,7 +46,7 @@ export function useQuery<TQueryFnData>(
     const { getToken } = useAuth()
     const func = async () => {
         const token = await getToken()
-        return query<TQueryFnData>({ endpoint, method, params, body, token })
+        return await query<TQueryFnData>({ endpoint, method, params, body, token })
     }
     return useQueryHook<TQueryFnData, Error | undefined>(key, func, {
         refetchOnMount: false,
