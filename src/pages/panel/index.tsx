@@ -1,8 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 import { NextPage } from 'next'
 
 import { query } from '@/api/network'
@@ -27,7 +28,7 @@ const Panel: NextPage = () => {
     const server = user?.server
     const isOn = serverStatus == 'active'
 
-    const fetchStatus = useCallback(() => {
+    const fetchStatus = () => {
         setIsLoading(true)
         getToken().then((token) =>
             query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token }).then((data) => {
@@ -36,34 +37,36 @@ const Panel: NextPage = () => {
                 setIsLoading(false)
             }),
         )
-    }, [])
-
-    // fetch status on interval
-    useEffect(() => {
-        fetchStatus()
-        const interval = setInterval(fetchStatus, 60000)
-        return () => clearInterval(interval)
-    }, [fetchStatus])
+    }
 
     const handleStart = async () => {
         setIsLoading(true)
         const token = await getToken()
-        await query({ endpoint: '/instance/start', method: 'POST', token })
-        fetchStatus()
+        query({ endpoint: '/instance/start', method: 'POST', token }).then(() => {
+            setIsLoading(false)
+            fetchStatus()
+        })
+        notifications.show({ message: 'Starting Server' })
     }
 
     const handleStop = async () => {
         setIsLoading(true)
         const token = await getToken()
-        await query({ endpoint: '/instance/stop', method: 'POST', token })
-        fetchStatus()
+        query({ endpoint: '/instance/stop', method: 'POST', token }).then(() => {
+            setIsLoading(false)
+            fetchStatus()
+        })
+        notifications.show({ message: 'Starting Server' })
     }
 
     const handleSave = async () => {
         setIsLoading(true)
         const token = await getToken()
-        await query({ endpoint: '/instance/save', method: 'POST', token })
-        setIsLoading(false)
+        query({ endpoint: '/instance/save', method: 'POST', token }).then(() => {
+            setIsLoading(false)
+            fetchStatus()
+        })
+        notifications.show({ message: 'Saving Server' })
     }
 
     const handleGoTo = async () => {

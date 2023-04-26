@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, Group, Modal, Stack, TextInput } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 
 import { query } from '@/api/network'
 import Loading from '@/components/loading'
@@ -29,8 +30,9 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
             },
             token,
         })
-        setIsLoading(false)
         onClose()
+        setIsLoading(false)
+        notifications.show({ message: 'Invited User' })
     }
 
     const copyLink = async () => {
@@ -38,8 +40,9 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
         const userToken = await getToken()
         const { link } = await query({ endpoint: '/server/link', token: userToken })
         await navigator.clipboard.writeText(link)
-        setIsLoading(false)
         onClose()
+        setIsLoading(false)
+        notifications.show({ message: 'Copied One-Time Link to Clipboard' })
     }
 
     const copyToken = async () => {
@@ -47,8 +50,9 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
         const userToken = await getToken()
         const { token } = await query({ endpoint: '/server/token', token: userToken })
         await navigator.clipboard.writeText(token)
-        setIsLoading(false)
         onClose()
+        setIsLoading(false)
+        notifications.show({ message: 'Copied Token to Clipboard' })
     }
 
     const isValidEmail = useMemo(() => {

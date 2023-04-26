@@ -2,6 +2,7 @@ import React from 'react'
 
 import { RedirectToSignUp } from '@clerk/nextjs'
 import { MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -41,6 +42,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                         withGlobalStyles
                         withNormalizeCSS
                     >
+                        <Notifications position="top-center" />
                         <MainLayout showLogo={!isSigningPage}>
                             <UserContext.Consumer>
                                 {(value) => {
