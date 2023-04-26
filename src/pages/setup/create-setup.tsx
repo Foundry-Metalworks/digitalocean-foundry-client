@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
-import { Button, Text, TextInput } from '@mantine/core'
+import { Anchor, Button, NavLink, Text, TextInput } from '@mantine/core'
 
 import { useQuery } from '@/api/network'
+import Link from '@/components/link'
 
 type SetupCreateProps = {
     onSubmit: (name: string, doApiToken: string) => void
@@ -30,6 +31,15 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
                 placeholder="dop_v1_sdfugsdf8dsgffug8e48afhu3i934uhf9hfw9hfofeh"
                 onChange={(e) => setDoApiToken(e.target.value)}
             />
+            <Anchor
+                color="gray"
+                size="xs"
+                href="https://cloud.digitalocean.com/account/api/tokens"
+                target="_blank"
+                style={{ marginTop: '-.75rem' }}
+            >
+                Where to get?
+            </Anchor>
             <Button disabled={exists} component="a" onClick={() => onSubmit(name, doApiToken)}>
                 Submit
             </Button>

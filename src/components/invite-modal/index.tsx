@@ -59,30 +59,34 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
             withCloseButton={!isLoading}
             closeOnEscape={!isLoading}
             closeOnClickOutside={!isLoading}
+            padding="lg"
             centered
         >
-            {isLoading ? (
-                <Loading />
-            ) : (
-                <Stack className={styles.inviteModal}>
-                    <Button component="a" onClick={copyLink}>
-                        Copy Link
-                    </Button>
-                    <Button component="a" onClick={copyToken}>
-                        Copy Token
-                    </Button>
-                    <Group>
-                        <TextInput
-                            label="E-Mail"
-                            placeholder="john.doe@site.com"
-                            onChange={(e) => setInviteEmail(e.target.value)}
-                        />
-                        <Button component="a" onClick={inviteUser}>
-                            Invite User
+            <div className={styles.inviteModal}>
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <Stack>
+                        <Button component="a" onClick={copyLink}>
+                            Copy Link
                         </Button>
-                    </Group>
-                </Stack>
-            )}
+                        <Button component="a" onClick={copyToken}>
+                            Copy Token
+                        </Button>
+                        <Group align="end" position="apart" style={{ marginTop: '1rem' }}>
+                            <TextInput
+                                label="E-Mail"
+                                placeholder="john.doe@site.com"
+                                onChange={(e) => setInviteEmail(e.target.value)}
+                                className={styles.emailInput}
+                            />
+                            <Button component="a" onClick={inviteUser} className={styles.emailSubmit}>
+                                Send Invite
+                            </Button>
+                        </Group>
+                    </Stack>
+                )}
+            </div>
         </Modal>
     )
 }

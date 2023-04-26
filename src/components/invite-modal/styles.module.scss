@@ -1,3 +1,22 @@
 .inviteModal {
+  height: min(12rem, 90vh);
+  margin: 1rem;
 
+  .emailInput {
+    width: 60%;
+  }
+  .emailSubmit {
+    width: 35%;
+  }
+}
+
+@media (max-width: 475px) {
+  .inviteModal {
+    .emailInput {
+      width: 100%;
+    }
+    .emailSubmit {
+      width: 100%;
+    }
+  }
 }
