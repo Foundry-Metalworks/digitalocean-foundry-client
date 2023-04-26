@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
+import { UserButton } from '@clerk/nextjs'
 import { Stack } from '@mantine/core'
 
 import styles from './styles.module.scss'
@@ -14,6 +15,9 @@ const MainLayout: React.FC<PropsWithChildren<MainLayoutProps>> = ({
 }: PropsWithChildren<MainLayoutProps>) => {
     return (
         <div className={styles.root}>
+            <div className={styles.userButton}>
+                <UserButton appearance={{ elements: { avatarBox: { width: '3rem', height: '3rem' } } }} />
+            </div>
             <Stack className={styles.content}>
                 <img
                     className={styles.logo}
