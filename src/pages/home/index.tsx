@@ -24,9 +24,16 @@ const Home: NextPage = () => {
                 </Title>
             )}
             {!isAuthenticated && (
-                <Link href={PATHS.SIGN_IN}>
-                    <Button component="a">Login</Button>
-                </Link>
+                <>
+                    <Link href={PATHS.SIGN_UP}>
+                        <Button component="a" color="green">
+                            Sign Up
+                        </Button>
+                    </Link>
+                    <Link href={PATHS.SIGN_IN}>
+                        <Button component="a">Sign In</Button>
+                    </Link>
+                </>
             )}
             {isAuthenticated && (
                 <>
@@ -34,7 +41,7 @@ const Home: NextPage = () => {
                         <Button component="a">Go to Panel</Button>
                     </Link>
                     <Button component="a" color="red" onClick={signOut}>
-                        Logout
+                        Sign Out
                     </Button>
                 </>
             )}

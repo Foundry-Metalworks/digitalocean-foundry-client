@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { RedirectToSignIn } from '@clerk/nextjs'
+import { RedirectToSignUp } from '@clerk/nextjs'
 import { MantineProvider } from '@mantine/core'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
