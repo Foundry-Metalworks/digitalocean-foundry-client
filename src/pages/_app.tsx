@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                                         if (isSetup || isSetupPage) return component
                                         return <RedirectTo path={PATHS.SETUP} />
                                     }
-                                    return isPublicPage ? component : <RedirectToSignIn />
+                                    return isPublicPage ? component : <RedirectToSignUp />
                                 }}
                             </UserContext.Consumer>
                         </MainLayout>
