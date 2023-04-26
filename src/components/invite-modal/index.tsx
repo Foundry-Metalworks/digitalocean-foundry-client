@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, Group, Modal, Stack, TextInput } from '@mantine/core'
@@ -51,6 +51,10 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
         onClose()
     }
 
+    const isValidEmail = useMemo(() => {
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(inviteEmail)
+    }, [inviteEmail])
+
     return (
         <Modal
             opened={opened}
@@ -77,10 +81,16 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
                             <TextInput
                                 label="E-Mail"
                                 placeholder="john.doe@site.com"
-                                onChange={(e) => setInviteEmail(e.target.value)}
+                                error={!!inviteEmail && !isValidEmail}
                                 className={styles.emailInput}
+                                onChange={(e) => setInviteEmail(e.target.value)}
                             />
-                            <Button component="a" onClick={inviteUser} className={styles.emailSubmit}>
+                            <Button
+                                component="a"
+                                onClick={inviteUser}
+                                className={styles.emailSubmit}
+                                disabled={!isValidEmail}
+                            >
                                 Send Invite
                             </Button>
                         </Group>

@@ -22,10 +22,12 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
 
     return (
         <>
-            <TextInput label="Server Name" placeholder="foundry" onChange={(e) => setName(e.target.value)} />
-            <Text display={exists ? 'inherit' : 'none'} color="red" size="xs">
-                That name is taken
-            </Text>
+            <TextInput
+                label="Server Name"
+                placeholder="foundry"
+                onChange={(e) => setName(e.target.value)}
+                error={exists && 'That name is taken'}
+            />
             <TextInput
                 label="DigitalOcean Token"
                 placeholder="dop_v1_sdfugsdf8dsgffug8e48afhu3i934uhf9hfw9hfofeh"
