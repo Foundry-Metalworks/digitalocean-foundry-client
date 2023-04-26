@@ -1,6 +1,7 @@
 import React, { createContext, PropsWithChildren, useMemo, useState } from 'react'
 
 import { ClerkProvider, useAuth, useClerk, useUser } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
 import { useRouter } from 'next/router'
 
 import { query, useQuery, UseQueryDetails } from '@/api/network'
@@ -134,9 +135,9 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     return <Provider value={contextValue}>{children}</Provider>
 }
 
-export const CustomUserProvider: React.FC<PropsWithChildren> = ({ children, ...rest }: PropsWithChildren<any>) => {
+export const CustomUserProvider: React.FC<PropsWithChildren<any>> = ({ children, ...rest }: PropsWithChildren<any>) => {
     return (
-        <ClerkProvider {...rest}>
+        <ClerkProvider {...rest} appearance={{ baseTheme: dark }}>
             <InnerUserProvider>{children}</InnerUserProvider>
         </ClerkProvider>
     )

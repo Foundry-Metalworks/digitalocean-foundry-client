@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.14.2",
+    "@clerk/themes": "^1.6.3",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^6.0.6",

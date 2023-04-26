@@ -2,11 +2,20 @@
 
 .root {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  height: 80vh;
-  top: 20vh;
+  margin: 1rem;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+}
+
+.userButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  .cl-userButtonAvatarBox {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 .logo {
@@ -16,6 +25,10 @@
 
 .content {
   position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: min(475px, 100%);
 }
 
 .mainContent {
