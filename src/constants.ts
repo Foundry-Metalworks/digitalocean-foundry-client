@@ -1,5 +1,5 @@
-export const PUBLIC_PAGES = ['/', '/home', '/sign-in/[[...index]]', '/sign-up/[[...index]]']
 export const AUTH_PAGES = ['/sign-in/[[...index]]', '/sign-up/[[...index]]']
+export const PUBLIC_PAGES = [...AUTH_PAGES, '/', '/home']
 
 export const PATHS = {
     SETUP: '/setup',
@@ -7,4 +7,5 @@ export const PATHS = {
     PANEL: '/panel',
     SIGN_IN: '/sign-in',
     SIGN_UP: '/sign-up',
+    JOIN: '/join/[inviteToken]',
 }

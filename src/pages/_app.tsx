@@ -20,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
     const isPublicPage = PUBLIC_PAGES.includes(pathname)
     const isSetupPage = PATHS.SETUP == pathname
     const isSigningPage = AUTH_PAGES.includes(pathname)
+    const isJoinPage = PATHS.JOIN == pathname
 
     const component = <Component {...pageProps} />
 
@@ -52,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                                         return <Loading />
                                     }
                                     if (isAuthenticated) {
-                                        if (isSetup || isSetupPage) return component
+                                        if (isSetup || isSetupPage || isJoinPage) return component
                                         return <RedirectTo path={PATHS.SETUP} />
                                     }
                                     return isPublicPage ? component : <RedirectToSignUp />

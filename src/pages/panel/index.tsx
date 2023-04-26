@@ -1,10 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
-import { Button, MantineColor, Stack, Text, Title } from '@mantine/core'
+import { Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import { NextPage } from 'next'
 
 import { query } from '@/api/network'
+import InviteModal from '@/components/invite-modal'
 import Loading from '@/components/loading'
 import UserContext from '@/context/user'
 
@@ -14,8 +16,9 @@ type ServerStatusType = 'active' | 'off' | 'deleted'
 
 const Panel: NextPage = () => {
     const [serverStatus, setServerStatus] = useState<ServerStatusType>('off')
-    const [inviteToken, setInviteToken] = useState('')
     const [isLoading, setIsLoading] = useState(true)
+    const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
+
     const {
         data: { user },
         dispatch: { signOut },
@@ -35,27 +38,12 @@ const Panel: NextPage = () => {
         )
     }, [])
 
-    const fetchToken = useCallback(() => {
-        getToken().then((token) =>
-            query<{ token: string }>({ endpoint: '/server/token', token }).then((data) => {
-                const { token } = data
-                setInviteToken(token)
-            }),
-        )
-    }, [])
-
     // fetch status on interval
     useEffect(() => {
         fetchStatus()
         const interval = setInterval(fetchStatus, 60000)
         return () => clearInterval(interval)
     }, [fetchStatus])
-
-    useEffect(() => {
-        fetchToken()
-        const interval = setInterval(fetchToken, 14000)
-        return () => clearInterval(interval)
-    }, [fetchToken])
 
     const handleStart = async () => {
         setIsLoading(true)
@@ -91,6 +79,7 @@ const Panel: NextPage = () => {
 
     return (
         <Stack className={styles.panelContent}>
+            <InviteModal opened={isModalOpen} onClose={closeModal} />
             <Title className={styles.serverTitle} order={2} h="md">
                 SERVER:
             </Title>
@@ -120,12 +109,10 @@ const Panel: NextPage = () => {
                         </Button>
                     </>
                 )}
-                <Title className={styles.tokenTitle} order={3} h="md">
-                    TOKEN:
-                </Title>
-                <Text className={styles.tokenBody} color="blue">
-                    {inviteToken}
-                </Text>
+                <Space h="sm" />
+                <Button component="a" onClick={openModal}>
+                    Invite
+                </Button>
                 <Button component="a" color="red" onClick={signOut}>
                     Logout
                 </Button>
