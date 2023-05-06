@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
@@ -30,14 +30,18 @@ const Panel: NextPage = () => {
 
     const fetchStatus = () => {
         setIsLoading(true)
-        getToken().then((token) =>
+        getToken().then((token) => {
+            console.log('token: ' + token)
             query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token }).then((data) => {
+                console.log('result: ' + JSON.stringify(data))
                 const { status } = data
                 setServerStatus(status)
+                console.log('loaded')
                 setIsLoading(false)
-            }),
-        )
+            })
+        })
     }
+    useEffect(fetchStatus, [])
 
     const handleStart = async () => {
         setIsLoading(true)

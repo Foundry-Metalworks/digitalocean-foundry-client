@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 
-import { Anchor, Button, NavLink, Text, TextInput } from '@mantine/core'
+import { Anchor, Button, TextInput } from '@mantine/core'
 
 import { useQuery } from '@/api/network'
-import Link from '@/components/link'
 
 type SetupCreateProps = {
     onSubmit: (name: string, doApiToken: string) => void

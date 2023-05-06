@@ -38,7 +38,7 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
     const copyLink = async () => {
         setIsLoading(true)
         const userToken = await getToken()
-        const { link } = await query({ endpoint: '/server/link', token: userToken })
+        const { link } = await query<{ link: string }>({ endpoint: '/server/link', token: userToken })
         await navigator.clipboard.writeText(link)
         onClose()
         setIsLoading(false)
@@ -48,7 +48,7 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
     const copyToken = async () => {
         setIsLoading(true)
         const userToken = await getToken()
-        const { token } = await query({ endpoint: '/server/token', token: userToken })
+        const { token } = await query<{ token: string }>({ endpoint: '/server/token', token: userToken })
         await navigator.clipboard.writeText(token)
         onClose()
         setIsLoading(false)
