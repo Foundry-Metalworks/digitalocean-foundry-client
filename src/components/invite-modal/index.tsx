@@ -38,11 +38,18 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
     const copyLink = async () => {
         setIsLoading(true)
         const userToken = await getToken()
-        const { link } = await query<{ link: string }>({ endpoint: '/server/link', token: userToken })
-        await navigator.clipboard.writeText(link)
-        onClose()
-        setIsLoading(false)
-        notifications.show({ message: 'Copied One-Time Link to Clipboard' })
+        query<{ link: string }>({ endpoint: '/server/link', token: userToken })
+            .then(async ({ link }) => {
+                await navigator.clipboard.writeText(link)
+                notifications.show({ message: 'Copied One-Time Link to Clipboard' })
+            })
+            .catch((err) => {
+                notifications.show({ message: err.message })
+            })
+            .finally(() => {
+                onClose()
+                setIsLoading(false)
+            })
     }
 
     const copyToken = async () => {

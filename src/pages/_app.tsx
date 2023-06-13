@@ -22,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
     const isSetupPage = PATHS.SETUP == pathname
     const isSigningPage = AUTH_PAGES.includes(pathname)
     const isJoinPage = PATHS.JOIN == pathname
+    const isInvitesPage = PATHS.INVITES == pathname
 
     const component = <Component {...pageProps} />
 
@@ -47,7 +48,8 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                             <UserContext.Consumer>
                                 {(value) => {
                                     const { data } = value
-                                    const { isLoading, isAuthenticated, isSetup, error } = data
+                                    const { isLoading, isAuthenticated, isSetup, error, user } = data
+                                    const hasInvites = !!user && !!user.invites
                                     if (error) {
                                         return <div>{error.message}</div>
                                     }
@@ -55,7 +57,9 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                                         return <Loading />
                                     }
                                     if (isAuthenticated) {
-                                        if (isSetup || isSetupPage || isJoinPage) return component
+                                        if (!isSetup && hasInvites) {
+                                            return isInvitesPage ? component : <RedirectTo path={PATHS.INVITES} />
+                                        } else if (isSetup || isSetupPage || isJoinPage) return component
                                         return <RedirectTo path={PATHS.SETUP} />
                                     }
                                     return isPublicPage ? component : <RedirectToSignUp />

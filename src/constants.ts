@@ -8,4 +8,5 @@ export const PATHS = {
     SIGN_IN: '/sign-in',
     SIGN_UP: '/sign-up',
     JOIN: '/join/[inviteToken]',
+    INVITES: '/invites',
 }

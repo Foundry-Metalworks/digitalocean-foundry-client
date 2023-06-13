@@ -4,50 +4,20 @@ import { ClerkProvider, useAuth, useClerk, useUser } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
 import { useRouter } from 'next/router'
 
-import { query, useQuery, UseQueryDetails } from '@/api/network'
+import { query, useQuery } from '@/api/network'
 import { PATHS } from '@/constants'
-
-export interface UserProfile {
-    email?: string | undefined
-    name?: string | undefined
-    id?: string | undefined
-    server?: string | undefined
-}
-
-export interface UserData {
-    user?: UserProfile
-    isSetup: boolean
-    isAuthenticated: boolean
-    isLoading: boolean
-    error?: Error
-}
-
-interface UserDetails {
-    server: string
-    isSetup: boolean
-}
-
-interface UserDispatch {
-    createServer: (name: string, doApiToken: string) => void
-    joinServer: (inviteToken: string) => void
-    signIn: () => void
-    signOut: () => void
-}
-
-interface UserContextType {
-    data: UserData
-    dispatch: UserDispatch
-}
+import { UserContextType, UserProfile } from '@/context/user/types'
 
 const defaultValue: UserContextType = {
     data: {
-        isSetup: false,
         isAuthenticated: false,
+        isSetup: false,
         isLoading: true,
     },
     dispatch: {
         createServer: () => undefined,
         joinServer: () => undefined,
+        acceptInvite: () => undefined,
         signIn: () => undefined,
         signOut: () => undefined,
     },
@@ -61,53 +31,59 @@ function InnerUserProvider({ children }: PropsWithChildren) {
     const { signOut } = useClerk()
     const { isLoaded, isSignedIn, user } = useUser()
     const { getToken } = useAuth()
-    const [serverName, setServerName] = useState('')
-    const [isSetup, setIsSetup] = useState(false)
+    const [name, setName] = useState('')
 
-    const details: UseQueryDetails<UserDetails> = useMemo(() => {
-        return {
-            endpoint: '/server',
-            key: `user-setup-${user?.id}`,
-            enabled: !!isSignedIn && !isSetup,
-            initialData: { server: '', isSetup: false },
-        }
-    }, [user?.id, isSignedIn, isSetup])
-
-    console.log('query details: ' + JSON.stringify(details))
-    const { isLoading: setupLoading, isFetching: setupFetching, data, error } = useQuery<{ server: string }>(details)
-    const fetchedServer: string | undefined = data?.server
-    const isLoading = !isLoaded || setupLoading || setupFetching
-    if (!isSetup && !isLoading && !!fetchedServer) {
-        setServerName(fetchedServer)
-        setIsSetup(true)
+    const {
+        isLoading: serverLoading,
+        data: serverData,
+        error: serverError,
+    } = useQuery<{ server: string }>({
+        endpoint: '/server',
+        key: `server-${user?.id}`,
+        enabled: isLoaded && !!isSignedIn,
+    })
+    if (isLoaded && isSignedIn && !serverLoading && !!serverData?.server && !name) {
+        setName(serverData.server)
     }
 
-    const contextUser = useMemo(() => {
-        return isLoaded
+    const {
+        isLoading: inviteLoading,
+        data: inviteData,
+        error: inviteError,
+    } = useQuery<{ invites: string[] }>({
+        endpoint: '/user/invites',
+        key: `invites-${user?.id}`,
+        enabled: !serverLoading && !!serverData && !name,
+    })
+
+    // Context value
+    const isLoading = !isLoaded || serverLoading || inviteLoading
+    const error = serverError || inviteError
+    const contextUser: UserProfile | undefined = useMemo(() => {
+        return !isLoading
             ? {
                   email: user?.primaryEmailAddress?.emailAddress,
                   name: user?.username || undefined,
                   id: user?.id,
-                  server: serverName,
+                  server: name,
+                  invites: inviteData?.invites || [],
               }
             : undefined
-    }, [isLoaded, user?.id, serverName])
-
+    }, [isLoading, user?.id, name, inviteData?.invites])
     const contextValue: UserContextType = useMemo(() => {
         return {
             data: {
                 user: contextUser,
-                isSetup,
                 isAuthenticated: isSignedIn || false,
                 isLoading: isLoading,
+                isSetup: !!name,
                 error: error || undefined,
             },
             dispatch: {
                 createServer: async (name: string, doApiToken: string) => {
                     const token = await getToken()
                     await query({ endpoint: '/server/create', method: 'POST', body: { name, doApiToken }, token })
-                    setServerName(name)
-                    setIsSetup(true)
+                    setName(name)
                 },
                 joinServer: async (inviteToken: string) => {
                     const token = await getToken()
@@ -117,8 +93,19 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                         body: { inviteToken },
                         token,
                     })
-                    setServerName(server)
-                    setIsSetup(true)
+                    setName(server)
+                    await push(PATHS.HOME)
+                },
+                acceptInvite: async (server: string) => {
+                    const token = await getToken()
+                    await query({
+                        endpoint: '/user/invites/accept',
+                        method: 'POST',
+                        body: { server },
+                        token,
+                    })
+                    setName(server)
+                    await push(PATHS.HOME)
                 },
                 signIn: async () => {
                     await push(PATHS.SIGN_IN)
@@ -129,9 +116,9 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                 },
             },
         }
-    }, [contextUser?.id, serverName, isSignedIn, isLoading, error])
+    }, [contextUser?.id, isSignedIn, isLoading, error])
 
-    console.log('rerendered provider: ' + JSON.stringify(contextValue))
+    console.log('rendered context: ' + JSON.stringify(contextValue))
     return <Provider value={contextValue}>{children}</Provider>
 }
 

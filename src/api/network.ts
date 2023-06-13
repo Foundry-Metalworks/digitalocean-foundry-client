@@ -1,4 +1,5 @@
 import { useAuth } from '@clerk/nextjs'
+import { notifications } from '@mantine/notifications'
 import axios, { Method } from 'axios'
 import * as process from 'process'
 import { useQuery as useQueryHook } from 'react-query'
@@ -20,23 +21,29 @@ export type QueryDetails = {
 }
 
 export type UseQueryDetails<T> = Omit<QueryDetails, 'token'> & {
-    key: string
+    key?: string
     enabled?: boolean
     initialData?: T
 }
 
 export async function query<TQueryFnData>(details: QueryDetails): Promise<TQueryFnData> {
     const { endpoint, method, token, params, body } = details
-    const result = await bffService.request({
-        method: method || 'get',
-        url: endpoint,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-        data: body,
-        params,
-    })
-    return result.data
+    try {
+        const result = await bffService.request({
+            method: method || 'get',
+            url: endpoint,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            data: body,
+            params,
+        })
+        return result.data
+    } catch (err) {
+        const errorDataMessage = err.response.data.error?.message
+        notifications.show({ message: errorDataMessage || err.message, color: 'red' })
+        throw err
+    }
 }
 
 export function useQuery<TQueryFnData>(
