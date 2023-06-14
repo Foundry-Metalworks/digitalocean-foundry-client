@@ -19,9 +19,10 @@ const Setup: NextPage = () => {
     } = useContext(UserContext)
     const [setupType, setSetupType] = useState<'create' | 'join' | null>(null)
 
-    if (isSetup) return <RedirectTo path={PATHS.HOME} replace />
+    if (isSetup) {
+        return <RedirectTo path={PATHS.HOME} replace />
+    }
 
-    console.log('setupType: ' + setupType)
     const renderContent = () => {
         if (!setupType) return <SelectType onTypeSelected={setSetupType} />
         if (setupType == 'create') {

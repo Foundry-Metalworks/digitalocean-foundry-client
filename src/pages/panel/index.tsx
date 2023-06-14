@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
@@ -13,11 +13,11 @@ import UserContext from '@/context/user'
 
 import styles from './styles.module.scss'
 
-type ServerStatusType = 'active' | 'off' | 'deleted'
+type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending'
 
 const Panel: NextPage = () => {
-    const [serverStatus, setServerStatus] = useState<ServerStatusType>('off')
-    const [isLoading, setIsLoading] = useState(true)
+    const [serverStatus, setServerStatus] = useState<ServerStatusType>('pending')
+    const [isLoading, setIsLoading] = useState(false)
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
 
     const {
@@ -28,49 +28,46 @@ const Panel: NextPage = () => {
     const server = user?.server
     const isOn = serverStatus == 'active'
 
-    const fetchStatus = () => {
-        setIsLoading(true)
-        getToken().then((token) => {
-            console.log('token: ' + token)
-            query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token }).then((data) => {
-                console.log('result: ' + JSON.stringify(data))
-                const { status } = data
-                setServerStatus(status)
-                console.log('loaded')
-                setIsLoading(false)
-            })
-        })
-    }
-    useEffect(fetchStatus, [])
+    // Status updating
+    const fetchStatus = useCallback(async () => {
+        const token = await getToken()
+        const data = await query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token })
+        const { status } = data
+        setServerStatus(status)
+    }, [])
+
+    useEffect(() => {
+        fetchStatus()
+        const interval = setInterval(() => {
+            fetchStatus()
+        }, 15000)
+        return () => clearInterval(interval)
+    }, [fetchStatus])
 
     const handleStart = async () => {
         setIsLoading(true)
         const token = await getToken()
-        query({ endpoint: '/instance/start', method: 'POST', token }).then(() => {
-            setIsLoading(false)
-            fetchStatus()
-        })
         notifications.show({ message: 'Starting Server' })
+        await query({ endpoint: '/instance/start', method: 'POST', token })
+        setIsLoading(false)
+        await fetchStatus()
     }
 
     const handleStop = async () => {
         setIsLoading(true)
         const token = await getToken()
-        query({ endpoint: '/instance/stop', method: 'POST', token }).then(() => {
-            setIsLoading(false)
-            fetchStatus()
-        })
-        notifications.show({ message: 'Starting Server' })
+        notifications.show({ message: 'Stopping Server' })
+        await query({ endpoint: '/instance/stop', method: 'POST', token })
+        setIsLoading(false)
+        await fetchStatus()
     }
 
     const handleSave = async () => {
         setIsLoading(true)
         const token = await getToken()
-        query({ endpoint: '/instance/save', method: 'POST', token }).then(() => {
-            setIsLoading(false)
-            fetchStatus()
-        })
         notifications.show({ message: 'Saving Server' })
+        await query({ endpoint: '/instance/save', method: 'POST', token })
+        setIsLoading(false)
     }
 
     const handleGoTo = async () => {
@@ -82,7 +79,7 @@ const Panel: NextPage = () => {
         setIsLoading(false)
     }
 
-    if (isLoading) return <Loading />
+    if (isLoading || serverStatus == 'pending') return <Loading />
 
     return (
         <Stack className={styles.panelContent}>
@@ -96,6 +93,7 @@ const Panel: NextPage = () => {
                 weight="normal"
                 color={(isOn ? 'green' : 'red') as MantineColor}
             >{`${server}`}</Text>
+            <br />
             <Stack className={styles.panelButtons}>
                 {isOn ? (
                     <>

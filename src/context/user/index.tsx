@@ -84,6 +84,7 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                     const token = await getToken()
                     await query({ endpoint: '/server/create', method: 'POST', body: { name, doApiToken }, token })
                     setName(name)
+                    await push(PATHS.HOME)
                 },
                 joinServer: async (inviteToken: string) => {
                     const token = await getToken()
@@ -116,9 +117,8 @@ function InnerUserProvider({ children }: PropsWithChildren) {
                 },
             },
         }
-    }, [contextUser?.id, isSignedIn, isLoading, error])
+    }, [contextUser?.id, isSignedIn, isLoading, name, error])
 
-    console.log('rendered context: ' + JSON.stringify(contextValue))
     return <Provider value={contextValue}>{children}</Provider>
 }
 

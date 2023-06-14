@@ -15,7 +15,6 @@ const Home: NextPage = () => {
         dispatch: { signOut },
     } = useContext(UserContext)
 
-    console.log('rerendered home')
     return (
         <Stack className={styles.homeContent}>
             {!!user?.name && (

@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                                 {(value) => {
                                     const { data } = value
                                     const { isLoading, isAuthenticated, isSetup, error, user } = data
-                                    const hasInvites = !!user && !!user.invites
+                                    const hasInvites = !!user?.invites?.length
                                     if (error) {
                                         return <div>{error.message}</div>
                                     }

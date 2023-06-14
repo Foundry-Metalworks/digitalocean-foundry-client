@@ -11,6 +11,6 @@ module.exports = {
         ]
     },
     experimental: {
-        proxyTimeout: 60_000,
+        proxyTimeout: 120000,
     },
 }

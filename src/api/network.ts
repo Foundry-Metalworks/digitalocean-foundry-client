@@ -37,6 +37,7 @@ export async function query<TQueryFnData>(details: QueryDetails): Promise<TQuery
             },
             data: body,
             params,
+            timeout: 120000,
         })
         return result.data
     } catch (err) {
