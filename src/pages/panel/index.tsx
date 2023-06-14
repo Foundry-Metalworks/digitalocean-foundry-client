@@ -13,11 +13,12 @@ import UserContext from '@/context/user'
 
 import styles from './styles.module.scss'
 
-type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending'
+type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending' | 'fresh' | 'new'
 
 const Panel: NextPage = () => {
     const [serverStatus, setServerStatus] = useState<ServerStatusType>('pending')
     const [isLoading, setIsLoading] = useState(false)
+    const [isNew, setIsNew] = useState(false)
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
 
     const {
@@ -34,6 +35,7 @@ const Panel: NextPage = () => {
         const data = await query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token })
         const { status } = data
         setServerStatus(status)
+        if (status == 'fresh') setIsNew(true)
     }, [])
 
     useEffect(() => {
@@ -55,6 +57,7 @@ const Panel: NextPage = () => {
 
     const handleStop = async () => {
         setIsLoading(true)
+        setIsNew(false)
         const token = await getToken()
         notifications.show({ message: 'Stopping Server' })
         await query({ endpoint: '/instance/stop', method: 'POST', token })
@@ -94,6 +97,9 @@ const Panel: NextPage = () => {
                 color={(isOn ? 'green' : 'red') as MantineColor}
             >{`${server}`}</Text>
             <br />
+            {serverStatus == 'active' && isNew ? (
+                <Text>Brand new server. Might take a couple of minutes to be accessible</Text>
+            ) : null}
             <Stack className={styles.panelButtons}>
                 {isOn ? (
                     <>

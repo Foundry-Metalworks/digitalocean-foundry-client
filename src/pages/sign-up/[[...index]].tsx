@@ -2,6 +2,8 @@ import React from 'react'
 
 import { SignUp } from '@clerk/nextjs'
 
+import { PATHS } from '@/constants'
+
 const SignUpPage = (): React.ReactNode => {
     return (
         <SignUp
@@ -11,6 +13,7 @@ const SignUpPage = (): React.ReactNode => {
             appearance={{
                 elements: { footerActionText: { fontSize: '1rem' }, footerActionLink: { fontSize: '1rem' } },
             }}
+            redirectUrl={PATHS.HOME}
         />
     )
 }
