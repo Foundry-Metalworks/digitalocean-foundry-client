@@ -9,12 +9,10 @@ import UserContext from '@/context/user'
 
 const Invites: NextPage = () => {
     const {
-        data: {
-            isSetup,
-            user: { invites },
-        },
+        data: { isSetup, user },
         dispatch: { acceptInvite },
     } = useContext(UserContext)
+    const invites = user?.invites || []
 
     if (isSetup) return <RedirectTo path={PATHS.HOME} />
 

@@ -21,7 +21,7 @@ export type QueryDetails = {
 }
 
 export type UseQueryDetails<T> = Omit<QueryDetails, 'token'> & {
-    key?: string
+    key: string
     enabled?: boolean
     initialData?: T
 }
@@ -40,7 +40,7 @@ export async function query<TQueryFnData>(details: QueryDetails): Promise<TQuery
             timeout: 120000,
         })
         return result.data
-    } catch (err) {
+    } catch (err: any) {
         const errorDataMessage = err.response.data.error?.message
         notifications.show({ message: errorDataMessage || err.message, color: 'red' })
         throw err
