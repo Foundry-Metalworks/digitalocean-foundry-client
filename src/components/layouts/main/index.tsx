@@ -5,14 +5,11 @@ import { Stack } from '@mantine/core'
 
 import styles from './styles.module.scss'
 
-interface MainLayoutProps {
-    showLogo: boolean
+export interface MainLayoutProps extends PropsWithChildren<MainLayoutProps> {
+    showLogo?: boolean
 }
 
-const MainLayout: React.FC<PropsWithChildren<MainLayoutProps>> = ({
-    children,
-    showLogo,
-}: PropsWithChildren<MainLayoutProps>) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: MainLayoutProps) => {
     return (
         <div className={styles.root}>
             <div className={styles.userButton}>

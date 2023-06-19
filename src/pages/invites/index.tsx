@@ -3,18 +3,16 @@ import React, { useContext } from 'react'
 import { Button, Stack, Text, Title } from '@mantine/core'
 import { NextPage } from 'next'
 
-import RedirectTo from '@/components/redirect'
-import { PATHS } from '@/constants'
+import MainLayout from '@/components/layouts/main'
+import InvitesContext, { InvitesProvider } from '@/context/invites'
 import UserContext from '@/context/user'
 
-const Invites: NextPage = () => {
+const UnwrappedInvites: React.FC = () => {
     const {
-        data: { isSetup, user },
+        data,
         dispatch: { acceptInvite },
-    } = useContext(UserContext)
-    const invites = user?.invites || []
-
-    if (isSetup) return <RedirectTo path={PATHS.HOME} />
+    } = useContext(InvitesContext)
+    const invites = data?.invites || []
 
     return (
         <Stack>
@@ -22,13 +20,22 @@ const Invites: NextPage = () => {
             <Text>Click to Accept</Text>
             <br />
             {invites.map((invite) => (
-                <div key={`invite-${invite}`}>
-                    <Button type="button" fullWidth onClick={() => acceptInvite(invite)}>
-                        {invite}
+                <div key={`invite-${invite.id}`}>
+                    <Button type="button" fullWidth onClick={() => acceptInvite(invite.id)}>
+                        {invite.server}
                     </Button>
                 </div>
             ))}
         </Stack>
+    )
+}
+
+const Invites: NextPage = () => {
+    const { data } = useContext(UserContext)
+    return (
+        <InvitesProvider user={data?.id as string}>
+            <UnwrappedInvites />
+        </InvitesProvider>
     )
 }
 

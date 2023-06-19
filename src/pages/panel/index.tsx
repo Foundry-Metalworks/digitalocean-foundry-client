@@ -1,88 +1,38 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 
-import { useAuth } from '@clerk/nextjs'
 import { Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { notifications } from '@mantine/notifications'
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 
-import { query } from '@/api/network'
-import InviteModal from '@/components/invite-modal'
-import Loading from '@/components/loading'
-import UserContext from '@/context/user'
+import Loading from '@/components/shared/loading'
+import { PATHS } from '@/constants'
+import ServerContext, { ServerProvider } from '@/context/server'
+import { useInstanceApi } from '@/pages/panel/hooks/use-instance-api'
 
+import InviteModal from './components/invite-modal'
 import styles from './styles.module.scss'
 
-type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending' | 'fresh' | 'new'
-
-const Panel: NextPage = () => {
-    const [serverStatus, setServerStatus] = useState<ServerStatusType>('pending')
-    const [isLoading, setIsLoading] = useState(false)
-    const [isNew, setIsNew] = useState(false)
+const UnwrappedPanel: React.FC = () => {
+    const { data } = useContext(ServerContext)
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
-
     const {
-        data: { user },
-        dispatch: { signOut },
-    } = useContext(UserContext)
-    const { getToken } = useAuth()
-    const server = user?.server
-    const isOn = serverStatus == 'active'
-
-    // Status updating
-    const fetchStatus = useCallback(async () => {
-        const token = await getToken()
-        const data = await query<{ status: ServerStatusType }>({ endpoint: '/instance/status', token })
-        const { status } = data
-        setServerStatus(status)
-        if (status == 'fresh') setIsNew(true)
-    }, [])
+        name: server,
+        permissions: { canstart, canstop, cansave, caninvite },
+    } = data || {}
+    const {
+        isFetching,
+        instanceStatus,
+        actions: { startServer, stopServer, saveServer, goToServer, updateStatus },
+    } = useInstanceApi(server)
+    const { push } = useRouter()
 
     useEffect(() => {
-        fetchStatus()
-        const interval = setInterval(() => {
-            fetchStatus()
-        }, 15000)
+        const interval = setInterval(() => updateStatus(), 10000)
         return () => clearInterval(interval)
-    }, [fetchStatus])
+    }, [updateStatus])
 
-    const handleStart = async () => {
-        setIsLoading(true)
-        const token = await getToken()
-        notifications.show({ message: 'Starting Server' })
-        await query({ endpoint: '/instance/start', method: 'POST', token })
-        setIsLoading(false)
-        await fetchStatus()
-    }
-
-    const handleStop = async () => {
-        setIsLoading(true)
-        setIsNew(false)
-        const token = await getToken()
-        notifications.show({ message: 'Stopping Server' })
-        await query({ endpoint: '/instance/stop', method: 'POST', token })
-        setIsLoading(false)
-        await fetchStatus()
-    }
-
-    const handleSave = async () => {
-        setIsLoading(true)
-        const token = await getToken()
-        notifications.show({ message: 'Saving Server' })
-        await query({ endpoint: '/instance/save', method: 'POST', token })
-        setIsLoading(false)
-    }
-
-    const handleGoTo = async () => {
-        setIsLoading(true)
-        const token = await getToken()
-        const result = await query<{ ip: string }>({ endpoint: '/instance/ip', token })
-        const { ip } = result
-        window.open(ip, '_blank')
-        setIsLoading(false)
-    }
-
-    if (isLoading || serverStatus == 'pending') return <Loading />
+    if (isFetching || instanceStatus == 'pending') return <Loading />
 
     return (
         <Stack className={styles.panelContent}>
@@ -94,41 +44,60 @@ const Panel: NextPage = () => {
                 size={'xl'}
                 display="inline"
                 weight="normal"
-                color={(isOn ? 'green' : 'red') as MantineColor}
+                color={(instanceStatus == 'active' ? 'green' : 'red') as MantineColor}
             >{`${server}`}</Text>
             <br />
-            {serverStatus == 'active' && isNew ? (
-                <Text>Brand new server. Might take a couple of minutes to be accessible</Text>
-            ) : null}
             <Stack className={styles.panelButtons}>
-                {isOn ? (
+                {instanceStatus == 'active' ? (
                     <>
-                        <Button component="a" color="green" onClick={handleGoTo}>
+                        <Button component="a" color="green" onClick={goToServer}>
                             Go To Server
                         </Button>
-                        <Button component="a" color="red" onClick={handleStop}>
-                            Stop Server
-                        </Button>
-                        <Button component="a" onClick={handleSave}>
-                            Save Server
-                        </Button>
+                        {canstop && (
+                            <Button component="a" color="red" onClick={stopServer}>
+                                Stop Server
+                            </Button>
+                        )}
+                        {cansave && (
+                            <Button component="a" onClick={saveServer}>
+                                Save Server
+                            </Button>
+                        )}
                     </>
                 ) : (
                     <>
-                        <Button component="a" color="green" onClick={handleStart}>
-                            Start Server
-                        </Button>
+                        {canstart && (
+                            <Button component="a" color="green" onClick={startServer}>
+                                Start Server
+                            </Button>
+                        )}
                     </>
                 )}
                 <Space h="sm" />
-                <Button component="a" onClick={openModal}>
-                    Invite
-                </Button>
-                <Button component="a" color="red" onClick={signOut}>
-                    Logout
+                {caninvite && (
+                    <Button component="a" onClick={openModal}>
+                        Invite
+                    </Button>
+                )}
+                <Button component="a" color="red" onClick={() => push(PATHS.HOME)}>
+                    Back Home
                 </Button>
             </Stack>
         </Stack>
+    )
+}
+
+const Panel: NextPage = () => {
+    return (
+        <ServerProvider>
+            <ServerContext.Consumer>
+                {(value) => {
+                    const { isLoading } = value
+                    if (isLoading) return <Loading />
+                    return <UnwrappedPanel />
+                }}
+            </ServerContext.Consumer>
+        </ServerProvider>
     )
 }
 

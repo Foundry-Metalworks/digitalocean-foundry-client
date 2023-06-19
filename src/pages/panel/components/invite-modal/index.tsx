@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, Group, Modal, Stack, TextInput } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import { query } from '@/api/network'
-import Loading from '@/components/loading'
+import Loading from '@/components/shared/loading'
+import ServerContext from '@/context/server'
 
 import styles from './styles.module.scss'
 
@@ -15,6 +16,9 @@ interface Props {
 }
 
 const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
+    const {
+        data: { name: serverId },
+    } = useContext(ServerContext)
     const [inviteEmail, setInviteEmail] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { getToken } = useAuth()
@@ -23,10 +27,11 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
         setIsLoading(true)
         const token = await getToken()
         await query({
-            endpoint: '/server/invite',
+            endpoint: '/invites/create',
             method: 'POST',
             body: {
                 email: inviteEmail,
+                serverId,
             },
             token,
         })
@@ -38,7 +43,7 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
     const copyLink = async () => {
         setIsLoading(true)
         const userToken = await getToken()
-        query<{ link: string }>({ endpoint: '/server/link', token: userToken })
+        query<{ link: string }>({ endpoint: `/servers/${serverId}/link`, token: userToken })
             .then(async ({ link }) => {
                 await navigator.clipboard.writeText(link)
                 notifications.show({ message: 'Copied One-Time Link to Clipboard' })
@@ -55,7 +60,7 @@ const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
     const copyToken = async () => {
         setIsLoading(true)
         const userToken = await getToken()
-        const { token } = await query<{ token: string }>({ endpoint: '/server/token', token: userToken })
+        const { token } = await query<{ token: string }>({ endpoint: `/servers/${serverId}/token`, token: userToken })
         await navigator.clipboard.writeText(token)
         onClose()
         setIsLoading(false)

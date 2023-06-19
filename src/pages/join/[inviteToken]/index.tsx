@@ -3,25 +3,25 @@ import React, { useContext, useEffect } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import RedirectTo from '@/components/redirect'
+import RedirectTo from '@/components/shared/redirect'
 import { PATHS } from '@/constants'
-import UserContext from '@/context/user'
+import ServerContext from '@/context/server'
 
 const Join: NextPage = () => {
     const router = useRouter()
     const { inviteToken } = router.query
     const {
-        data: { isSetup },
-        dispatch: { joinServer },
-    } = useContext(UserContext)
+        data,
+        dispatch: { joinByToken },
+    } = useContext(ServerContext)
 
     useEffect(() => {
-        if (!isSetup && !!inviteToken) {
-            joinServer(inviteToken as string)
+        if (!!inviteToken) {
+            joinByToken(inviteToken as string)
         }
-    }, [isSetup, inviteToken, joinServer])
+    }, [inviteToken, joinByToken])
 
-    if (isSetup) return <RedirectTo path={PATHS.HOME} />
+    if (!!data) return <RedirectTo path={PATHS.HOME} />
     return null
 }
 

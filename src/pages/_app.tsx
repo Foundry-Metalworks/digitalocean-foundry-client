@@ -9,20 +9,19 @@ import { useRouter } from 'next/router'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import MainLayout from '@/components/layouts/main'
-import Loading from '@/components/loading'
-import RedirectTo from '@/components/redirect'
+import Loading from '@/components/shared/loading'
+import RedirectTo from '@/components/shared/redirect'
 import { AUTH_PAGES, PATHS, PUBLIC_PAGES } from '@/constants'
-import UserContext, { CustomUserProvider } from '@/context/user'
+import UserContext, { UserProvider } from '@/context/user'
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }: AppProps): React.ReactNode {
     const { pathname } = useRouter()
     const isPublicPage = PUBLIC_PAGES.includes(pathname)
+    const isAuthPage = AUTH_PAGES.includes(pathname)
     const isSetupPage = PATHS.SETUP == pathname
-    const isSigningPage = AUTH_PAGES.includes(pathname)
     const isJoinPage = PATHS.JOIN == pathname
-    const isInvitesPage = PATHS.INVITES == pathname
 
     const component = <Component {...pageProps} />
 
@@ -33,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
             </Head>
             <QueryClientProvider client={queryClient}>
-                <CustomUserProvider {...pageProps}>
+                <UserProvider>
                     <MantineProvider
                         theme={{
                             colorScheme: 'dark',
@@ -43,31 +42,24 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                         withGlobalStyles
                         withNormalizeCSS
                     >
-                        <Notifications position="top-center" />
-                        <MainLayout showLogo={!isSigningPage}>
+                        <MainLayout showLogo={!isAuthPage}>
+                            <Notifications position="top-center" />
                             <UserContext.Consumer>
                                 {(value) => {
-                                    const { data } = value
-                                    const { isLoading, isAuthenticated, isSetup, error, user } = data
-                                    const hasInvites = !!user?.invites?.length
-                                    if (error) {
-                                        return <div>{error.message}</div>
+                                    const { data, isLoading } = value
+                                    if (data != null) {
+                                        if (isSetupPage || isJoinPage || data.servers.length) return component
+                                        return <RedirectTo path={PATHS.SETUP} />
                                     }
                                     if (isLoading) {
                                         return <Loading />
-                                    }
-                                    if (isAuthenticated) {
-                                        if (!isSetup && hasInvites) {
-                                            return isInvitesPage ? component : <RedirectTo path={PATHS.INVITES} />
-                                        } else if (isSetup || isSetupPage || isJoinPage) return component
-                                        return <RedirectTo path={PATHS.SETUP} />
                                     }
                                     return isPublicPage ? component : <RedirectToSignUp />
                                 }}
                             </UserContext.Consumer>
                         </MainLayout>
                     </MantineProvider>
-                </CustomUserProvider>
+                </UserProvider>
             </QueryClientProvider>
         </>
     )

@@ -21,9 +21,9 @@ export type QueryDetails = {
 }
 
 export type UseQueryDetails<T> = Omit<QueryDetails, 'token'> & {
-    key: string
     enabled?: boolean
     initialData?: T
+    onSuccess?: (data: T) => void
 }
 
 export async function query<TQueryFnData>(details: QueryDetails): Promise<TQueryFnData> {
@@ -47,23 +47,27 @@ export async function query<TQueryFnData>(details: QueryDetails): Promise<TQuery
     }
 }
 
-export function useQuery<TQueryFnData>(
-    details: UseQueryDetails<TQueryFnData>,
-): UseQueryResult<TQueryFnData, Error | undefined> {
-    const { key, endpoint, method, enabled, initialData, params, body } = details
+export function useQuery<TQueryFNData>(
+    details: UseQueryDetails<TQueryFNData>,
+    dependencies: any[],
+): UseQueryResult<TQueryFNData, Error> {
+    const { endpoint, method, enabled, initialData, params, body, onSuccess } = details
+    const key = `${endpoint}--${dependencies.map((e) => (e ? JSON.stringify(e) : 'null')).join('-')}`
     const { getToken } = useAuth()
+
     const func = async () => {
         const token = await getToken()
-        return await query<TQueryFnData>({ endpoint, method, params, body, token })
+        return await query<TQueryFNData>({ endpoint, method, params, body, token })
     }
-    return useQueryHook<TQueryFnData, Error | undefined>(key, func, {
-        refetchOnMount: false,
-        retryDelay: 0,
-        refetchOnWindowFocus: false,
-        retryOnMount: false,
-        retry: false,
+    return useQueryHook<TQueryFNData, Error>(key, func, {
         keepPreviousData: true,
         initialData: initialData,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: false,
+        retryOnMount: false,
+        retryDelay: 0,
+        onSuccess,
         enabled,
     })
 }
