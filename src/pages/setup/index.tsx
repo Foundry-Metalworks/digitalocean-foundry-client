@@ -4,14 +4,14 @@ import { useAuth } from '@clerk/nextjs'
 import { Button, Space, Stack } from '@mantine/core'
 import { NextPage } from 'next'
 
-import ServerContext from '@/context/server'
+import ServerContext, { ServerProvider } from '@/context/server'
 import SetupCreate from '@/pages/setup/create-setup'
 import SetupJoin from '@/pages/setup/join-setup'
 import SelectType from '@/pages/setup/select-type'
 
 import styles from './styles.module.scss'
 
-const Setup: NextPage = () => {
+const UnwrappedSetup: NextPage = () => {
     const [setupType, setSetupType] = useState<'create' | 'join' | null>(null)
     const { signOut } = useAuth()
     const {
@@ -36,6 +36,14 @@ const Setup: NextPage = () => {
                 </Button>
             </Stack>
         </div>
+    )
+}
+
+const Setup: NextPage = () => {
+    return (
+        <ServerProvider>
+            <UnwrappedSetup />
+        </ServerProvider>
     )
 }
 

@@ -47,7 +47,9 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                             <UserContext.Consumer>
                                 {(value) => {
                                     const { data, isLoading } = value
+                                    const servers = data?.servers || []
                                     if (data != null) {
+                                        if (isSetupPage && servers.length) return <RedirectTo path={PATHS.HOME} />
                                         if (isSetupPage || isJoinPage || data.servers.length) return component
                                         return <RedirectTo path={PATHS.SETUP} />
                                     }

@@ -22,7 +22,7 @@ const ServerContext = createContext<ServerContextType>({
 export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const { getToken } = useAuth()
     const { data: userData } = useContext(UserContext)
-    const server = userData?.servers[0].name
+    const server = userData?.servers.length ? userData?.servers[0].name : undefined
     const { status, data, error } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
@@ -34,8 +34,8 @@ export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const loading = !server || status == 'idle' || status == 'loading'
     const value: ServerContextType = useMemo(
         () => ({
-            isLoading: !server || status == 'idle' || status == 'loading',
-            data: data || null,
+            isLoading: loading,
+            data: loading ? null : data || null,
             error: error || undefined,
             dispatch: {
                 create: async (serverId: string, apiToken: string) => {
@@ -46,7 +46,7 @@ export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
                         body: { serverId, apiToken },
                         token,
                     })
-                    notifications.show({ message: `Created Server: ${name}` })
+                    notifications.show({ message: `Created Server: ${serverId}` })
                 },
                 joinByToken: async (inviteToken: string) => {
                     const authToken = await getToken()
