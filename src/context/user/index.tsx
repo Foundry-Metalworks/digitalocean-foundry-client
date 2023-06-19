@@ -1,4 +1,4 @@
-import React, { useState, createContext, useMemo } from 'react'
+import React, { createContext, useMemo, PropsWithChildren } from 'react'
 
 import { ClerkProvider, useAuth } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
@@ -15,7 +15,7 @@ const UserContext = createContext<UserContextType>({
     dispatch: undefined,
 })
 
-const InnerUserProvider: React.FC<React.ReactNode> = ({ children }) => {
+const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const { isSignedIn, isLoaded, userId } = useAuth()
 
     const shouldFetchUser = isLoaded && !!isSignedIn
@@ -41,7 +41,7 @@ const InnerUserProvider: React.FC<React.ReactNode> = ({ children }) => {
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
 
-export const UserProvider: React.FC<React.ReactNode> = ({ children, ...rest }) => {
+export const UserProvider: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
     return (
         <ClerkProvider {...rest} appearance={{ baseTheme: dark }}>
             <InnerUserProvider>{children}</InnerUserProvider>

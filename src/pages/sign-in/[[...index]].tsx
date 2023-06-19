@@ -2,7 +2,6 @@ import React from 'react'
 
 import { SignIn } from '@clerk/nextjs'
 
-import MainLayout from '@/components/layouts/main'
 import { PATHS } from '@/constants'
 
 const SignInPage = (): React.ReactNode => {

@@ -5,21 +5,20 @@ import { useDisclosure } from '@mantine/hooks'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
+import InviteModal from '@/components/panel/invite-modal'
 import Loading from '@/components/shared/loading'
 import { PATHS } from '@/constants'
 import ServerContext, { ServerProvider } from '@/context/server'
-import { useInstanceApi } from '@/pages/panel/hooks/use-instance-api'
+import { useInstanceApi } from '@/hooks/use-instance-api'
 
-import InviteModal from './components/invite-modal'
 import styles from './styles.module.scss'
 
 const UnwrappedPanel: React.FC = () => {
     const { data } = useContext(ServerContext)
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
-    const {
-        name: server,
-        permissions: { canstart, canstop, cansave, caninvite },
-    } = data || {}
+    const permissions = data?.permissions
+    const server = data?.name || ''
+
     const {
         isFetching,
         instanceStatus,
@@ -53,12 +52,12 @@ const UnwrappedPanel: React.FC = () => {
                         <Button component="a" color="green" onClick={goToServer}>
                             Go To Server
                         </Button>
-                        {canstop && (
+                        {!!permissions?.canstop && (
                             <Button component="a" color="red" onClick={stopServer}>
                                 Stop Server
                             </Button>
                         )}
-                        {cansave && (
+                        {!!permissions?.cansave && (
                             <Button component="a" onClick={saveServer}>
                                 Save Server
                             </Button>
@@ -66,7 +65,7 @@ const UnwrappedPanel: React.FC = () => {
                     </>
                 ) : (
                     <>
-                        {canstart && (
+                        {!!permissions?.canstart && (
                             <Button component="a" color="green" onClick={startServer}>
                                 Start Server
                             </Button>
@@ -74,13 +73,13 @@ const UnwrappedPanel: React.FC = () => {
                     </>
                 )}
                 <Space h="sm" />
-                {caninvite && (
+                {!!permissions?.caninvite && (
                     <Button component="a" onClick={openModal}>
                         Invite
                     </Button>
                 )}
                 <Button component="a" color="red" onClick={() => push(PATHS.HOME)}>
-                    Back Home
+                    Return Home
                 </Button>
             </Stack>
         </Stack>

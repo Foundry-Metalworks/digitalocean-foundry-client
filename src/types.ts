@@ -11,3 +11,5 @@ export interface ContextType<T, R> {
     isLoading: boolean
     error?: Error
 }
+
+export type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending' | 'fresh' | 'new'

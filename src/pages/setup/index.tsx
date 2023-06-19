@@ -4,7 +4,6 @@ import { useAuth } from '@clerk/nextjs'
 import { Button, Space, Stack } from '@mantine/core'
 import { NextPage } from 'next'
 
-import MainLayout from '@/components/layouts/main'
 import ServerContext from '@/context/server'
 import SetupCreate from '@/pages/setup/create-setup'
 import SetupJoin from '@/pages/setup/join-setup'
@@ -32,7 +31,7 @@ const Setup: NextPage = () => {
             <Stack>
                 {renderContent()}
                 <Space h="xs" />
-                <Button component="a" color="red" onClick={signOut}>
+                <Button component="a" color="red" onClick={() => signOut()}>
                     Sign Out
                 </Button>
             </Stack>

@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
 
 import { query } from '@/api/network'
-import { ServerStatusType } from '@/pages/panel/types'
+import { ServerStatusType } from '@/types'
 
 interface InstanceApi {
     isFetching: boolean
@@ -41,7 +41,7 @@ export const useInstanceApi = (serverId: string): InstanceApi => {
         const token = await getToken()
         notifications.show({ message: 'Navigating to Server' })
         setIsFetching(true)
-        const { ip } = await query({ endpoint: `/instance/${serverId}/ip`, token })
+        const { ip } = await query<{ ip: string }>({ endpoint: `/instance/${serverId}/ip`, token })
         setIsFetching(false)
         window.open(ip, '_blank')
     }, [serverId])

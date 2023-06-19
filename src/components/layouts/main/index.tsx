@@ -5,7 +5,7 @@ import { Stack } from '@mantine/core'
 
 import styles from './styles.module.scss'
 
-export interface MainLayoutProps extends PropsWithChildren<MainLayoutProps> {
+export interface MainLayoutProps extends PropsWithChildren {
     showLogo?: boolean
 }
 

@@ -4,7 +4,6 @@ import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
 
 import { query, useQuery } from '@/api/network'
-import Loading from '@/components/shared/loading'
 import { ServerDispatch, ServerType } from '@/context/server/types'
 import UserContext from '@/context/user'
 import { ContextType } from '@/types'

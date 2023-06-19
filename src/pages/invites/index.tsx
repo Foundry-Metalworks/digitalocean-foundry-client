@@ -3,7 +3,6 @@ import React, { useContext } from 'react'
 import { Button, Stack, Text, Title } from '@mantine/core'
 import { NextPage } from 'next'
 
-import MainLayout from '@/components/layouts/main'
 import InvitesContext, { InvitesProvider } from '@/context/invites'
 import UserContext from '@/context/user'
 

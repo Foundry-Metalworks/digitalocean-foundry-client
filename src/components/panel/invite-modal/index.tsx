@@ -16,9 +16,8 @@ interface Props {
 }
 
 const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
-    const {
-        data: { name: serverId },
-    } = useContext(ServerContext)
+    const { data } = useContext(ServerContext)
+    const serverId = data?.name
     const [inviteEmail, setInviteEmail] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { getToken } = useAuth()

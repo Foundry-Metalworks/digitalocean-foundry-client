@@ -12,16 +12,15 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     const [name, setName] = useState<string>('')
     const [doApiToken, setDoApiToken] = useState<string>('')
 
-    const {
-        data: { exists },
-    } = useQuery<boolean>(
+    const { data } = useQuery<{ exists: boolean }>(
         {
             endpoint: `/servers/${name}/check`,
             enabled: !!name,
-            initialData: false,
+            initialData: { exists: false },
         },
         [name],
     )
+    const exists = !!data?.exists
 
     return (
         <>
