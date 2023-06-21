@@ -12,3 +12,7 @@ export interface UserServerType {
     name: string
     permissions: PermissionsType
 }
+
+export interface UserDispatch {
+    authorize: (code: string) => void
+}

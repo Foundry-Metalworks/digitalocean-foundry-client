@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 import { Badge, Button, Group, rem, Space, Stack, Title } from '@mantine/core'
-import { useLocalStorage } from '@mantine/hooks'
 import process from 'process'
 
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
-import Loading from '@/components/shared/loading'
 import { useUser } from '@/hooks/use-user'
 
 const REFERRAL_LINK =
@@ -15,7 +13,6 @@ const DOSetup: React.FC = () => {
     const [setupStage, setSetupStage] = useState<number | undefined>(undefined)
     const [hasDOAcc, setHasDOAcc] = useState<boolean | undefined>(undefined)
     const { isLoading, data } = useUser()
-    const isConnected = !!data?.authorized
 
     useEffect(() => {
         if (data?.authorized != undefined) {
@@ -50,7 +47,7 @@ const DOSetup: React.FC = () => {
                 component="a"
                 href={hasDOAcc ? process.env.NEXT_PUBLIC_DO_URL : REFERRAL_LINK}
                 target={hasDOAcc ? undefined : '_blank'}
-                onClick={() => (hasDOAcc ? setSetupStage(3) : setSetupStage(2))}
+                onClick={() => !hasDOAcc && setSetupStage(2)}
                 disabled={isLoading}
             >
                 <IconBrandDigitalOcean size={16} style={{ marginRight: rem(12) }} />
@@ -82,7 +79,6 @@ const DOSetup: React.FC = () => {
 
     const SetupContent = () => {
         if (setupStage == undefined) return <Space h={32} />
-        console.log('RENDER')
         switch (setupStage) {
             case 0:
                 return <Stage0 />
@@ -96,7 +92,7 @@ const DOSetup: React.FC = () => {
     }
 
     return (
-        <Stack>
+        <Stack h="4rem">
             <SetupContent />
         </Stack>
     )

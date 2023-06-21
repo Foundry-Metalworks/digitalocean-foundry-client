@@ -15,7 +15,7 @@ const SignInPage = (): React.ReactNode => {
                 appearance={{
                     elements: { footerActionText: { fontSize: '1rem' }, footerActionLink: { fontSize: '1rem' } },
                 }}
-                redirectUrl={PATHS.PANEL}
+                redirectUrl={PATHS.ROOT}
             />
         </MainLayout>
     )

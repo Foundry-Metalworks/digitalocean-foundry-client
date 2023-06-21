@@ -34,64 +34,65 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
         <div>
             <Header height="4rem" pl="1rem" pr="1rem" mb="2rem" pos="sticky">
                 <Group spacing={20} h="inherit" pos="relative">
-                    <Link href={PATHS.HOME} legacyBehavior={false}>
-                        <FoundryLogo size="48px" withText />
-                    </Link>
-                    {isSignedIn ? (
-                        <Menu trigger="hover" width={200} position="bottom-start">
-                            <Menu.Target>
-                                <Group spacing={0}>
-                                    Setup <IconChevronDown />
-                                </Group>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Item>
-                                    <Link href={`${PATHS.SETUP}?type=dm`}>
-                                        <Text w="100%" my={0} py={0}>
-                                            DM
-                                        </Text>
-                                    </Link>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Link href={`${PATHS.SETUP}?type=player`}>
-                                        <Text w="100%" my={0} py={0}>
-                                            Player
-                                        </Text>
-                                    </Link>
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    ) : null}
-                    {isSignedIn && servers.length ? (
-                        <Menu trigger="hover" width={200} position="bottom-start">
-                            <Menu.Target>
-                                <Group spacing={0}>
-                                    Panel <IconChevronDown />
-                                </Group>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                {servers.map((s) => (
-                                    <Menu.Item key={`header-panel-${s.name}`}>
-                                        <Link href={`${PATHS.PANEL}/${s.name}`}>
+                    <Group left>
+                        <Link href={PATHS.HOME} legacyBehavior={false}>
+                            <FoundryLogo size="48px" withText />
+                        </Link>
+                        {isSignedIn ? (
+                            <Menu trigger="hover" width={200} position="bottom-start">
+                                <Menu.Target>
+                                    <Group spacing={0}>
+                                        Setup <IconChevronDown />
+                                    </Group>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item>
+                                        <Link href={`${PATHS.SETUP}?type=dm`}>
                                             <Text w="100%" my={0} py={0}>
-                                                {s.name}
+                                                DM
                                             </Text>
                                         </Link>
                                     </Menu.Item>
-                                ))}
-                            </Menu.Dropdown>
-                        </Menu>
-                    ) : null}
-                    {!isSignedIn && (
-                        <>
-                            <Link href={PATHS.SIGN_UP}>Sign Up</Link>
-                            <Link href={PATHS.SIGN_IN}>Sign In</Link>
-                        </>
-                    )}
-                    <ThemeSwitch />
-                    <div className={styles.userButton}>
-                        <UserButton appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }} />
-                    </div>
+                                    <Menu.Item>
+                                        <Link href={`${PATHS.SETUP}?type=player`}>
+                                            <Text w="100%" my={0} py={0}>
+                                                Player
+                                            </Text>
+                                        </Link>
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                        ) : null}
+                        {isSignedIn && servers.length ? (
+                            <Menu trigger="hover" width={200} position="bottom-start">
+                                <Menu.Target>
+                                    <Group spacing={0}>
+                                        Panel <IconChevronDown />
+                                    </Group>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    {servers.map((s) => (
+                                        <Menu.Item key={`header-panel-${s.name}`}>
+                                            <Link href={`${PATHS.PANEL}/${s.name}`}>
+                                                <Text w="100%" my={0} py={0}>
+                                                    {s.name}
+                                                </Text>
+                                            </Link>
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                        ) : null}
+                    </Group>
+                    <Group right>
+                        {!isSignedIn && <Link href={PATHS.SIGN_IN}>Sign In</Link>}
+                        <ThemeSwitch />
+                        {isSignedIn && (
+                            <UserButton
+                                appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }}
+                            />
+                        )}
+                    </Group>
                 </Group>
             </Header>
             <Container display="flex" className={styles.mainContent} maw="100%" w="60rem">

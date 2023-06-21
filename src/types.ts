@@ -12,4 +12,11 @@ export interface ContextType<T, R> {
     error?: Error
 }
 
+export interface UseDataType<T> {
+    data: T | undefined
+    isLoading: boolean
+    error?: any
+    refetch: () => void
+}
+
 export type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending' | 'fresh' | 'new'

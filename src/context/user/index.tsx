@@ -1,26 +1,30 @@
 import React, { createContext, useMemo, PropsWithChildren } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
+import { useRouter } from 'next/router'
 
-import { useQuery } from '@/api/network'
+import { query, useQuery } from '@/api/network'
 import RedirectTo from '@/components/shared/redirect'
 import { PATHS } from '@/constants'
-import { UserType } from '@/context/user/types'
+import { UserDispatch, UserType } from '@/context/user/types'
 import { ContextType } from '@/types'
 
-type UserContextType = ContextType<UserType | null, undefined>
+type UserContextType = ContextType<UserType | null, UserDispatch>
 
 const UserContext = createContext<UserContextType>({
     isLoading: false,
     data: null,
-    dispatch: undefined,
+    dispatch: {
+        authorize: () => undefined,
+    },
 })
 
 const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const { isSignedIn, isLoaded, userId } = useAuth()
+    const { isSignedIn, isLoaded, userId, getToken } = useAuth()
+    const { push } = useRouter()
 
     const shouldFetchUser = isLoaded && !!isSignedIn
-    const { status, data, error } = useQuery<UserType>(
+    const { status, data, error, refetch } = useQuery<UserType>(
         {
             endpoint: '/users/me',
             enabled: shouldFetchUser,
@@ -34,7 +38,19 @@ const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
             data: isSignedIn ? data || null : null,
             isLoading: !isLoaded || isLoading,
             error: error || undefined,
-            dispatch: undefined,
+            dispatch: {
+                authorize: async (code: string) => {
+                    const token = await getToken()
+                    await query({
+                        endpoint: '/users/authorize',
+                        token,
+                        method: 'PUT',
+                        body: { code },
+                    })
+                    await refetch()
+                    await push(PATHS.ROOT)
+                },
+            },
         }),
         [isLoading, isSignedIn, status, userId],
     )
