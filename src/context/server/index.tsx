@@ -26,9 +26,9 @@ type ServerProviderProps = PropsWithChildren<{ needsServer?: boolean }>
 export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsServer = false }) => {
     const { getToken } = useAuth()
     const { push } = useRouter()
-    const { data: userData } = useContext(UserContext)
+    const { data: userData, isLoading: userLoading } = useContext(UserContext)
     const server = userData?.servers.length ? userData?.servers[0].name : undefined
-    const { status, data, error } = useQuery<ServerType>(
+    const { isFetching, data, error } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
             enabled: !!server,
@@ -36,7 +36,7 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsS
         [server],
     )
 
-    const loading = needsServer ? !server || status == 'idle' || status == 'loading' : false
+    const loading = needsServer ? userLoading || isFetching : false
     const value: ServerContextType = useMemo(
         () => ({
             isLoading: loading,
@@ -67,10 +67,8 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsS
                 },
             },
         }),
-        [server, status, error],
+        [server, userLoading, isFetching, error],
     )
-
-    console.log(JSON.stringify(value.data))
 
     return <ServerContext.Provider value={value}>{children}</ServerContext.Provider>
 }

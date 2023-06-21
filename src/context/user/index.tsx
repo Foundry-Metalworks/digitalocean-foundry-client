@@ -3,6 +3,8 @@ import React, { createContext, useMemo, PropsWithChildren } from 'react'
 import { useAuth } from '@clerk/nextjs'
 
 import { useQuery } from '@/api/network'
+import RedirectTo from '@/components/shared/redirect'
+import { PATHS } from '@/constants'
 import { UserType } from '@/context/user/types'
 import { ContextType } from '@/types'
 
@@ -30,14 +32,17 @@ const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const value: UserContextType = useMemo(
         () => ({
             data: isSignedIn ? data || null : null,
-            isLoading,
+            isLoading: !isLoaded || isLoading,
             error: error || undefined,
             dispatch: undefined,
         }),
         [isLoading, isSignedIn, status, userId],
     )
 
-    return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+    if (isLoaded && !isLoading) {
+        if (!data) return <RedirectTo path={PATHS.HOME} />
+        return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+    }
 }
 
 export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 
-import { Button, TextInput } from '@mantine/core'
+import { Box, Button, TextInput } from '@mantine/core'
 
 type SetupJoinProps = {
     onSubmit: (token: string) => void
@@ -16,12 +16,18 @@ const SetupJoin: React.FC<SetupJoinProps> = ({ onSubmit }) => {
     }, [serverToken])
 
     return (
-        <>
-            <TextInput label="Server Token" placeholder="49QQGsdC" onChange={(e) => setServerToken(e.target.value)} />
-            <Button disabled={isTokenInvalid} component="a" onClick={() => onSubmit(serverToken)}>
+        <Box ta="center">
+            <TextInput
+                label="Server Token"
+                placeholder="49QQGsdC"
+                error={serverToken && isTokenInvalid ? 'Invalid Token' : null}
+                onChange={(e) => setServerToken(e.target.value)}
+            />
+            <br />
+            <Button disabled={isTokenInvalid} component="a" onClick={() => onSubmit(serverToken)} w="100%">
                 Submit
             </Button>
-        </>
+        </Box>
     )
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { SignUpButton, useAuth } from '@clerk/nextjs'
-import { Button, rem, Stepper } from '@mantine/core'
+import { Button, rem, Select, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 import process from 'process'
 
@@ -20,23 +20,37 @@ type StepProps = {
 
 const Steps: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0)
+    const [isDM, setIsDM] = useState(true)
     const { isSignedIn } = useAuth()
     const { push } = useRouter()
     const { data } = useUser()
 
     useEffect(() => {
-        if (data?.servers.length) setActiveStep(3)
-        else if (data?.authorized) setActiveStep(2)
+        if (data?.servers.length) setActiveStep(isDM ? 3 : 2)
+        else if (isDM && data?.authorized) setActiveStep(2)
         else if (isSignedIn) setActiveStep(1)
-    }, [data?.authorized, isSignedIn, data?.servers])
+    }, [data?.authorized, isSignedIn, data?.servers, isDM])
 
     return (
         <Section title="Steps to Setup">
+            <Select
+                defaultValue="dm"
+                data={[
+                    { value: 'dm', label: 'Dungeon Master' },
+                    { value: 'player', label: 'Player' },
+                ]}
+                onChange={(value) => setIsDM(value === 'dm')}
+                mb="2rem"
+                w={rem(320)}
+                mx="auto"
+            />
             <Stepper
                 active={activeStep}
                 onStepClick={(step) => setActiveStep(step)}
                 breakpoint="sm"
                 className={styles.stepper}
+                maw={!isDM ? '40rem' : undefined}
+                m="0 auto"
             >
                 <Stepper.Step label="Step 1" description="Create Metalworks Account">
                     <SignUpButton redirectUrl={PATHS.HOME}>
@@ -45,15 +59,20 @@ const Steps: React.FC = () => {
                         </Button>
                     </SignUpButton>
                 </Stepper.Step>
-                <Stepper.Step label="Step 2" description="Connect DigitalOcean Account">
-                    <Button radius="xl" size="md" component="a" href={process.env.NEXT_PUBLIC_DO_URL}>
-                        <IconBrandDigitalOcean size={16} style={{ marginRight: rem(4) }} />
-                        Connect DigitalOcean
-                    </Button>
-                </Stepper.Step>
-                <Stepper.Step label="Step 3" description="Create or Join Metalworks Server">
-                    <Button radius="xl" size="md" onClick={() => push(PATHS.SETUP)}>
-                        Create or Join Server
+                {isDM ? (
+                    <Stepper.Step label="Step 2" description="Connect DigitalOcean Account">
+                        <Button radius="xl" size="md" component="a" href={process.env.NEXT_PUBLIC_DO_URL}>
+                            <IconBrandDigitalOcean size={16} style={{ marginRight: rem(4) }} />
+                            Connect DigitalOcean
+                        </Button>
+                    </Stepper.Step>
+                ) : null}
+                <Stepper.Step
+                    label={isDM ? 'Step 3' : 'Step 2'}
+                    description={`${isDM ? 'Create' : 'Join'} Metalworks Server`}
+                >
+                    <Button radius="xl" size="md" onClick={() => push(`${PATHS.SETUP}?type=${isDM ? 'dm' : 'player'}`)}>
+                        {isDM ? 'Create' : 'Join'} Metalworks Server
                     </Button>
                 </Stepper.Step>
                 <Stepper.Completed>{"Looks like you're a pro already!"}</Stepper.Completed>
