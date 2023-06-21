@@ -23,7 +23,7 @@ const DigitalOcean: NextPage = () => {
         return <Loading />
     }
 
-    return <RedirectTo path={PATHS.HOME} />
+    return <RedirectTo path={PATHS.ROOT} />
 }
 
 export default DigitalOcean

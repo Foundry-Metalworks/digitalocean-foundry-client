@@ -30,7 +30,7 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, server
     const { isFetching, data, error, refetch } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
-            enabled: !!server,
+            enabled: server != undefined,
         },
         [server],
     )
@@ -51,7 +51,7 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, server
                         token,
                     })
                     await refetch()
-                    await push(PATHS.HOME)
+                    await push(PATHS.ROOT)
                     notifications.show({ message: `Created Server: ${serverId}` })
                 },
                 joinByToken: async (inviteToken: string) => {
@@ -63,7 +63,7 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, server
                         token: authToken,
                     })
                     await refetch()
-                    await push(PATHS.HOME)
+                    await push(PATHS.ROOT)
                     notifications.show({ message: 'Joined Server Successfully' })
                 },
             },

@@ -21,7 +21,8 @@ const PanelLayout: React.FC<PropsWithChildren<{ server?: string }>> = ({ childre
                                 <ServerContext.Consumer>
                                     {({ isLoading, data }) => {
                                         if (isLoading) return <Loading />
-                                        if (!!server && !data?.name) return <RedirectTo path={PATHS.HOME} />
+                                        console.log('server: ' + !!server)
+                                        if (!!server && !data?.name) return <RedirectTo path={PATHS.ROOT} />
                                         return (
                                             <Box maw="80%" w="40rem">
                                                 {children}

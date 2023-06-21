@@ -4,6 +4,7 @@ import { useAuth, UserButton } from '@clerk/nextjs'
 import { Box, Container, Group, Header, Menu, Space, Text } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 
+import Dropdown from '@/components/shared/dropdown'
 import FoundryLogo from '@/components/shared/foundry-logo'
 import Link from '@/components/shared/link'
 import Loading from '@/components/shared/loading'
@@ -32,57 +33,37 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
 
     return (
         <div>
-            <Header height="4rem" pl="1rem" pr="1rem" mb="2rem" pos="sticky">
-                <Group spacing={20} h="inherit" pos="relative">
+            <Header height="4rem" px="2rem" mb="2rem" pos="sticky">
+                <Group h="inherit" pos="relative" style={{ justifyContent: 'space-between' }}>
                     <Group left>
-                        <Link href={PATHS.HOME} legacyBehavior={false}>
+                        <Link href={PATHS.ROOT} legacyBehavior={false}>
                             <FoundryLogo size="48px" withText />
                         </Link>
-                        {isSignedIn ? (
-                            <Menu trigger="hover" width={200} position="bottom-start">
-                                <Menu.Target>
-                                    <Group spacing={0}>
-                                        Setup <IconChevronDown />
-                                    </Group>
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    <Menu.Item>
-                                        <Link href={`${PATHS.SETUP}?type=dm`}>
-                                            <Text w="100%" my={0} py={0}>
-                                                DM
-                                            </Text>
-                                        </Link>
-                                    </Menu.Item>
-                                    <Menu.Item>
-                                        <Link href={`${PATHS.SETUP}?type=player`}>
-                                            <Text w="100%" my={0} py={0}>
-                                                Player
-                                            </Text>
-                                        </Link>
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
-                        ) : null}
-                        {isSignedIn && servers.length ? (
-                            <Menu trigger="hover" width={200} position="bottom-start">
-                                <Menu.Target>
-                                    <Group spacing={0}>
-                                        Panel <IconChevronDown />
-                                    </Group>
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    {servers.map((s) => (
-                                        <Menu.Item key={`header-panel-${s.name}`}>
-                                            <Link href={`${PATHS.PANEL}/${s.name}`}>
-                                                <Text w="100%" my={0} py={0}>
-                                                    {s.name}
-                                                </Text>
-                                            </Link>
-                                        </Menu.Item>
-                                    ))}
-                                </Menu.Dropdown>
-                            </Menu>
-                        ) : null}
+                        {isSignedIn && (
+                            <Dropdown label="Setup" labelType="link">
+                                <Link href={`${PATHS.SETUP}?type=dm`}>
+                                    <Text w="100%" my={0} py={0}>
+                                        DM
+                                    </Text>
+                                </Link>
+                                <Link href={`${PATHS.SETUP}?type=player`}>
+                                    <Text w="100%" my={0} py={0}>
+                                        Player
+                                    </Text>
+                                </Link>
+                            </Dropdown>
+                        )}
+                        {isSignedIn && !!servers.length && (
+                            <Dropdown label="Go To Panel" labelType="link" z>
+                                {servers.map((s) => (
+                                    <Link key={`button-server-link-${s.name}`} href={`${PATHS.PANEL}/${s.name}`}>
+                                        <Text w="100%" my={0} py={0}>
+                                            {s.name}
+                                        </Text>
+                                    </Link>
+                                ))}
+                            </Dropdown>
+                        )}
                     </Group>
                     <Group right>
                         {!isSignedIn && <Link href={PATHS.SIGN_IN}>Sign In</Link>}

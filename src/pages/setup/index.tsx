@@ -37,7 +37,7 @@ const UnwrappedSetup: NextPage = () => {
             <Space h={rem(16)} />
             {setupType == 'dm' ? <CreateSetup onSubmit={create} /> : <JoinSetup onSubmit={joinByToken} />}
             <Space h={rem(32)} />
-            <Button component="a" color="red" onClick={() => push(PATHS.HOME)}>
+            <Button component="a" color="red" onClick={() => push(PATHS.ROOT)}>
                 Return Home
             </Button>
         </Stack>

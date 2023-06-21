@@ -5,6 +5,7 @@ import { Box, Button, Group, List, Menu, rem, Text, ThemeIcon, Title } from '@ma
 import { IconBrandGithub, IconCheck, IconChevronDown } from '@tabler/icons-react'
 import { NextPage } from 'next'
 
+import Dropdown from '@/components/shared/dropdown'
 import FoundryLogo from '@/components/shared/foundry-logo'
 import Link from '@/components/shared/link'
 import { PATHS } from '@/constants'
@@ -22,27 +23,17 @@ const HomepageHero: NextPage = () => {
     const { data } = useUser()
 
     const heroButton = useMemo(() => {
-        if (data?.servers) {
+        if (data?.servers.length) {
             return (
-                <Menu trigger="hover" width={200} position="bottom-start">
-                    <Menu.Target>
-                        <Button radius="xl" size="md">
-                            Go To Panel <IconChevronDown />
-                        </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown w={rem(320)}>
-                        <Menu.Label>Servers</Menu.Label>
-                        {data.servers.map((s) => (
-                            <Menu.Item key={`hero-panel-${s.name}`}>
-                                <Link href={`${PATHS.PANEL}/${s.name}`}>
-                                    <Text w="100%" my={0} py={0}>
-                                        {s.name}
-                                    </Text>
-                                </Link>
-                            </Menu.Item>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu>
+                <Dropdown label="Go To Panel">
+                    {data.servers.map((s) => (
+                        <Link key={`button-server-link-${s.name}`} href={`${PATHS.PANEL}/${s.name}`}>
+                            <Text w="100%" my={0} py={0}>
+                                {s.name}
+                            </Text>
+                        </Link>
+                    ))}
+                </Dropdown>
             )
         }
         if (isSignedIn) {
@@ -61,7 +52,7 @@ const HomepageHero: NextPage = () => {
                 </Button>
             </SignUpButton>
         )
-    }, [isSignedIn, data?.servers])
+    }, [isSignedIn, data?.servers.length])
 
     return (
         <Box className={styles.hero} mb="32px">

@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react'
 
-import { Box, Button, rem, Space, TextInput } from '@mantine/core'
-import process from 'process'
+import { Box, Button, TextInput } from '@mantine/core'
 
 import { useQuery } from '@/api/network'
-import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
 import DOSetup from '@/components/shared/digitalocean-setup'
 import UserContext from '@/context/user'
 
@@ -29,7 +27,6 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     return (
         <Box ta="center">
             <DOSetup />
-            <Space h="1rem" />
             <TextInput
                 label="Server Name"
                 placeholder="foundry"

@@ -3,13 +3,13 @@ import { useContext, useMemo } from 'react'
 import { useQuery } from '@/api/network'
 import { ServerType } from '@/context/server/types'
 import UserContext from '@/context/user'
+import { UseDataType } from '@/types'
 
-export const useServers = (server: string): { isLoading: boolean; data: ServerType | null; error: any } => {
+export const useServers = (server: string): UseDataType<ServerType> => {
     const { isLoading } = useContext(UserContext)
-    const { isFetching, data, error } = useQuery<ServerType>(
+    const { isFetching, data, error, refetch } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
-            enabled: !!server,
         },
         [server],
     )
@@ -18,10 +18,13 @@ export const useServers = (server: string): { isLoading: boolean; data: ServerTy
     const value = useMemo(
         () => ({
             isLoading: loading,
-            data: loading ? null : data || null,
+            data: loading ? undefined : data,
             error: error || undefined,
+            refetch,
         }),
         [server, loading, error],
     )
     return value
 }
+
+export default useServers

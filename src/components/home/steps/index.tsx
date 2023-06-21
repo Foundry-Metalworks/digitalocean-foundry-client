@@ -3,21 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { SignUpButton, useAuth } from '@clerk/nextjs'
 import { Button, rem, Select, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
-import process from 'process'
 
 import Section from '@/components/home/section'
-import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
 import DOSetup from '@/components/shared/digitalocean-setup'
 import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
-
-type StepperProps = StepProps & React.RefAttributes<HTMLButtonElement>
-type StepProps = {
-    initialStep?: number
-    children: React.ReactElement<StepperProps> | React.ReactElement<StepperProps>[]
-}
 
 const Steps: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0)
@@ -33,7 +25,7 @@ const Steps: React.FC = () => {
     }, [data?.authorized, isSignedIn, data?.servers, isDM])
 
     return (
-        <Section title="Setup">
+        <Section title="Setup Guide">
             <Select
                 defaultValue="dm"
                 data={[
@@ -54,7 +46,7 @@ const Steps: React.FC = () => {
                 m="0 auto"
             >
                 <Stepper.Step label="Step 1" description="Create Metalworks Account">
-                    <SignUpButton redirectUrl={PATHS.HOME}>
+                    <SignUpButton redirectUrl={PATHS.ROOT}>
                         <Button radius="xl" size="md">
                             Sign Up
                         </Button>

@@ -79,7 +79,7 @@ const InnerPanel: React.FC = () => {
                         Invite
                     </Button>
                 )}
-                <Button component="a" color="red" onClick={() => push(PATHS.HOME)}>
+                <Button component="a" color="red" onClick={() => push(PATHS.ROOT)}>
                     Return Home
                 </Button>
             </Stack>

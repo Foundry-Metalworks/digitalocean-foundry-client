@@ -16,7 +16,7 @@ const Invites: NextPage = () => {
     const { acceptInvite } = actions
 
     if (isLoading) return <Loading />
-    if (!invites.length) return <RedirectTo path={PATHS.HOME} />
+    if (!invites.length) return <RedirectTo path={PATHS.ROOT} />
 
     return (
         <MainLayout showLogo>

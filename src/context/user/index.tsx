@@ -56,7 +56,7 @@ const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     )
 
     if (isLoaded && !isLoading) {
-        if (!data) return <RedirectTo path={PATHS.HOME} />
+        if (!data) return <RedirectTo path={PATHS.ROOT} />
         return <UserContext.Provider value={value}>{children}</UserContext.Provider>
     }
     return null

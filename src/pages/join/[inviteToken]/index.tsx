@@ -1,28 +1,38 @@
 import React, { useContext, useEffect } from 'react'
 
+import { RedirectToSignUp, useAuth } from '@clerk/nextjs'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import RedirectTo from '@/components/shared/redirect'
-import { PATHS } from '@/constants'
-import ServerContext from '@/context/server'
+import Loading from '@/components/shared/loading'
+import ServerContext, { ServerProvider } from '@/context/server'
 
-const Join: NextPage = () => {
-    const router = useRouter()
-    const { inviteToken } = router.query
+const UnwrappedJoin: NextPage = () => {
+    const { asPath, query } = useRouter()
+    const { inviteToken } = query
+    const { isSignedIn, isLoaded } = useAuth()
     const {
-        data,
         dispatch: { joinByToken },
     } = useContext(ServerContext)
 
     useEffect(() => {
-        if (!!inviteToken) {
+        if (isLoaded && isSignedIn) {
+            console.log('JOINING')
             joinByToken(inviteToken as string)
         }
-    }, [inviteToken, joinByToken])
+    }, [isLoaded, isSignedIn, joinByToken])
 
-    if (!!data) return <RedirectTo path={PATHS.HOME} />
-    return null
+    console.log('isLoaded: ' + isLoaded)
+    if (isLoaded && !isSignedIn) return <RedirectToSignUp redirectUrl={asPath} />
+    return <Loading />
+}
+
+const Join: NextPage = () => {
+    return (
+        <ServerProvider>
+            <UnwrappedJoin />
+        </ServerProvider>
+    )
 }
 
 export default Join

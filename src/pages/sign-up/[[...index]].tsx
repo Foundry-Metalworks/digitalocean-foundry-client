@@ -15,7 +15,7 @@ const SignUpPage = (): React.ReactNode => {
                 appearance={{
                     elements: { footerActionText: { fontSize: '1rem' }, footerActionLink: { fontSize: '1rem' } },
                 }}
-                redirectUrl={PATHS.HOME}
+                redirectUrl={PATHS.ROOT}
             />
         </MainLayout>
     )
