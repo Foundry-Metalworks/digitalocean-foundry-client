@@ -4,9 +4,9 @@ import { Button, Group, rem, Select, Space, Stack, Text } from '@mantine/core'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import PanelLayout from '@/components/layouts/panel'
+import MainLayout from '@/components/layouts/main'
 import { PATHS } from '@/constants'
-import ServerContext from '@/context/server'
+import ServerContext, { ServerProvider } from '@/context/server'
 import CreateSetup from '@/pages/setup/create-setup'
 import JoinSetup from '@/pages/setup/join-setup'
 
@@ -46,9 +46,11 @@ const UnwrappedSetup: NextPage = () => {
 
 const Setup: NextPage = () => {
     return (
-        <PanelLayout>
-            <UnwrappedSetup />
-        </PanelLayout>
+        <ServerProvider>
+            <MainLayout>
+                <UnwrappedSetup />
+            </MainLayout>
+        </ServerProvider>
     )
 }
 

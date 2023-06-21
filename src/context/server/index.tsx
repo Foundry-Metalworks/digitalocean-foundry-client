@@ -8,6 +8,7 @@ import { query, useQuery } from '@/api/network'
 import { PATHS } from '@/constants'
 import { ServerDispatch, ServerType } from '@/context/server/types'
 import UserContext from '@/context/user'
+import { useUser } from '@/hooks/use-user'
 import { ContextType } from '@/types'
 
 type ServerContextType = ContextType<ServerType | null, ServerDispatch>
@@ -26,8 +27,9 @@ type ServerProviderProps = PropsWithChildren<{ server?: string }>
 export const ServerProvider: React.FC<ServerProviderProps> = ({ children, server }) => {
     const { getToken } = useAuth()
     const { push } = useRouter()
+    const { refetch } = useUser()
     const { isLoading } = useContext(UserContext)
-    const { isFetching, data, error, refetch } = useQuery<ServerType>(
+    const { isFetching, data, error } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
             enabled: server != undefined,

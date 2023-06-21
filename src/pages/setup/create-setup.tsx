@@ -5,6 +5,7 @@ import { Box, Button, TextInput } from '@mantine/core'
 import { useQuery } from '@/api/network'
 import DOSetup from '@/components/shared/digitalocean-setup'
 import UserContext from '@/context/user'
+import { useUser } from '@/hooks/use-user'
 
 type SetupCreateProps = {
     onSubmit: (name: string) => void
@@ -12,7 +13,7 @@ type SetupCreateProps = {
 
 const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     const [name, setName] = useState<string>('')
-    const { data: userData } = useContext(UserContext)
+    const { data: userData } = useUser()
 
     const { data, isLoading } = useQuery<{ exists: boolean }>(
         {
