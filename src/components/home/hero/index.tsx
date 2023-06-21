@@ -47,14 +47,16 @@ const HomepageHero: NextPage = () => {
         }
         if (isSignedIn) {
             return (
-                <Button radius="xl" size="md" component={Link} href={PATHS.SETUP}>
-                    Get started
-                </Button>
+                <Link href={PATHS.SETUP}>
+                    <Button radius="xl" size="md">
+                        Get started
+                    </Button>
+                </Link>
             )
         }
         return (
             <SignUpButton>
-                <Button radius="xl" size="md" component={Link} href={PATHS.SETUP}>
+                <Button radius="xl" size="md">
                     Get started
                 </Button>
             </SignUpButton>

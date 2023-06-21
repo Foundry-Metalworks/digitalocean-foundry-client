@@ -5,6 +5,7 @@ import process from 'process'
 
 import { useQuery } from '@/api/network'
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
+import DOSetup from '@/components/shared/digitalocean-setup'
 import UserContext from '@/context/user'
 
 type SetupCreateProps = {
@@ -27,21 +28,8 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
 
     return (
         <Box ta="center">
-            {!userData?.authorized ? (
-                <>
-                    <Button
-                        radius="xl"
-                        size="md"
-                        component="a"
-                        href={process.env.NEXT_PUBLIC_DO_URL}
-                        disabled={isLoading}
-                    >
-                        <IconBrandDigitalOcean size={16} style={{ marginRight: rem(12) }} />
-                        Connect DigitalOcean
-                    </Button>
-                    <Space h={rem(16)} />
-                </>
-            ) : null}
+            <DOSetup />
+            <Space h="1rem" />
             <TextInput
                 label="Server Name"
                 placeholder="foundry"

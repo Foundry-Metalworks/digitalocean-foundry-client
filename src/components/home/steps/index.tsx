@@ -7,6 +7,7 @@ import process from 'process'
 
 import Section from '@/components/home/section'
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
+import DOSetup from '@/components/shared/digitalocean-setup'
 import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
@@ -32,7 +33,7 @@ const Steps: React.FC = () => {
     }, [data?.authorized, isSignedIn, data?.servers, isDM])
 
     return (
-        <Section title="Steps to Setup">
+        <Section title="Setup">
             <Select
                 defaultValue="dm"
                 data={[
@@ -60,16 +61,14 @@ const Steps: React.FC = () => {
                     </SignUpButton>
                 </Stepper.Step>
                 {isDM ? (
-                    <Stepper.Step label="Step 2" description="Connect DigitalOcean Account">
-                        <Button radius="xl" size="md" component="a" href={process.env.NEXT_PUBLIC_DO_URL}>
-                            <IconBrandDigitalOcean size={16} style={{ marginRight: rem(4) }} />
-                            Connect DigitalOcean
-                        </Button>
+                    <Stepper.Step label="Step 2" description="Connect DigitalOcean Account" disabled={!isSignedIn}>
+                        <DOSetup />
                     </Stepper.Step>
                 ) : null}
                 <Stepper.Step
                     label={isDM ? 'Step 3' : 'Step 2'}
                     description={`${isDM ? 'Create' : 'Join'} Metalworks Server`}
+                    disabled={!data?.authorized}
                 >
                     <Button radius="xl" size="md" onClick={() => push(`${PATHS.SETUP}?type=${isDM ? 'dm' : 'player'}`)}>
                         {isDM ? 'Create' : 'Join'} Metalworks Server
