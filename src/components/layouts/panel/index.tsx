@@ -9,7 +9,7 @@ import { PATHS } from '@/constants'
 import ServerContext, { ServerProvider } from '@/context/server'
 import UserContext, { UserProvider } from '@/context/user'
 
-const PanelLayout: React.FC<PropsWithChildren<{ needsServer?: boolean }>> = ({ children, needsServer = false }) => {
+const PanelLayout: React.FC<PropsWithChildren<{ server?: string }>> = ({ children, server }) => {
     return (
         <MainLayout showLogo>
             <UserProvider>
@@ -17,11 +17,11 @@ const PanelLayout: React.FC<PropsWithChildren<{ needsServer?: boolean }>> = ({ c
                     {({ isLoading }) => {
                         if (isLoading) return <Loading />
                         return (
-                            <ServerProvider needsServer={needsServer}>
+                            <ServerProvider server={server}>
                                 <ServerContext.Consumer>
                                     {({ isLoading, data }) => {
                                         if (isLoading) return <Loading />
-                                        if (needsServer && !data?.name) return <RedirectTo path={PATHS.HOME} />
+                                        if (!!server && !data?.name) return <RedirectTo path={PATHS.HOME} />
                                         return (
                                             <Box maw="80%" w="40rem">
                                                 {children}

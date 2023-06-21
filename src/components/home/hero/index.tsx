@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { SignUpButton, useAuth } from '@clerk/nextjs'
-import { Box, Button, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
-import { IconBrandGithub, IconCheck } from '@tabler/icons-react'
+import { Box, Button, Group, List, Menu, rem, Text, ThemeIcon, Title } from '@mantine/core'
+import { IconBrandGithub, IconCheck, IconChevronDown } from '@tabler/icons-react'
 import { NextPage } from 'next'
 
 import FoundryLogo from '@/components/shared/foundry-logo'
 import Link from '@/components/shared/link'
 import { PATHS } from '@/constants'
+import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
 
@@ -18,12 +19,48 @@ const HomepageHero: NextPage = () => {
         </ThemeIcon>
     )
     const { isSignedIn } = useAuth()
+    const { data } = useUser()
 
-    const heroButton = (
-        <Button radius="xl" size="md">
-            {!!isSignedIn ? 'Go To Panel' : 'Get started'}
-        </Button>
-    )
+    const heroButton = useMemo(() => {
+        if (data?.servers) {
+            return (
+                <Menu trigger="hover" width={200} position="bottom-start">
+                    <Menu.Target>
+                        <Button radius="xl" size="md">
+                            Go To Panel <IconChevronDown />
+                        </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown w={rem(320)}>
+                        <Menu.Label>Servers</Menu.Label>
+                        {data.servers.map((s) => (
+                            <Menu.Item key={`hero-panel-${s.name}`}>
+                                <Link href={`${PATHS.PANEL}/${s.name}`}>
+                                    <Text w="100%" my={0} py={0}>
+                                        {s.name}
+                                    </Text>
+                                </Link>
+                            </Menu.Item>
+                        ))}
+                    </Menu.Dropdown>
+                </Menu>
+            )
+        }
+        if (isSignedIn) {
+            return (
+                <Button radius="xl" size="md" component={Link} href={PATHS.SETUP}>
+                    Get started
+                </Button>
+            )
+        }
+        return (
+            <SignUpButton>
+                <Button radius="xl" size="md" component={Link} href={PATHS.SETUP}>
+                    Get started
+                </Button>
+            </SignUpButton>
+        )
+    }, [isSignedIn, data?.servers])
+
     return (
         <Box className={styles.hero} mb="32px">
             <div>
@@ -46,13 +83,7 @@ const HomepageHero: NextPage = () => {
                     </List.Item>
                 </List>
                 <Group mt={30}>
-                    {!!isSignedIn ? (
-                        <Link href={PATHS.PANEL} legacyBehavior>
-                            {heroButton}
-                        </Link>
-                    ) : (
-                        <SignUpButton>{heroButton}</SignUpButton>
-                    )}
+                    {!!isSignedIn ? heroButton : <SignUpButton>{heroButton}</SignUpButton>}
                     <Button
                         variant="default"
                         radius="xl"

@@ -87,10 +87,14 @@ const InnerPanel: React.FC = () => {
     )
 }
 
-const Panel: NextPage = () => (
-    <PanelLayout needsServer>
-        <InnerPanel />
-    </PanelLayout>
-)
+const Panel: NextPage = () => {
+    const { query } = useRouter()
+
+    return (
+        <PanelLayout server={query.server as string | undefined}>
+            <InnerPanel />
+        </PanelLayout>
+    )
+}
 
 export default Panel

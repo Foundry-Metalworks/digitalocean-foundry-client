@@ -21,14 +21,13 @@ const ServerContext = createContext<ServerContextType>({
     },
 })
 
-type ServerProviderProps = PropsWithChildren<{ needsServer?: boolean }>
+type ServerProviderProps = PropsWithChildren<{ server?: string }>
 
-export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsServer = false }) => {
+export const ServerProvider: React.FC<ServerProviderProps> = ({ children, server }) => {
     const { getToken } = useAuth()
     const { push } = useRouter()
-    const { data: userData, isLoading: userLoading } = useContext(UserContext)
-    const server = userData?.servers.length ? userData?.servers[0].name : undefined
-    const { isFetching, data, error } = useQuery<ServerType>(
+    const { isLoading } = useContext(UserContext)
+    const { isFetching, data, error, refetch } = useQuery<ServerType>(
         {
             endpoint: `/servers/${server}`,
             enabled: !!server,
@@ -36,7 +35,7 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsS
         [server],
     )
 
-    const loading = needsServer ? userLoading || isFetching : false
+    const loading = !!server ? isLoading || isFetching : false
     const value: ServerContextType = useMemo(
         () => ({
             isLoading: loading,
@@ -51,8 +50,9 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsS
                         body: { serverId },
                         token,
                     })
-                    notifications.show({ message: `Created Server: ${serverId}` })
+                    await refetch()
                     await push(PATHS.HOME)
+                    notifications.show({ message: `Created Server: ${serverId}` })
                 },
                 joinByToken: async (inviteToken: string) => {
                     const authToken = await getToken()
@@ -62,12 +62,13 @@ export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsS
                         body: { inviteToken },
                         token: authToken,
                     })
-                    notifications.show({ message: 'Joined Server Successfully' })
+                    await refetch()
                     await push(PATHS.HOME)
+                    notifications.show({ message: 'Joined Server Successfully' })
                 },
             },
         }),
-        [server, userLoading, isFetching, error],
+        [server, loading, error],
     )
 
     return <ServerContext.Provider value={value}>{children}</ServerContext.Provider>
