@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { Box, Container, Title } from '@mantine/core'
+import { Box, Title } from '@mantine/core'
 
 type SectionProps = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
     title: string

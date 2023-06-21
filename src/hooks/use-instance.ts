@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
-import { router } from 'next/client'
-import { useRouter } from 'next/router'
 
 import { query, useQuery } from '@/api/network'
 import { ServerStatusType } from '@/types'
@@ -24,7 +22,6 @@ export const useInstance = (serverId: string | undefined): InstanceApi => {
     const { getToken } = useAuth()
     const [isFetching, setIsFetching] = useState(false)
 
-    console.log('serverId: ' + serverId)
     const { data, isLoading, refetch } = useQuery<{ status: ServerStatusType }>(
         {
             endpoint: `/instance/${serverId}/status`,

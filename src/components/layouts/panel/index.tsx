@@ -20,7 +20,7 @@ const PanelLayout: React.FC<PropsWithChildren<{ needsServer?: boolean }>> = ({ c
                                     {({ isLoading }) => {
                                         if (isLoading) return <Loading />
                                         return (
-                                            <Box mw="80%" w="40rem">
+                                            <Box maw="80%" w="40rem">
                                                 {children}
                                             </Box>
                                         )

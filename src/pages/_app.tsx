@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
-import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core'
+import { Box, ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'
@@ -44,7 +44,13 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                     >
                         <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
                             <Notifications position="top-center" />
-                            {isRouting ? <Loading /> : <Component {...pageProps} />}
+                            {isRouting ? (
+                                <Box display="flex" style={{ justifyItems: 'center', alignItems: 'center' }} h="100vh">
+                                    <Loading />
+                                </Box>
+                            ) : (
+                                <Component {...pageProps} />
+                            )}
                         </ClerkProvider>
                     </MantineProvider>
                 </ColorSchemeProvider>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-const useIsRouting = () => {
+const useIsRouting = (): boolean => {
     const { events } = useRouter()
     const [isRouting, setIsRouting] = useState(false)
 

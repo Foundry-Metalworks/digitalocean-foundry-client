@@ -1,7 +1,6 @@
 import React, { createContext, useMemo, PropsWithChildren } from 'react'
 
-import { ClerkProvider, useAuth } from '@clerk/nextjs'
-import { dark } from '@clerk/themes'
+import { useAuth } from '@clerk/nextjs'
 
 import { useQuery } from '@/api/network'
 import { UserType } from '@/context/user/types'
@@ -41,7 +40,7 @@ const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
 
-export const UserProvider: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
+export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return <InnerUserProvider>{children}</InnerUserProvider>
 }
 

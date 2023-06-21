@@ -1,14 +1,13 @@
-import React, { PropsWithChildren, useContext } from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import { useAuth, UserButton } from '@clerk/nextjs'
-import { Container, Group, Header, Space, Stack } from '@mantine/core'
+import { Box, Container, Group, Header, Space } from '@mantine/core'
 
 import FoundryLogo from '@/components/shared/foundry-logo'
 import Link from '@/components/shared/link'
 import Loading from '@/components/shared/loading'
 import ThemeSwitch from '@/components/shared/theme-switch'
 import { PATHS } from '@/constants'
-import UserContext from '@/context/user'
 
 import styles from './styles.module.scss'
 
@@ -21,9 +20,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
 
     if (!isLoaded)
         return (
-            <div style={{ margin: '50vh auto 0' }}>
+            <Box display="flex" style={{ justifyItems: 'center', alignItems: 'center' }} h="100vh">
                 <Loading />
-            </div>
+            </Box>
         )
 
     return (
@@ -50,7 +49,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
                     </div>
                 </Group>
             </Header>
-            <Container display="flex" className={styles.mainContent} mw="100%" w="60rem">
+            <Container display="flex" className={styles.mainContent} maw="100%" w="60rem">
                 <FoundryLogo size="256px" hidden={!showLogo} center />
                 <Space h="3rem" />
                 {children}

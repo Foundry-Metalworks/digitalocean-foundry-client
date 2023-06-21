@@ -38,8 +38,8 @@ const Home: NextPage = () => {
                     </Text>
                     <List mt={30} spacing="sm" size="sm" icon={checkIcon}>
                         <List.Item>
-                            <b>Shareable</b> – give players easy access to start/stop your FoundryVTT server. Or don't,
-                            the choice is yours!
+                            <b>Shareable</b> – give players easy access to start/stop your FoundryVTT server. Or
+                            don&apost, the choice is yours!
                         </List.Item>
                         <List.Item>
                             <b>Open Source</b> – all packages have MIT license, Metalworks is yours to use as you see

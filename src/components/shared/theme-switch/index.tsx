@@ -14,7 +14,7 @@ const ThemeSwitch: React.FC = () => {
                 onChange={() => toggleColorScheme()}
                 size="lg"
                 onLabel={<IconSun color={theme.white} size="1.25rem" stroke={1.5} />}
-                offLabel={<IconMoonStars color={theme.colors[0]} size="1.25rem" stroke={1.5} />}
+                offLabel={<IconMoonStars color={theme.colors['dark'][0]} size="1.25rem" stroke={1.5} />}
             />
         </Group>
     )

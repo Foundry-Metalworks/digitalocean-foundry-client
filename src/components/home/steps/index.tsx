@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react'
 
+import { SignUpButton, useAuth } from '@clerk/nextjs'
 import { Button, rem, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 import process from 'process'
 
 import Section from '@/components/home/section'
-
-type StepperProps = StepProps & React.RefAttributes<HTMLButtonElement>
-type StepProps = {
-    initialStep?: number
-    children: React.ReactElement<StepperProps> | React.ReactElement<StepperProps>[]
-}
-
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
 import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
 
-import { SignUpButton, useAuth } from '@clerk/nextjs'
+type StepperProps = StepProps & React.RefAttributes<HTMLButtonElement>
+type StepProps = {
+    initialStep?: number
+    children: React.ReactElement<StepperProps> | React.ReactElement<StepperProps>[]
+}
 
 const Steps: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0)
