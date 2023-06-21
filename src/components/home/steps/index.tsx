@@ -25,7 +25,7 @@ const Steps: React.FC = () => {
     const { data } = useUser()
 
     useEffect(() => {
-        if (data?.servers) setActiveStep(3)
+        if (data?.servers.length) setActiveStep(3)
         else if (data?.authorized) setActiveStep(2)
         else if (isSignedIn) setActiveStep(1)
     }, [data?.authorized, isSignedIn, data?.servers])
