@@ -5,15 +5,16 @@ import { useDisclosure } from '@mantine/hooks'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
+import PanelLayout from '@/components/layouts/panel'
 import InviteModal from '@/components/panel/invite-modal'
 import Loading from '@/components/shared/loading'
 import { PATHS } from '@/constants'
-import ServerContext, { ServerProvider } from '@/context/server'
-import { useInstanceApi } from '@/hooks/use-instance-api'
+import ServerContext from '@/context/server'
+import { useInstance } from '@/hooks/use-instance'
 
 import styles from './styles.module.scss'
 
-const UnwrappedPanel: React.FC = () => {
+const InnerPanel: React.FC = () => {
     const { data } = useContext(ServerContext)
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
     const permissions = data?.permissions
@@ -23,7 +24,7 @@ const UnwrappedPanel: React.FC = () => {
         isFetching,
         instanceStatus,
         actions: { startServer, stopServer, saveServer, goToServer, updateStatus },
-    } = useInstanceApi(server)
+    } = useInstance(server)
     const { push } = useRouter()
 
     useEffect(() => {
@@ -31,10 +32,10 @@ const UnwrappedPanel: React.FC = () => {
         return () => clearInterval(interval)
     }, [updateStatus])
 
-    if (isFetching || instanceStatus == 'pending') return <Loading />
+    if (isFetching || !instanceStatus) return <Loading />
 
     return (
-        <Stack className={styles.panelContent}>
+        <Stack className={styles.panelContent} ta="center">
             <InviteModal opened={isModalOpen} onClose={closeModal} />
             <Title className={styles.serverTitle} order={2} h="md">
                 SERVER:
@@ -86,18 +87,10 @@ const UnwrappedPanel: React.FC = () => {
     )
 }
 
-const Panel: NextPage = () => {
-    return (
-        <ServerProvider>
-            <ServerContext.Consumer>
-                {(value) => {
-                    const { isLoading } = value
-                    if (isLoading) return <Loading />
-                    return <UnwrappedPanel />
-                }}
-            </ServerContext.Consumer>
-        </ServerProvider>
-    )
-}
+const Panel: NextPage = () => (
+    <PanelLayout needsServer>
+        <InnerPanel />
+    </PanelLayout>
+)
 
 export default Panel

@@ -1,29 +1,29 @@
 import React from 'react'
 
-import { RedirectToSignUp } from '@clerk/nextjs'
-import { MantineProvider } from '@mantine/core'
+import { ClerkProvider } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import MainLayout from '@/components/layouts/main'
 import Loading from '@/components/shared/loading'
-import RedirectTo from '@/components/shared/redirect'
-import { AUTH_PAGES, PATHS, PUBLIC_PAGES } from '@/constants'
-import UserContext, { UserProvider } from '@/context/user'
+import useIsRouting from '@/hooks/use-is-routing'
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }: AppProps): React.ReactNode {
-    const { pathname } = useRouter()
-    const isPublicPage = PUBLIC_PAGES.includes(pathname)
-    const isAuthPage = AUTH_PAGES.includes(pathname)
-    const isSetupPage = PATHS.SETUP == pathname
-    const isJoinPage = PATHS.JOIN == pathname
+    const isRouting = useIsRouting()
+    const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+        key: 'mantine-color-scheme',
+        defaultValue: 'dark',
+        getInitialValueInEffect: true,
+    })
 
-    const component = <Component {...pageProps} />
+    const toggleColorScheme = (value?: ColorScheme) =>
+        setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
 
     return (
         <>
@@ -32,36 +32,22 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
             </Head>
             <QueryClientProvider client={queryClient}>
-                <UserProvider>
+                <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
                     <MantineProvider
                         theme={{
-                            colorScheme: 'dark',
+                            colorScheme,
                             fontFamily: 'Signika, sans-serif',
                             headings: { fontFamily: 'Domine, serif' },
                         }}
                         withGlobalStyles
                         withNormalizeCSS
                     >
-                        <MainLayout showLogo={!isAuthPage}>
+                        <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
                             <Notifications position="top-center" />
-                            <UserContext.Consumer>
-                                {(value) => {
-                                    const { data, isLoading } = value
-                                    const servers = data?.servers || []
-                                    if (data != null) {
-                                        if (isSetupPage && servers.length) return <RedirectTo path={PATHS.HOME} />
-                                        if (isSetupPage || isJoinPage || data.servers.length) return component
-                                        return <RedirectTo path={PATHS.SETUP} />
-                                    }
-                                    if (isLoading) {
-                                        return <Loading />
-                                    }
-                                    return isPublicPage ? component : <RedirectToSignUp />
-                                }}
-                            </UserContext.Consumer>
-                        </MainLayout>
+                            {isRouting ? <Loading /> : <Component {...pageProps} />}
+                        </ClerkProvider>
                     </MantineProvider>
-                </UserProvider>
+                </ColorSchemeProvider>
             </QueryClientProvider>
         </>
     )

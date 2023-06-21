@@ -24,6 +24,8 @@ export type UseQueryDetails<T> = Omit<QueryDetails, 'token'> & {
     enabled?: boolean
     initialData?: T
     onSuccess?: (data: T) => void
+    refetchInterval?: number | false
+    refetchOnRevisit?: boolean
 }
 
 export async function query<TQueryFnData>(details: QueryDetails): Promise<TQueryFnData> {
@@ -51,7 +53,8 @@ export function useQuery<TQueryFNData>(
     details: UseQueryDetails<TQueryFNData>,
     dependencies: any[],
 ): UseQueryResult<TQueryFNData, Error> {
-    const { endpoint, method, enabled, initialData, params, body, onSuccess } = details
+    const { endpoint, method, enabled, initialData, params, body, onSuccess, refetchInterval, refetchOnRevisit } =
+        details
     const key = `${endpoint}--${dependencies.map((e) => (e ? JSON.stringify(e) : 'null')).join('-')}`
     const { getToken } = useAuth()
 
@@ -62,11 +65,12 @@ export function useQuery<TQueryFNData>(
     return useQueryHook<TQueryFNData, Error>(key, func, {
         keepPreviousData: true,
         initialData: initialData,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
+        refetchOnMount: refetchOnRevisit || false,
+        refetchOnWindowFocus: refetchOnRevisit || false,
         retry: false,
         retryOnMount: false,
         retryDelay: 0,
+        refetchInterval,
         onSuccess,
         enabled,
     })

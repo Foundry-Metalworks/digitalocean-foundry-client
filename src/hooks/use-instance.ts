@@ -2,13 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
+import { router } from 'next/client'
+import { useRouter } from 'next/router'
 
-import { query } from '@/api/network'
+import { query, useQuery } from '@/api/network'
 import { ServerStatusType } from '@/types'
 
 interface InstanceApi {
     isFetching: boolean
-    instanceStatus: ServerStatusType
+    instanceStatus: ServerStatusType | undefined
     actions: {
         startServer: () => Promise<void>
         stopServer: () => Promise<void>
@@ -18,24 +20,24 @@ interface InstanceApi {
     }
 }
 
-export const useInstanceApi = (serverId: string): InstanceApi => {
+export const useInstance = (serverId: string | undefined): InstanceApi => {
     const { getToken } = useAuth()
     const [isFetching, setIsFetching] = useState(false)
-    const [instanceStatus, setInstanceStatus] = useState<ServerStatusType>('pending')
+
+    console.log('serverId: ' + serverId)
+    const { data, isLoading, refetch } = useQuery<{ status: ServerStatusType }>(
+        {
+            endpoint: `/instance/${serverId}/status`,
+            enabled: !!serverId,
+            refetchInterval: 10000,
+            refetchOnRevisit: true,
+        },
+        [serverId],
+    )
 
     const updateStatus = useCallback(async () => {
-        const token = await getToken()
-        const data = await query<{ status: ServerStatusType }>({
-            endpoint: `/instance/${serverId}/status`,
-            token,
-        })
-        const { status } = data
-        setInstanceStatus(status)
-    }, [serverId])
-
-    useEffect(() => {
-        updateStatus()
-    }, [updateStatus])
+        await refetch()
+    }, [serverId, refetch])
 
     const goToServer = useCallback(async () => {
         const token = await getToken()
@@ -71,12 +73,14 @@ export const useInstanceApi = (serverId: string): InstanceApi => {
         setIsFetching(false)
     }, [serverId])
 
-    return useMemo(
+    const value = useMemo(
         () => ({
-            isFetching,
-            instanceStatus,
+            isFetching: isFetching || isLoading,
+            instanceStatus: data?.status,
             actions: { goToServer, startServer, stopServer, saveServer, updateStatus },
         }),
-        [isFetching, instanceStatus, serverId],
+        [isFetching, data?.status, serverId],
     )
+
+    return value
 }

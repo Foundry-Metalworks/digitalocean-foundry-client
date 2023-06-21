@@ -12,6 +12,6 @@ export interface ServerUserType {
 }
 
 export interface ServerDispatch {
-    create: (serverId: string, apiToken: string) => void
+    create: (serverId: string) => void
     joinByToken: (inviteToken: string) => void
 }

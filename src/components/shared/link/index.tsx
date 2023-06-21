@@ -2,6 +2,8 @@ import React, { PropsWithChildren } from 'react'
 
 import NextLink, { LinkProps } from 'next/link'
 
+import styles from './styles.module.scss'
+
 const Link: React.FC<PropsWithChildren<LinkProps>> = ({
     as,
     children,
@@ -10,10 +12,11 @@ const Link: React.FC<PropsWithChildren<LinkProps>> = ({
     scroll,
     shallow,
     passHref = true,
-    legacyBehavior = true,
+    legacyBehavior = false,
 }: PropsWithChildren<LinkProps>) => {
     return (
         <NextLink
+            className={styles.link}
             href={href}
             as={as}
             replace={replace}

@@ -1,46 +1,79 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
-import { useAuth } from '@clerk/nextjs'
-import { Button, Stack, Title } from '@mantine/core'
+import { SignUpButton, useAuth } from '@clerk/nextjs'
+import { Text, Title, List, ThemeIcon, rem, Button, Group, Box } from '@mantine/core'
+import { IconCheck, IconBrandGithub } from '@tabler/icons-react'
 import { NextPage } from 'next'
 
+import FAQ from '@/components/home/faq'
+import Steps from '@/components/home/steps'
+import MainLayout from '@/components/layouts/main'
+import FoundryLogo from '@/components/shared/foundry-logo'
 import Link from '@/components/shared/link'
 import { PATHS } from '@/constants'
-import UserContext from '@/context/user'
 
 import styles from './styles.module.scss'
 
 const Home: NextPage = () => {
-    const { signOut } = useAuth()
-    const { data: user } = useContext(UserContext)
+    const checkIcon = (
+        <ThemeIcon size={20} radius="xl">
+            <IconCheck size={rem(12)} stroke={1.5} />
+        </ThemeIcon>
+    )
+    const { isSignedIn } = useAuth()
 
+    const heroButton = (
+        <Button radius="xl" size="md">
+            {!!isSignedIn ? 'Go To Panel' : 'Get started'}
+        </Button>
+    )
     return (
-        <Stack className={styles.homeContent}>
-            {!!user ? (
-                <>
-                    <Title className={styles.userTitle} order={3}>
-                        Welcome, {user.name}
-                    </Title>
-                    <Link href="/panel">
-                        <Button component="a">Go to Panel</Button>
-                    </Link>
-                    <Button component="a" color="red" onClick={() => signOut()}>
-                        Sign Out
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <Link href={PATHS.SIGN_UP}>
-                        <Button component="a" color="green">
-                            Sign Up
+        <MainLayout showLogo={false}>
+            <Box className={styles.hero} mb="32px">
+                <div className={styles.heroContent}>
+                    <Title>Metalworks: Open-Source FoundryVTT Hosting</Title>
+                    <Text color="dimmed" mt="md">
+                        Get your FoundryVTT server up-and-running in no time. Metalworks is a toolkit to help you easily
+                        host your FoundryVTT server on DigitalOcean. And best of all, its free!
+                    </Text>
+                    <List mt={30} spacing="sm" size="sm" icon={checkIcon}>
+                        <List.Item>
+                            <b>Shareable</b> – give players easy access to start/stop your FoundryVTT server. Or don't,
+                            the choice is yours!
+                        </List.Item>
+                        <List.Item>
+                            <b>Open Source</b> – all packages have MIT license, Metalworks is yours to use as you see
+                            fit
+                        </List.Item>
+                        <List.Item>
+                            <b>Pay What You Use</b> – the average Metalworks user pays DigitalOcean just{' '}
+                            <strong>$0.15 USD</strong> monthly
+                        </List.Item>
+                    </List>
+                    <Group mt={30}>
+                        {!!isSignedIn ? (
+                            <Link href={PATHS.PANEL} legacyBehavior>
+                                {heroButton}
+                            </Link>
+                        ) : (
+                            <SignUpButton>{heroButton}</SignUpButton>
+                        )}
+                        <Button
+                            variant="default"
+                            radius="xl"
+                            size="md"
+                            onClick={() => window.open('https://github.com/Foundry-Metalworks/metalworks-client')}
+                        >
+                            <IconBrandGithub size={rem(16)} style={{ marginRight: rem(4) }} />
+                            Source code
                         </Button>
-                    </Link>
-                    <Link href={PATHS.SIGN_IN}>
-                        <Button component="a">Sign In</Button>
-                    </Link>
-                </>
-            )}
-        </Stack>
+                    </Group>
+                </div>
+                <FoundryLogo size={rem(384)} />
+            </Box>
+            <Steps />
+            <FAQ />
+        </MainLayout>
     )
 }
 

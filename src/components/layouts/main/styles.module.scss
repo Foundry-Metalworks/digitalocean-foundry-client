@@ -9,32 +9,16 @@
 
 .userButton {
   position: absolute;
-  top: 0;
   right: 0;
-
-  .cl-userButtonAvatarBox {
-    width: 4rem;
-    height: 4rem;
-  }
-}
-
-.logo {
-  max-width: 256px;
-  margin-bottom: 1rem;
 }
 
 .content {
-  position: relative;
-  display: flex;
-  align-items: center;
   margin: 0 auto;
-  width: min(475px, 100%);
 }
 
 .mainContent {
-  width: 100%;
-  text-align: center;
-
   // font
   font-family: $font-body;
+  flex-direction: column;
+  align-items: center;
 }

@@ -5,6 +5,7 @@ export interface UserType {
     name: string
     id: string
     servers: UserServerType[]
+    authorized: boolean
 }
 
 export interface UserServerType {

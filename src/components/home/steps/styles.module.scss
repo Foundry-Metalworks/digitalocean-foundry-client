@@ -1,0 +1,7 @@
+.stepper {
+  > div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+  }
+}

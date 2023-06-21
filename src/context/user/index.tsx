@@ -42,11 +42,7 @@ const InnerUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 }
 
 export const UserProvider: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
-    return (
-        <ClerkProvider {...rest} appearance={{ baseTheme: dark }}>
-            <InnerUserProvider>{children}</InnerUserProvider>
-        </ClerkProvider>
-    )
+    return <InnerUserProvider>{children}</InnerUserProvider>
 }
 
 export default UserContext

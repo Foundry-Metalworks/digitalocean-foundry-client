@@ -1,0 +1,10 @@
+@import 'src/styles/tokens';
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  &.hidden > img {
+    display: none;
+  }
+}

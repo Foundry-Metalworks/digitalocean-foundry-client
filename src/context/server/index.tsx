@@ -2,8 +2,10 @@ import React, { createContext, PropsWithChildren, useContext, useMemo } from 're
 
 import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
+import { useRouter } from 'next/router'
 
 import { query, useQuery } from '@/api/network'
+import { PATHS } from '@/constants'
 import { ServerDispatch, ServerType } from '@/context/server/types'
 import UserContext from '@/context/user'
 import { ContextType } from '@/types'
@@ -19,8 +21,11 @@ const ServerContext = createContext<ServerContextType>({
     },
 })
 
-export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
+type ServerProviderProps = PropsWithChildren<{ needsServer?: boolean }>
+
+export const ServerProvider: React.FC<ServerProviderProps> = ({ children, needsServer = false }) => {
     const { getToken } = useAuth()
+    const { push } = useRouter()
     const { data: userData } = useContext(UserContext)
     const server = userData?.servers.length ? userData?.servers[0].name : undefined
     const { status, data, error } = useQuery<ServerType>(
@@ -31,22 +36,23 @@ export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
         [server],
     )
 
-    const loading = !server || status == 'idle' || status == 'loading'
+    const loading = needsServer ? !server || status == 'idle' || status == 'loading' : false
     const value: ServerContextType = useMemo(
         () => ({
             isLoading: loading,
             data: loading ? null : data || null,
             error: error || undefined,
             dispatch: {
-                create: async (serverId: string, apiToken: string) => {
+                create: async (serverId: string) => {
                     const token = await getToken()
                     await query({
                         endpoint: '/servers/create',
                         method: 'POST',
-                        body: { serverId, apiToken },
+                        body: { serverId },
                         token,
                     })
                     notifications.show({ message: `Created Server: ${serverId}` })
+                    await push(PATHS.HOME)
                 },
                 joinByToken: async (inviteToken: string) => {
                     const authToken = await getToken()
@@ -57,11 +63,14 @@ export const ServerProvider: React.FC<PropsWithChildren> = ({ children }) => {
                         token: authToken,
                     })
                     notifications.show({ message: 'Joined Server Successfully' })
+                    await push(PATHS.HOME)
                 },
             },
         }),
-        [server, loading, error],
+        [server, status, error],
     )
+
+    console.log(JSON.stringify(value.data))
 
     return <ServerContext.Provider value={value}>{children}</ServerContext.Provider>
 }
