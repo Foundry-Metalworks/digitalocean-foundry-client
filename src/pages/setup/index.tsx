@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 
-import { useAuth } from '@clerk/nextjs'
 import { Button, Group, rem, Select, Space, Stack, Text } from '@mantine/core'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
