@@ -7,17 +7,15 @@ import { PATHS } from '@/constants'
 
 const SignUpPage = (): React.ReactNode => {
     return (
-        <MainLayout showLogo={false}>
-            <SignUp
-                path="/sign-up"
-                routing="path"
-                afterSignUpUrl="/setup"
-                appearance={{
-                    elements: { footerActionText: { fontSize: '1rem' }, footerActionLink: { fontSize: '1rem' } },
-                }}
-                redirectUrl={PATHS.ROOT}
-            />
-        </MainLayout>
+        <SignUp
+            path="/sign-up"
+            routing="path"
+            afterSignUpUrl="/setup"
+            appearance={{
+                elements: { footerActionText: { fontSize: '1rem' }, footerActionLink: { fontSize: '1rem' } },
+            }}
+            redirectUrl={PATHS.ROOT}
+        />
     )
 }
 

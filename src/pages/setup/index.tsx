@@ -1,27 +1,36 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Button, Group, rem, Select, Space, Stack, Text } from '@mantine/core'
+import { useFocusTrap } from '@mantine/hooks'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
+import Link from '@/components/kit/link'
 import MainLayout from '@/components/layouts/main'
 import { PATHS } from '@/constants'
-import ServerContext, { ServerProvider } from '@/context/server'
+import useServer from '@/hooks/use-server'
+import { useUser } from '@/hooks/use-user'
 import CreateSetup from '@/pages/setup/create-setup'
 import JoinSetup from '@/pages/setup/join-setup'
 
 type SetupType = 'dm' | 'player'
 
-const UnwrappedSetup: NextPage = () => {
+const Setup: NextPage = () => {
     const { query, push } = useRouter()
-    const initialType: 'dm' | 'player' = (query.type as SetupType | undefined) || 'dm'
-    const [setupType, setSetupType] = useState<'dm' | 'player'>(initialType)
+    const { data } = useUser()
+    const queryType = query.type as string
+    const [setupType, setSetupType] = useState<'dm' | 'player' | undefined>(undefined)
     const {
-        dispatch: { create, joinByToken },
-    } = useContext(ServerContext)
+        actions: { create, joinByToken },
+    } = useServer(null)
+    const focusTrapRef = useFocusTrap(data?.authorized)
+
+    useEffect(() => {
+        if (setupType != queryType) setSetupType(queryType)
+    }, [queryType])
 
     return (
-        <Stack maw="30rem" m="0 auto">
+        <Stack maw="30rem" m="0 auto" ref={focusTrapRef}>
             <Group m="0 auto">
                 <Text>I am a:</Text>
                 <Select
@@ -34,23 +43,15 @@ const UnwrappedSetup: NextPage = () => {
                     w={rem(320)}
                 />
             </Group>
-            <Space h={rem(16)} />
+            <Space h={rem(12)} />
             {setupType == 'dm' ? <CreateSetup onSubmit={create} /> : <JoinSetup onSubmit={joinByToken} />}
-            <Space h={rem(32)} />
-            <Button component="a" color="red" onClick={() => push(PATHS.ROOT)}>
-                Return Home
-            </Button>
+            <Space h={rem(24)} />
+            <Link href={PATHS.ROOT} legacyBehavior>
+                <Button component="a" color="red" onClick={() => push(PATHS.ROOT)}>
+                    Return Home
+                </Button>
+            </Link>
         </Stack>
-    )
-}
-
-const Setup: NextPage = () => {
-    return (
-        <ServerProvider>
-            <MainLayout>
-                <UnwrappedSetup />
-            </MainLayout>
-        </ServerProvider>
     )
 }
 

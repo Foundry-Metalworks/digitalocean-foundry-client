@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 
 import { SignUpButton, useAuth } from '@clerk/nextjs'
-import { Box, Button, Group, List, Menu, rem, Text, ThemeIcon, Title } from '@mantine/core'
-import { IconBrandGithub, IconCheck, IconChevronDown } from '@tabler/icons-react'
+import { Box, Button, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
+import { IconBrandGithub, IconCheck } from '@tabler/icons-react'
 import { NextPage } from 'next'
 
-import Dropdown from '@/components/shared/dropdown'
+import Link from '@/components/kit/link'
 import FoundryLogo from '@/components/shared/foundry-logo'
-import Link from '@/components/shared/link'
+import PanelDropdown from '@/components/shared/panel-dropdown'
 import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
@@ -20,21 +20,11 @@ const HomepageHero: NextPage = () => {
         </ThemeIcon>
     )
     const { isSignedIn } = useAuth()
-    const { data } = useUser()
+    const { data, isLoading } = useUser()
 
     const heroButton = useMemo(() => {
         if (data?.servers.length) {
-            return (
-                <Dropdown label="Go To Panel">
-                    {data.servers.map((s) => (
-                        <Link key={`button-server-link-${s.name}`} href={`${PATHS.PANEL}/${s.name}`}>
-                            <Text w="100%" my={0} py={0}>
-                                {s.name}
-                            </Text>
-                        </Link>
-                    ))}
-                </Dropdown>
-            )
+            return <PanelDropdown text="Go To Panel" />
         }
         if (isSignedIn) {
             return (
@@ -55,7 +45,7 @@ const HomepageHero: NextPage = () => {
     }, [isSignedIn, data?.servers.length])
 
     return (
-        <Box className={styles.hero} mb="32px">
+        <Box className={styles.hero} mt="0" mb="32px">
             <div>
                 <Title>Metalworks: Open-Source FoundryVTT Hosting</Title>
                 <Text color="dimmed" mt="md">
@@ -82,6 +72,7 @@ const HomepageHero: NextPage = () => {
                         radius="xl"
                         size="md"
                         onClick={() => window.open('https://github.com/Foundry-Metalworks/metalworks-client')}
+                        loading={isLoading}
                     >
                         <IconBrandGithub size={rem(16)} style={{ marginRight: rem(4) }} />
                         Source code

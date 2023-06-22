@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Box, Button, TextInput } from '@mantine/core'
 
 import { useQuery } from '@/api/network'
 import DOSetup from '@/components/shared/digitalocean-setup'
-import UserContext from '@/context/user'
 import { useUser } from '@/hooks/use-user'
 
 type SetupCreateProps = {
@@ -32,7 +31,9 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
                 label="Server Name"
                 placeholder="foundry"
                 onChange={(e) => setName(e.target.value)}
+                onKeyUp={(e) => e.key === 'Enter' && onSubmit(name)}
                 error={exists && 'That name is taken'}
+                data-autofocus
             />
             <br />
             <Button
@@ -41,7 +42,7 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
                 onClick={() => onSubmit(name)}
                 w="100%"
             >
-                Submit
+                <a>Submit</a>
             </Button>
         </Box>
     )

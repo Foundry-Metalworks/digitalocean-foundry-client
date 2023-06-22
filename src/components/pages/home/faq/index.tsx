@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Accordion } from '@mantine/core'
 
-import Section from '@/components/home/section'
-import Link from '@/components/shared/link'
+import Link from '@/components/kit/link'
+import Section from '@/components/pages/home/section'
 
 const FAQ: React.FC = () => {
     return (

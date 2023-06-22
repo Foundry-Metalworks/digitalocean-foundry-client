@@ -4,12 +4,7 @@ import { useAuth } from '@clerk/nextjs'
 import { notifications } from '@mantine/notifications'
 
 import { query, useQuery } from '@/api/network'
-
-export interface InvitesType {
-    isLoading: boolean
-    invites: InviteType[]
-    actions: InvitesDispatch
-}
+import { UseDataType } from '@/types'
 
 export interface InviteType {
     id: number
@@ -20,9 +15,9 @@ export interface InvitesDispatch {
     acceptInvite: (id: number) => void
 }
 
-const useInvites = (userId: string): InvitesType => {
+const useInvites = (userId: string): UseDataType<InviteType[], InvitesDispatch> => {
     const { getToken } = useAuth()
-    const { data, isLoading } = useQuery<{ invites: InviteType[] }>(
+    const { data, isLoading, error, refetch } = useQuery<{ invites: InviteType[] }>(
         {
             endpoint: `/invites`,
             enabled: !!userId,
@@ -30,29 +25,32 @@ const useInvites = (userId: string): InvitesType => {
         [userId],
     )
 
-    const acceptInvite = useCallback(async (inviteId: number) => {
-        const token = await getToken()
-        await query({
-            token,
-            endpoint: '/invites/accept',
-            method: 'POST',
-            body: {
-                inviteId,
-            },
-        })
-        notifications.show({ message: 'Accepted Invite' })
-    }, [])
-
-    const value: InvitesType = useMemo(
-        () => ({
-            isLoading,
-            invites: data?.invites || [],
-            actions: { acceptInvite },
-        }),
-        [isLoading, userId],
+    const acceptInvite = useCallback(
+        async (inviteId: number) => {
+            const token = await getToken()
+            await query({
+                token,
+                endpoint: '/invites/accept',
+                method: 'POST',
+                body: {
+                    inviteId,
+                },
+            })
+            notifications.show({ message: 'Accepted Invite' })
+        },
+        [getToken],
     )
 
-    return value
+    return useMemo(
+        () => ({
+            isLoading,
+            data: data?.invites || [],
+            actions: { acceptInvite },
+            error,
+            refetch,
+        }),
+        [isLoading, userId, acceptInvite],
+    )
 }
 
 export default useInvites

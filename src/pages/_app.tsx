@@ -2,25 +2,27 @@ import React from 'react'
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
-import { Box, ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core'
+import { ColorScheme, ColorSchemeProvider, LoadingOverlay, MantineProvider } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import Loading from '@/components/shared/loading'
-import useIsRouting from '@/hooks/use-is-routing'
+import MainLayout from '@/components/layouts/main'
+import { AUTH_PAGES, PATHS } from '@/constants'
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }: AppProps): React.ReactNode {
-    const isRouting = useIsRouting()
     const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
         key: 'mantine-color-scheme',
         defaultValue: 'dark',
         getInitialValueInEffect: true,
     })
+    const { asPath } = useRouter()
+    const showLogo = !AUTH_PAGES.includes(asPath) && PATHS.HOME != asPath && PATHS.ROOT != asPath
 
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
@@ -44,13 +46,9 @@ export default function App({ Component, pageProps }: AppProps): React.ReactNode
                     >
                         <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
                             <Notifications position="top-center" />
-                            {isRouting ? (
-                                <Box display="flex" style={{ justifyItems: 'center', alignItems: 'center' }} h="100vh">
-                                    <Loading />
-                                </Box>
-                            ) : (
+                            <MainLayout showLogo={showLogo}>
                                 <Component {...pageProps} />
-                            )}
+                            </MainLayout>
                         </ClerkProvider>
                     </MantineProvider>
                 </ColorSchemeProvider>

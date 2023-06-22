@@ -1,23 +1,21 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { useAuth } from '@clerk/nextjs'
 import { Button, Group, Modal, Stack, TextInput } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import { query } from '@/api/network'
-import Loading from '@/components/shared/loading'
-import ServerContext from '@/context/server'
+import Loading from '@/components/kit/loading'
 
 import styles from './styles.module.scss'
 
 interface Props {
+    serverId: string
     opened: boolean
     onClose: () => void
 }
 
-const InviteModal: React.FC<Props> = ({ opened, onClose }) => {
-    const { data } = useContext(ServerContext)
-    const serverId = data?.name
+const InviteModal: React.FC<Props> = ({ serverId, opened, onClose }) => {
     const [inviteEmail, setInviteEmail] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { getToken } = useAuth()

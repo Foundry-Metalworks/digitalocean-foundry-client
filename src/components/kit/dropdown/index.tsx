@@ -1,21 +1,23 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { useState } from 'react'
 
-import { Box, Button, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core'
+import { Button, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import Link, { LinkProps } from 'next/link'
+import { LinkProps } from 'next/link'
+import { useRouter } from 'next/router'
 
 type Props = {
     label: string
     labelType?: 'link' | 'button'
-    children: React.ReactElement<LinkProps> | React.ReactElement<LinkProps>[]
+    links: { label: string; href: string }[]
 }
 
-const Dropdown: React.FC<Props> = ({ label, children, labelType = 'button' }) => {
+const Dropdown: React.FC<Props> = ({ label, links, labelType = 'button' }) => {
     const [open, setIsOpen] = useState(false)
+    const { push } = useRouter()
 
     const target =
         labelType == 'button' ? (
-            <Button radius="xl" size="md">
+            <Button radius="xl" size="md" fullWidth>
                 {label} <IconChevronDown />
             </Button>
         ) : (
@@ -31,8 +33,10 @@ const Dropdown: React.FC<Props> = ({ label, children, labelType = 'button' }) =>
             <Menu onChange={setIsOpen} opened={open} width={200} position="bottom-start">
                 <Menu.Target>{target}</Menu.Target>
                 <Menu.Dropdown w={rem(320)}>
-                    {[...children].map((l, i) => (
-                        <Menu.Item key={`dropdown-${label}-entry-${i}`}>{l}</Menu.Item>
+                    {links.map(({ href, label: linkText }, i) => (
+                        <Menu.Item key={`dropdown-label-${label}-entry-${i}`} component="a" onClick={() => push(href)}>
+                            <Text>{linkText}</Text>
+                        </Menu.Item>
                     ))}
                 </Menu.Dropdown>
             </Menu>

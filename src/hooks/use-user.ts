@@ -46,7 +46,7 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
                 await query({
                     endpoint: '/users/authorize',
                     token,
-                    method: 'PUT',
+                    method: 'POST',
                     body: { code },
                 })
                 await refetch()

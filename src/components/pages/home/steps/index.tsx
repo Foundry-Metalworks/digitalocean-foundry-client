@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 import { SignUpButton, useAuth } from '@clerk/nextjs'
-import { Button, rem, Select, Stepper } from '@mantine/core'
+import { Button, rem, Select, Stack, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 
-import Section from '@/components/home/section'
+import Section from '@/components/pages/home/section'
 import DOSetup from '@/components/shared/digitalocean-setup'
+import PanelDropdown from '@/components/shared/panel-dropdown'
 import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
@@ -66,7 +67,12 @@ const Steps: React.FC = () => {
                         {isDM ? 'Create' : 'Join'} Metalworks Server
                     </Button>
                 </Stepper.Step>
-                <Stepper.Completed>{"Looks like you're a pro already!"}</Stepper.Completed>
+                <Stepper.Completed>
+                    <Stack c>
+                        {"Looks like you're a pro already!"}
+                        <PanelDropdown text="Panel" />
+                    </Stack>
+                </Stepper.Completed>
             </Stepper>
         </Section>
     )

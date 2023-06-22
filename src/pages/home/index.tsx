@@ -2,18 +2,17 @@ import React from 'react'
 
 import { NextPage } from 'next'
 
-import FAQ from '@/components/home/faq'
-import HomepageHero from '@/components/home/hero'
-import Steps from '@/components/home/steps'
-import MainLayout from '@/components/layouts/main'
+import FAQ from '@/components/pages/home/faq'
+import HomepageHero from '@/components/pages/home/hero'
+import Steps from '@/components/pages/home/steps'
 
 const Home: NextPage = () => {
     return (
-        <MainLayout showLogo={false}>
+        <div>
             <HomepageHero />
             <Steps />
             <FAQ />
-        </MainLayout>
+        </div>
     )
 }
 

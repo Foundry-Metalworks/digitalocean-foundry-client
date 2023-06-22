@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 import { useRouter } from 'next/router'
 
-import Loading from '@/components/shared/loading'
+import Loading from '@/components/kit/loading'
 
 type RedirectProps = { path: string; replace?: boolean }
 

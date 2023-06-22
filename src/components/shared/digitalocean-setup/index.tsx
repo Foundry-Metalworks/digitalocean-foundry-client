@@ -71,14 +71,13 @@ const DOSetup: React.FC = () => {
     )
 
     const Stage3 = () => (
-        <Badge radius="xl" size="xl" color="green" w="max-content" mx="auto">
+        <Badge radius="xl" size="xl" color="green" w="max-content" mx="auto" tt="capitalize">
             <IconBrandDigitalOcean size={18} style={{ marginRight: rem(12) }} />
-            All Set!
+            DigitalOcean Connected
         </Badge>
     )
 
     const SetupContent = () => {
-        if (setupStage == undefined) return <Space h={32} />
         switch (setupStage) {
             case 0:
                 return <Stage0 />
@@ -92,7 +91,7 @@ const DOSetup: React.FC = () => {
     }
 
     return (
-        <Stack h="4rem">
+        <Stack mih="4rem">
             <SetupContent />
         </Stack>
     )
