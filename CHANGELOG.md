@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.9](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.8...v0.4.9) (2023-06-22)
+
+
+### Bug Fixes
+
+* fixup do auth ([2ab8521](https://github.com/Foundry-Metalworks/metalworks-client/commit/2ab852158472d56ad69cd8ae6e80715a01d69254))
+
 ### 0.4.8 (2023-06-22)
 
 
