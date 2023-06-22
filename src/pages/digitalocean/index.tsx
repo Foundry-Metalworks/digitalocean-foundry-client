@@ -11,7 +11,7 @@ const DigitalOcean: NextPage = () => {
     const {
         actions: { authorize },
     } = useUser()
-    const code = query.code
+    const code = query.code as string
 
     useEffect(() => {
         if (!!code) authorize(code)

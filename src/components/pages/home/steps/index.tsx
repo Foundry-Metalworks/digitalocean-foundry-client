@@ -68,7 +68,7 @@ const Steps: React.FC = () => {
                     </Button>
                 </Stepper.Step>
                 <Stepper.Completed>
-                    <Stack c>
+                    <Stack>
                         {"Looks like you're a pro already!"}
                         <PanelDropdown text="Panel" />
                     </Stack>

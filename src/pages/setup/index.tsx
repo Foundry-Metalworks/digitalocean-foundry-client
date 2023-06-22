@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button, Group, rem, Select, Space, Stack, Text } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
@@ -6,7 +6,6 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Link from '@/components/kit/link'
-import MainLayout from '@/components/layouts/main'
 import { PATHS } from '@/constants'
 import useServer from '@/hooks/use-server'
 import { useUser } from '@/hooks/use-user'
@@ -18,7 +17,7 @@ type SetupType = 'dm' | 'player'
 const Setup: NextPage = () => {
     const { query, push } = useRouter()
     const { data } = useUser()
-    const queryType = query.type as string
+    const queryType = query.type as 'dm' | 'player'
     const [setupType, setSetupType] = useState<'dm' | 'player' | undefined>(undefined)
     const {
         actions: { create, joinByToken },

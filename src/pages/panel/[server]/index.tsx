@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 
 import { Box, Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Loading from '@/components/kit/loading'

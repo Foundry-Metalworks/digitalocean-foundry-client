@@ -17,7 +17,7 @@ export interface UseDataType<T, R> {
     isLoading: boolean
     error?: any
     refetch: () => void
-    actions?: R
+    actions: R
 }
 
 export type ServerStatusType = 'active' | 'off' | 'deleted' | 'pending' | 'fresh' | 'new'

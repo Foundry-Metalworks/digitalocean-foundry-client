@@ -1,12 +1,10 @@
 import React from 'react'
 
 import { useAuth } from '@clerk/nextjs'
-import { Button, LoadingOverlay, Stack, Text, Title } from '@mantine/core'
+import { Button, Stack, Text, Title } from '@mantine/core'
 import { NextPage } from 'next'
 
-import Loading from '@/components/kit/loading'
 import RedirectTo from '@/components/kit/redirect'
-import MainLayout from '@/components/layouts/main'
 import { PATHS } from '@/constants'
 import useInvites from '@/hooks/use-invites'
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
-import { ColorScheme, ColorSchemeProvider, LoadingOverlay, MantineProvider } from '@mantine/core'
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'

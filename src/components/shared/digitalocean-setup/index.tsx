@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Badge, Button, Group, rem, Space, Stack, Title } from '@mantine/core'
+import { Badge, Button, Group, rem, Stack, Title } from '@mantine/core'
 import process from 'process'
 
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
@@ -79,7 +79,7 @@ const DOSetup: React.FC = () => {
 
     const SetupContent = () => {
         switch (setupStage) {
-            case 0:
+            default:
                 return <Stage0 />
             case 1:
                 return <Stage1 />

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 import { Button, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
 
 type Props = {

@@ -1,8 +1,7 @@
 import React, { PropsWithChildren } from 'react'
 
 import { UserButton } from '@clerk/nextjs'
-import { Container, Group, Header, LoadingOverlay, Space, Text } from '@mantine/core'
-import { useRouter } from 'next/router'
+import { Container, Group, Header, Space } from '@mantine/core'
 
 import Dropdown from '@/components/kit/dropdown'
 import Link from '@/components/kit/link'
