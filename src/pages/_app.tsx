@@ -9,6 +9,7 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import NextNProgress from 'nextjs-progressbar'
 
 import MainLayout from '@/components/layouts/main'
 import { AUTH_PAGES, PATHS } from '@/constants'
@@ -47,6 +48,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
                         >
                             <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
                                 <MainLayout showLogo={showLogo}>
+                                    <NextNProgress />
                                     <Notifications position="top-center" zIndex={1002} mt="4rem" />
                                     <Component {...pageProps} />
                                 </MainLayout>
