@@ -1,6 +1,6 @@
 {
   "name": "metalworks",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "private": true,
   "engines": {
     "node": "18.15.0"

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.15](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.14...v0.4.15) (2023-06-23)
+
+
+### Bug Fixes
+
+* broken sign up ([f7494d9](https://github.com/Foundry-Metalworks/metalworks-client/commit/f7494d95c7de448b811870663826521494665772))
+* digitalocean button in new tab ([ee38db7](https://github.com/Foundry-Metalworks/metalworks-client/commit/ee38db7dc2a914a3877495a7a65ff505de1896cd))
+
 ### [0.4.14](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.13...v0.4.14) (2023-06-23)
 
 
