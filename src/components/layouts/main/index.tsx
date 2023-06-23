@@ -1,17 +1,15 @@
 import React, { PropsWithChildren } from 'react'
 
-import { useAuth, UserButton } from '@clerk/nextjs'
-import { Container, Group, Header, Space } from '@mantine/core'
-
-import Dropdown from '@/components/kit/dropdown'
-import Link from '@/components/kit/link'
+import { useAuth } from '@clerk/nextjs'
+import { Container, Space } from '@mantine/core'
 import FoundryLogo from '@/components/shared/foundry-logo'
-import PanelDropdown from '@/components/shared/panel-dropdown'
-import ThemeSwitch from '@/components/shared/theme-switch'
-import { PATHS } from '@/constants'
+import { BREAKPOINTS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
+import { useViewportSize } from '@mantine/hooks'
+import MobileHeader from '@/components/layouts/main/header/mobile'
+import DesktopHeader from '@/components/layouts/main/header/desktop'
 
 export interface MainLayoutProps extends PropsWithChildren {
     showLogo?: boolean
@@ -20,39 +18,17 @@ export interface MainLayoutProps extends PropsWithChildren {
 const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: MainLayoutProps) => {
     const { data: user } = useUser()
     const { isSignedIn } = useAuth()
-    const servers = user?.servers || []
+    const hasServer = !!user?.servers.length
+    const { width } = useViewportSize()
+    const isMobile = width < BREAKPOINTS.TABLET
 
     return (
         <div>
-            <Header height="4rem" px="2rem" mb="xl" pos="sticky">
-                <Group h="inherit" pos="relative" style={{ justifyContent: 'space-between' }}>
-                    <Group>
-                        <Link href={PATHS.ROOT} legacyBehavior={false}>
-                            <FoundryLogo size="48px" withText />
-                        </Link>
-                        {isSignedIn && (
-                            <Dropdown
-                                label="Setup"
-                                labelType="link"
-                                links={[
-                                    { label: 'DM', href: `${PATHS.SETUP}?type=dm` },
-                                    { label: 'Player', href: `${PATHS.SETUP}?type=player` },
-                                ]}
-                            />
-                        )}
-                        {isSignedIn && !!servers.length && <PanelDropdown text="Panel" labelType="link" />}
-                    </Group>
-                    <Group>
-                        {!isSignedIn && <Link href={PATHS.SIGN_IN}>Sign In</Link>}
-                        <ThemeSwitch />
-                        {isSignedIn && (
-                            <UserButton
-                                appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }}
-                            />
-                        )}
-                    </Group>
-                </Group>
-            </Header>
+            {isMobile ? (
+                <MobileHeader isSignedIn={!!isSignedIn} hasServer={hasServer} />
+            ) : (
+                <DesktopHeader isSignedIn={!!isSignedIn} hasServer={hasServer} />
+            )}
             <Container display="flex" className={styles.mainContent} maw="100%" w="60rem">
                 {showLogo && (
                     <>

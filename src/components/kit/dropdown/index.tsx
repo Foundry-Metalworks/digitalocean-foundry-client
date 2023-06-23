@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { Button, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
+import { useViewportSize } from '@mantine/hooks'
+import { BREAKPOINTS } from '@/constants'
 
 type Props = {
     label: string
@@ -13,6 +15,8 @@ type Props = {
 const Dropdown: React.FC<Props> = ({ label, links, labelType = 'button' }) => {
     const [open, setIsOpen] = useState(false)
     const { push } = useRouter()
+    const { width } = useViewportSize()
+    const isPhone = width <= BREAKPOINTS.TABLET
 
     const target =
         labelType == 'button' ? (
@@ -29,7 +33,7 @@ const Dropdown: React.FC<Props> = ({ label, links, labelType = 'button' }) => {
 
     return (
         <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-            <Menu onChange={setIsOpen} opened={open} width={200} position="bottom-start">
+            <Menu onChange={setIsOpen} opened={open} width={200} position={isPhone ? 'bottom' : 'bottom-start'}>
                 <Menu.Target>{target}</Menu.Target>
                 <Menu.Dropdown w={rem(320)}>
                     {links.map(({ href, label: linkText }, i) => (
