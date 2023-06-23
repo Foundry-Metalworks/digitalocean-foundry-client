@@ -7,6 +7,7 @@ import ThemeSwitch from '@/components/shared/theme-switch'
 import { HeaderProps } from '@/components/layouts/main/header/types'
 import { useViewportSize } from '@mantine/hooks'
 import FoundryLogo from '@/components/shared/foundry-logo'
+import { UserButton } from '@clerk/nextjs'
 
 const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
     const { width } = useViewportSize()
@@ -30,6 +31,9 @@ const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
                         <Link href={PATHS.SIGN_IN}>Sign In</Link>
                     )}
                     <ThemeSwitch />
+                    {isSignedIn && (
+                        <UserButton appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }} />
+                    )}
                 </Group>
             </Group>
         </Header>
