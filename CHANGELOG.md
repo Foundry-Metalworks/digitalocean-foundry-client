@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.13](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.12...v0.4.13) (2023-06-23)
+
+
+### Bug Fixes
+
+* matcher breaking api route ([61e7314](https://github.com/Foundry-Metalworks/metalworks-client/commit/61e73143109773725ec759596a90ede5af316716))
+
 ### [0.4.12](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.9...v0.4.12) (2023-06-23)
 
 
