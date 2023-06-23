@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.10](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.9...v0.4.10) (2023-06-23)
+
+
+### Features
+
+* serverside rendering ([d323212](https://github.com/Foundry-Metalworks/metalworks-client/commit/d3232122c6498731ef95c99aecc3e958efa954ed))
+
 ### [0.4.9](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.8...v0.4.9) (2023-06-22)
 
 
