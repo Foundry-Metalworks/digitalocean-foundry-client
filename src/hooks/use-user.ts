@@ -28,16 +28,17 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
 
     const shouldFetchUser = isLoaded && !!isSignedIn
     const { isLoading, data, error, refetch } = useQuery<UserType>(
+        'getUser',
         {
             endpoint: '/users/me',
             enabled: shouldFetchUser,
         },
-        [userId, shouldFetchUser],
+        [userId],
     )
 
     return {
         isLoading: !isLoaded || isLoading,
-        data,
+        data: userId ? data : undefined,
         error,
         refetch,
         actions: {

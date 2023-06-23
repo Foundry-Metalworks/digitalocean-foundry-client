@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { SignUpButton, useAuth } from '@clerk/nextjs'
-import { Button, rem, Select, Stack, Stepper } from '@mantine/core'
+import { SignUpButton } from '@clerk/nextjs'
+import { Button, LoadingOverlay, rem, Select, Stack, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 
 import Section from '@/components/pages/home/section'
@@ -11,22 +11,32 @@ import { PATHS } from '@/constants'
 import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
+import { HomeProps } from '@/components/pages/home/types'
 
-const Steps: React.FC = () => {
-    const [activeStep, setActiveStep] = useState(0)
+const getSetupStep = (isSignedIn: boolean, isAuthorized: boolean, hasServer: boolean, isDM: boolean) => {
+    if (hasServer) {
+        return isDM ? 3 : 2
+    }
+    if (isDM && isAuthorized) return 2
+    if (isSignedIn) return 1
+    return 0
+}
+
+const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => {
     const [isDM, setIsDM] = useState(true)
-    const { isSignedIn } = useAuth()
     const { push } = useRouter()
-    const { data } = useUser()
+    const { isLoading } = useUser()
+    const initialStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
+    const [activeStep, setActiveStep] = useState(initialStep)
 
     useEffect(() => {
-        if (data?.servers.length) setActiveStep(isDM ? 3 : 2)
-        else if (isDM && data?.authorized) setActiveStep(2)
-        else if (isSignedIn) setActiveStep(1)
-    }, [data?.authorized, isSignedIn, data?.servers, isDM])
+        const setupStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
+        if (setupStep != activeStep) setActiveStep(setupStep)
+    }, [hasServer, isSignedIn, isAuthorized, isDM])
 
     return (
         <Section title="Setup Guide">
+            <LoadingOverlay visible={isLoading} />
             <Select
                 defaultValue="dm"
                 data={[
@@ -61,7 +71,7 @@ const Steps: React.FC = () => {
                 <Stepper.Step
                     label={isDM ? 'Step 3' : 'Step 2'}
                     description={`${isDM ? 'Create' : 'Join'} Metalworks Server`}
-                    disabled={!data?.authorized}
+                    disabled={!isAuthorized}
                 >
                     <Button radius="xl" size="md" onClick={() => push(`${PATHS.SETUP}?type=${isDM ? 'dm' : 'player'}`)}>
                         {isDM ? 'Create' : 'Join'} Metalworks Server

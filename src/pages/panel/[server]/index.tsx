@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { Box, Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
@@ -6,11 +6,15 @@ import { useRouter } from 'next/router'
 
 import Loading from '@/components/kit/loading'
 import InviteModal from '@/components/pages/panel/invite-modal'
-import { PATHS } from '@/constants'
+import { CACHE_TIME, PATHS } from '@/constants'
 import { useInstance } from '@/hooks/use-instance'
-import useServer from '@/hooks/use-server'
+import useServer, { ServerType } from '@/hooks/use-server'
 
 import styles from './styles.module.scss'
+import { queryClient, withAuthAndUser } from '@/util/server'
+import { query } from '@/api/network'
+import { getAuth } from '@clerk/nextjs/server'
+import { ServerStatusType } from '@/types'
 
 const Panel: React.FC = () => {
     const { query } = useRouter()
@@ -23,14 +27,9 @@ const Panel: React.FC = () => {
     const {
         isFetching,
         instanceStatus,
-        actions: { startServer, stopServer, saveServer, goToServer, updateStatus },
+        actions: { startServer, stopServer, saveServer, goToServer },
     } = useInstance(server)
     const { push } = useRouter()
-
-    useEffect(() => {
-        const interval = setInterval(() => updateStatus(), 10000)
-        return () => clearInterval(interval)
-    }, [updateStatus])
 
     if (isFetching || !instanceStatus) return <Loading />
 
@@ -88,5 +87,21 @@ const Panel: React.FC = () => {
         </Box>
     )
 }
+
+export const getServerSideProps = withAuthAndUser(async (ctx) => {
+    const { getToken } = getAuth(ctx.req)
+    const server = ctx.query.server as string
+    const token = await getToken()
+    await queryClient.prefetchQuery(
+        ['getServer', server],
+        () => query<ServerType>({ endpoint: `/servers/${server}`, token }),
+        { staleTime: CACHE_TIME },
+    )
+    await queryClient.prefetchQuery(
+        ['getInstance', server],
+        () => query<{ status: ServerStatusType }>({ endpoint: `/instance/${server}/status`, token }),
+        { staleTime: 5000 },
+    )
+})
 
 export default Panel

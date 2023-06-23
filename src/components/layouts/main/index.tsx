@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { UserButton } from '@clerk/nextjs'
+import { useAuth, UserButton } from '@clerk/nextjs'
 import { Container, Group, Header, Space } from '@mantine/core'
 
 import Dropdown from '@/components/kit/dropdown'
@@ -19,7 +19,7 @@ export interface MainLayoutProps extends PropsWithChildren {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: MainLayoutProps) => {
     const { data: user } = useUser()
-    const isSignedIn = !!user
+    const { isSignedIn } = useAuth()
     const servers = user?.servers || []
 
     return (

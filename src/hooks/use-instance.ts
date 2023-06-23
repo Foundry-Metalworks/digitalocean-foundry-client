@@ -23,6 +23,7 @@ export const useInstance = (serverId: string | undefined): InstanceApi => {
     const [isFetching, setIsFetching] = useState(false)
 
     const { data, isLoading, refetch } = useQuery<{ status: ServerStatusType }>(
+        'getInstance',
         {
             endpoint: `/instance/${serverId}/status`,
             enabled: !!serverId,

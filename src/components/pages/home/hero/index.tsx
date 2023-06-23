@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 
-import { SignUpButton, useAuth } from '@clerk/nextjs'
+import { SignUpButton } from '@clerk/nextjs'
 import { Box, Button, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
 import { IconBrandGithub, IconCheck } from '@tabler/icons-react'
 import { NextPage } from 'next'
@@ -9,21 +9,19 @@ import Link from '@/components/kit/link'
 import FoundryLogo from '@/components/shared/foundry-logo'
 import PanelDropdown from '@/components/shared/panel-dropdown'
 import { PATHS } from '@/constants'
-import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
+import { HomeProps } from '@/components/pages/home/types'
 
-const HomepageHero: NextPage = () => {
+const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => {
     const checkIcon = (
         <ThemeIcon size={20} radius="xl">
             <IconCheck size={rem(12)} stroke={1.5} />
         </ThemeIcon>
     )
-    const { isSignedIn } = useAuth()
-    const { data, isLoading } = useUser()
 
     const heroButton = useMemo(() => {
-        if (data?.servers.length) {
+        if (hasServer) {
             return <PanelDropdown text="Go To Panel" />
         }
         if (isSignedIn) {
@@ -42,7 +40,7 @@ const HomepageHero: NextPage = () => {
                 </Button>
             </SignUpButton>
         )
-    }, [isSignedIn, data?.servers.length])
+    }, [isSignedIn, hasServer])
 
     return (
         <Box className={styles.hero} mt="0" mb="32px">
@@ -72,7 +70,6 @@ const HomepageHero: NextPage = () => {
                         radius="xl"
                         size="md"
                         onClick={() => window.open('https://github.com/Foundry-Metalworks/metalworks-client')}
-                        loading={isLoading}
                     >
                         <IconBrandGithub size={rem(16)} style={{ marginRight: rem(4) }} />
                         Source code

@@ -18,6 +18,7 @@ export interface InvitesDispatch {
 const useInvites = (userId: string): UseDataType<InviteType[], InvitesDispatch> => {
     const { getToken } = useAuth()
     const { data, isLoading, error, refetch } = useQuery<{ invites: InviteType[] }>(
+        'getInvites',
         {
             endpoint: `/invites`,
             enabled: !!userId,

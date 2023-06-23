@@ -6,7 +6,7 @@ module.exports = {
         return [
             {
                 source: '/api/:path*',
-                destination: `${process.env.BFF_ENDPOINT}/api/:path*`,
+                destination: `${process.env.BFF_ENDPOINT}/:path*`,
             },
         ]
     },

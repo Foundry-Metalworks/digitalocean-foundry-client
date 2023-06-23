@@ -15,6 +15,7 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     const { data: userData } = useUser()
 
     const { data, isLoading } = useQuery<{ exists: boolean }>(
+        'checkServer',
         {
             endpoint: `/servers/${name}/check`,
             enabled: !!name,
@@ -27,6 +28,7 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
     return (
         <Box ta="center">
             <DOSetup />
+            <br />
             <TextInput
                 label="Server Name"
                 placeholder="foundry"
@@ -42,7 +44,7 @@ const SetupCreate: React.FC<SetupCreateProps> = ({ onSubmit }) => {
                 onClick={() => onSubmit(name)}
                 w="100%"
             >
-                <a>Submit</a>
+                Submit
             </Button>
         </Box>
     )

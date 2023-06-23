@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Badge, Button, Group, rem, Stack, Title } from '@mantine/core'
 import process from 'process'
@@ -10,15 +10,9 @@ const REFERRAL_LINK =
     'https://www.digitalocean.com/?refcode=d69d3faf8632&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge'
 
 const DOSetup: React.FC = () => {
-    const [setupStage, setSetupStage] = useState<number | undefined>(undefined)
-    const [hasDOAcc, setHasDOAcc] = useState<boolean | undefined>(undefined)
     const { isLoading, data } = useUser()
-
-    useEffect(() => {
-        if (data?.authorized != undefined) {
-            setSetupStage(data.authorized ? 3 : 0)
-        }
-    }, [data?.authorized])
+    const [setupStage, setSetupStage] = useState<number | undefined>(data?.authorized ? 3 : 0)
+    const [hasDOAcc, setHasDOAcc] = useState<boolean | undefined>(undefined)
 
     const updateData = (hasDoAcc: boolean, stage: number) => {
         setHasDOAcc(hasDoAcc)
@@ -91,7 +85,7 @@ const DOSetup: React.FC = () => {
     }
 
     return (
-        <Stack mih="4rem">
+        <Stack>
             <SetupContent />
         </Stack>
     )

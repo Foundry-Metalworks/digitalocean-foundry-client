@@ -50,19 +50,19 @@ export async function query<TQueryFnData>(details: QueryDetails): Promise<TQuery
 }
 
 export function useQuery<TQueryFNData>(
+    key: string,
     details: UseQueryDetails<TQueryFNData>,
     dependencies: any[],
 ): UseQueryResult<TQueryFNData, Error> {
     const { endpoint, method, enabled, initialData, params, body, onSuccess, refetchInterval, refetchOnRevisit } =
         details
-    const key = `${endpoint}--${dependencies.map((e) => (e ? JSON.stringify(e) : 'null')).join('-')}`
     const { getToken } = useAuth()
 
     const func = async () => {
         const token = await getToken()
         return await query<TQueryFNData>({ endpoint, method, params, body, token })
     }
-    return useQueryHook<TQueryFNData, Error>(key, func, {
+    return useQueryHook<TQueryFNData, Error>([key, ...dependencies], func, {
         keepPreviousData: true,
         initialData: initialData,
         refetchOnMount: refetchOnRevisit || false,

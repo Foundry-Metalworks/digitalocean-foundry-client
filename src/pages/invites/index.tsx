@@ -7,6 +7,7 @@ import { NextPage } from 'next'
 import RedirectTo from '@/components/kit/redirect'
 import { PATHS } from '@/constants'
 import useInvites from '@/hooks/use-invites'
+import { withAuthAndUser } from '@/util/server'
 
 const Invites: NextPage = () => {
     const { userId } = useAuth()
@@ -34,5 +35,7 @@ const Invites: NextPage = () => {
         </Stack>
     )
 }
+
+export const getServerSideProps = withAuthAndUser()
 
 export default Invites

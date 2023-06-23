@@ -31,6 +31,7 @@ const useServer = (server: string | null): UseDataType<ServerType, ServerDispatc
     const { refetch: refetchUser, isLoading: userLoading } = useUser()
 
     const { isFetching, data, error, refetch } = useQuery<ServerType>(
+        'getServer',
         {
             endpoint: `/servers/${server}`,
             enabled: server != null,
