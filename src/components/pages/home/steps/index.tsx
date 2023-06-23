@@ -49,12 +49,13 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                 mx="auto"
             />
             <Stepper
+                className={styles.stepper}
                 active={activeStep}
                 onStepClick={(step) => setActiveStep(step)}
                 breakpoint="sm"
-                className={styles.stepper}
                 maw={!isDM ? '40rem' : undefined}
-                m="0 auto"
+                mx="auto"
+                w="fit-content"
             >
                 <Stepper.Step label="Step 1" description="Create Metalworks Account">
                     <SignUpButton redirectUrl={PATHS.ROOT}>

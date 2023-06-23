@@ -13,3 +13,13 @@ export const PATHS = {
 }
 
 export const CACHE_TIME = 60000
+
+//Breakpoints
+export const BREAKPOINTS = {
+    MOBILE_SM: 320,
+    MOBILE_MD: 375,
+    MOBILE_LG: 420,
+    TABLET: 768,
+    LAPTOP: 1024,
+    DESKTOP: 1440,
+}

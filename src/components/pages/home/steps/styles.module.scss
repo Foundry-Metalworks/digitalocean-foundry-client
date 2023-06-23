@@ -1,7 +1,13 @@
 .stepper {
-  > div:nth-child(2) {
-    display: flex;
-    justify-content: center;
-    padding-top: 2rem;
+  > div {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+
+    &:nth-child(2) {
+      display: flex;
+      justify-content: center;
+      padding-top: 2rem;
+    }
   }
 }
