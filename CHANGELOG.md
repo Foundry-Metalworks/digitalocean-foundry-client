@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.14](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.13...v0.4.14) (2023-06-23)
+
+
+### Features
+
+*  responsive homepage (v0, ugly code) ([7d7e186](https://github.com/Foundry-Metalworks/metalworks-client/commit/7d7e18654809faf1e47a136ccf6507e244ed91aa))
+
 ### [0.4.13](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.12...v0.4.13) (2023-06-23)
 
 
