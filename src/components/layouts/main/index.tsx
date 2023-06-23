@@ -33,7 +33,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
                 {showLogo && (
                     <>
                         <Space h="md" />
-                        <FoundryLogo size="256px" center />
+                        <FoundryLogo size={isMobile ? '184px' : '256px'} center />
                         <Space h="xl" />
                     </>
                 )}
