@@ -40,7 +40,7 @@ const DOSetup: React.FC = () => {
                 size="md"
                 component="a"
                 href={hasDOAcc ? process.env.NEXT_PUBLIC_DO_URL : REFERRAL_LINK}
-                target={hasDOAcc ? undefined : '_blank'}
+                target={'_blank'}
                 onClick={() => !hasDOAcc && setSetupStage(2)}
                 disabled={isLoading}
             >
