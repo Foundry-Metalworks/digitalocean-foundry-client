@@ -71,7 +71,7 @@ export const useInstance = (serverId: string | undefined): InstanceApi => {
         setIsFetching(false)
     }, [serverId])
 
-    const value = useMemo(
+    return useMemo(
         () => ({
             isFetching: isFetching || isLoading,
             instanceStatus: data?.status,
@@ -79,6 +79,4 @@ export const useInstance = (serverId: string | undefined): InstanceApi => {
         }),
         [isFetching, data?.status, serverId],
     )
-
-    return value
 }

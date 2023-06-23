@@ -9,7 +9,7 @@ import { useUser } from '@/hooks/use-user'
 import { useAuth } from '@clerk/nextjs'
 import { withAuthAndUser } from '@/util/server'
 
-const Home: NextPage<{}> = ({}) => {
+const Home: NextPage = () => {
     const { data: user } = useUser()
     const { isSignedIn } = useAuth()
     const hasServer = !!user?.servers?.length
