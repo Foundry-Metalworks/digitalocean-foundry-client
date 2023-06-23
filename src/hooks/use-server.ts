@@ -50,7 +50,7 @@ const useServer = (server: string | null): UseDataType<ServerType, ServerDispatc
                 token,
             })
             await refetchUser()
-            await push(PATHS.ROOT)
+            await push(`${PATHS.PANEL}/${serverId}`)
             notifications.show({ message: `Created Server: ${serverId}` })
         },
         [getToken, refetchUser, push],

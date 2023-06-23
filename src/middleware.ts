@@ -11,7 +11,9 @@ const isImage = (path: string) => path.includes('.png') || path.includes('.jpg')
 
 export default withClerkMiddleware((request: NextRequest) => {
     const { userId } = getAuth(request)
-    if (isPublic(request.nextUrl.pathname) || isImage(request.nextUrl.pathname)) {
+    const path = request.nextUrl.pathname
+
+    if (isPublic(path) || isImage(path)) {
         return NextResponse.next()
     }
 
@@ -20,6 +22,7 @@ export default withClerkMiddleware((request: NextRequest) => {
         signInUrl.searchParams.set('redirect_url', request.url)
         return NextResponse.redirect(signInUrl)
     }
+
     return NextResponse.next()
 })
 

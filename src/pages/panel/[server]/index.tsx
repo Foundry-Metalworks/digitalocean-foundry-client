@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Box, Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
@@ -15,21 +15,26 @@ import { queryClient, withAuthAndUser } from '@/util/server'
 import { query } from '@/api/network'
 import { getAuth } from '@clerk/nextjs/server'
 import { ServerStatusType } from '@/types'
+import { useUser } from '@/hooks/use-user'
 
 const Panel: React.FC = () => {
     const { query } = useRouter()
     const serverId = query.server as string
     const { data } = useServer(serverId)
+    const { data: user } = useUser()
     const [isModalOpen, { open: openModal, close: closeModal }] = useDisclosure(false)
     const permissions = data?.permissions
     const server = data?.name || ''
-
     const {
         isFetching,
         instanceStatus,
         actions: { startServer, stopServer, saveServer, goToServer },
     } = useInstance(server)
     const { push } = useRouter()
+
+    useEffect(() => {
+        if (!user?.servers.find((s) => s.name === server)) push(`${PATHS.SETUP}?type=player`)
+    }, [user?.servers, server])
 
     if (isFetching || !instanceStatus) return <Loading />
 
@@ -92,6 +97,7 @@ export const getServerSideProps = withAuthAndUser(async (ctx) => {
     const { getToken } = getAuth(ctx.req)
     const server = ctx.query.server as string
     const token = await getToken()
+
     await queryClient.prefetchQuery(
         ['getServer', server],
         () => query<ServerType>({ endpoint: `/servers/${server}`, token }),

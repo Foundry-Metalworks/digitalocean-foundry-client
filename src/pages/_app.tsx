@@ -46,8 +46,8 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
                             withNormalizeCSS
                         >
                             <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
-                                <Notifications position="top-center" />
                                 <MainLayout showLogo={showLogo}>
+                                    <Notifications position="top-center" zIndex={1002} mt="4rem" />
                                     <Component {...pageProps} />
                                 </MainLayout>
                             </ClerkProvider>
