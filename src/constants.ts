@@ -8,7 +8,7 @@ export const PATHS = {
     PANEL: '/panel/',
     SIGN_IN: '/sign-in',
     SIGN_UP: '/sign-up',
-    JOIN: '/join/[inviteToken]',
+    JOIN: '/join',
     INVITES: '/invites',
 }
 

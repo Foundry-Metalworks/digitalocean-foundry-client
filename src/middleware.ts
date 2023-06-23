@@ -4,10 +4,10 @@ import { NextResponse } from 'next/server'
 import { PATHS, PUBLIC_PAGES } from '@/constants'
 
 const isPublic = (path: string) => {
-    return PUBLIC_PAGES.find((x) => path.match(new RegExp(`^${x}$`.replace('*$', '($|/)'))))
+    return PUBLIC_PAGES.find((x) => path.includes(x))
 }
 
-const isImage = (path: string) => path.includes('.png') || path.includes('.jpg')
+const isImage = (path: string) => path.includes('.png') || path.includes('.jpg') || path.includes('.webp')
 
 export default withClerkMiddleware((request: NextRequest) => {
     const { userId } = getAuth(request)
