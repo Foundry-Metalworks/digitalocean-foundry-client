@@ -59,14 +59,14 @@ const useServer = (server: string | null): UseDataType<ServerType, ServerDispatc
     const joinByToken = useCallback(
         async (inviteToken: string) => {
             const authToken = await getToken()
-            await query({
+            const { server } = await query({
                 endpoint: '/servers/join',
                 method: 'POST',
                 body: { inviteToken },
                 token: authToken,
             })
             await refetchUser()
-            await push(PATHS.ROOT)
+            await push(`${PATHS.PANEL}/${server}`)
             notifications.show({ message: 'Joined Server Successfully' })
         },
         [getToken, refetchUser, push],
