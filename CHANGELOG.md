@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.16](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.15...v0.4.16) (2023-06-23)
+
+
+### Features
+
+* responsive header ([b84bf47](https://github.com/Foundry-Metalworks/metalworks-client/commit/b84bf4745ff0f7071f0db4106662a0b9c34a8d66))
+
+
+### Bug Fixes
+
+* redirect to panel on join ([245f7dc](https://github.com/Foundry-Metalworks/metalworks-client/commit/245f7dcfe94b9211026ca1019b95471061f158aa))
+
 ### [0.4.15](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.14...v0.4.15) (2023-06-23)
 
 
