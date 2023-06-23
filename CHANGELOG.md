@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.17](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.16...v0.4.17) (2023-06-23)
+
+
+### Features
+
+* loading progress ([75186dd](https://github.com/Foundry-Metalworks/metalworks-client/commit/75186dd3394adc9b2afe32f6d0c8a34e536df6cf))
+
+
+### Bug Fixes
+
+* smaller icon on mobile ([67f0b36](https://github.com/Foundry-Metalworks/metalworks-client/commit/67f0b36e45a296b976e7922bde7ffcff12038e01))
+
 ### [0.4.16](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.15...v0.4.16) (2023-06-23)
 
 
