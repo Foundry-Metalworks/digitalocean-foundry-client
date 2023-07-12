@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { Box, Button, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
+import { Box, Button, LoadingOverlay, MantineColor, Space, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 
@@ -39,6 +39,7 @@ const Panel: React.FC = () => {
 
     return (
         <Box maw="80%" w="40rem" pos="relative">
+            <LoadingOverlay visible={instanceStatus == 'pending'} />
             <Stack className={styles.panelContent} ta="center">
                 <InviteModal serverId={serverId} opened={isModalOpen} onClose={closeModal} />
                 <Title className={styles.serverTitle} order={2} h="md">
