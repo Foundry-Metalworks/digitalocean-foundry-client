@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.19](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.18...v0.4.19) (2023-07-12)
+
+
+### Bug Fixes
+
+* jank on homepage ([09dbb58](https://github.com/Foundry-Metalworks/metalworks-client/commit/09dbb58ebb043a442bfbfb8629205cba4967a1a6))
+* loading overlay on panel when pending action ([5003f96](https://github.com/Foundry-Metalworks/metalworks-client/commit/5003f965498e37fedab4458684f0482d55457423))
+* no ssr on homepage ([420a8b4](https://github.com/Foundry-Metalworks/metalworks-client/commit/420a8b4449e041b88c5a1ae9e63e88352bd42d96))
+
 ### [0.4.18](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.17...v0.4.18) (2023-07-12)
 
 
