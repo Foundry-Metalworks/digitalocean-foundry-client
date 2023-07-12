@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react'
-
-import { SignUpButton } from '@clerk/nextjs'
 import { Box, Button, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
 import { IconBrandGithub, IconCheck } from '@tabler/icons-react'
 import { NextPage } from 'next'
@@ -14,7 +12,7 @@ import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
 import { useViewportSize } from '@mantine/hooks'
 
-const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, hasServer }) => {
+const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = false }) => {
     const { width } = useViewportSize()
 
     const checkIcon = (
@@ -23,25 +21,16 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, hasServer }) => {
         </ThemeIcon>
     )
 
-    const heroButton = useMemo(() => {
+    const HeroButton = useMemo(() => {
         if (hasServer) {
             return <PanelDropdown text="Go To Panel" />
         }
-        if (isSignedIn) {
-            return (
-                <Link href={PATHS.SETUP}>
-                    <Button radius="xl" size="md">
-                        Get started
-                    </Button>
-                </Link>
-            )
-        }
         return (
-            <SignUpButton>
+            <Link href={isSignedIn ? PATHS.SETUP : PATHS.SIGN_IN}>
                 <Button radius="xl" size="md">
                     Get started
                 </Button>
-            </SignUpButton>
+            </Link>
         )
     }, [isSignedIn, hasServer])
 
@@ -78,7 +67,7 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, hasServer }) => {
                     </List.Item>
                 </List>
                 <Group mt={30} position={width <= BREAKPOINTS.TABLET ? 'center' : undefined}>
-                    {!!isSignedIn ? heroButton : <SignUpButton>{heroButton}</SignUpButton>}
+                    {HeroButton}
                     <Button
                         variant="default"
                         radius="xl"

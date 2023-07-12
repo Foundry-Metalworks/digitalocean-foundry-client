@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-
-import { SignUpButton } from '@clerk/nextjs'
 import { Button, LoadingOverlay, rem, Select, Stack, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 
@@ -12,6 +10,7 @@ import { useUser } from '@/hooks/use-user'
 
 import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
+import NextLink from 'next/link'
 
 const getSetupStep = (isSignedIn: boolean, isAuthorized: boolean, hasServer: boolean, isDM: boolean) => {
     if (hasServer) {
@@ -58,11 +57,11 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                 w="fit-content"
             >
                 <Stepper.Step label="Step 1" description="Create Metalworks Account">
-                    <SignUpButton redirectUrl={PATHS.ROOT}>
+                    <NextLink href={`${PATHS.SIGN_UP}?redirectUrl=${PATHS.HOME}`}>
                         <Button radius="xl" size="md">
                             Sign Up
                         </Button>
-                    </SignUpButton>
+                    </NextLink>
                 </Stepper.Step>
                 {isDM ? (
                     <Stepper.Step label="Step 2" description="Connect DigitalOcean Account" disabled={!isSignedIn}>
