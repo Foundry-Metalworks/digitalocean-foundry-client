@@ -32,6 +32,7 @@ const Setup: NextPage = () => {
                 <Text>I am a:</Text>
                 <Select
                     value={setupType}
+                    defaultValue="dm"
                     data={[
                         { value: 'dm', label: 'Dungeon Master' },
                         { value: 'player', label: 'Player' },
