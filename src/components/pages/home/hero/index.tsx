@@ -14,7 +14,7 @@ import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
 import { useViewportSize } from '@mantine/hooks'
 
-const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => {
+const HomepageHero: NextPage<HomeProps> = ({ isSignedIn, hasServer }) => {
     const { width } = useViewportSize()
 
     const checkIcon = (

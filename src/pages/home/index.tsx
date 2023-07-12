@@ -7,7 +7,6 @@ import HomepageHero from '@/components/pages/home/hero'
 import Steps from '@/components/pages/home/steps'
 import { useUser } from '@/hooks/use-user'
 import { useAuth } from '@clerk/nextjs'
-import { withSSR } from '@/util/server'
 
 const Home: NextPage = () => {
     const { data: user } = useUser()
@@ -23,7 +22,5 @@ const Home: NextPage = () => {
         </div>
     )
 }
-
-export const getServerSideProps = withSSR()
 
 export default Home
