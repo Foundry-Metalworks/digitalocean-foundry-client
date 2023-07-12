@@ -6,16 +6,15 @@ import { useRouter } from 'next/router'
 
 import Loading from '@/components/kit/loading'
 import InviteModal from '@/components/pages/panel/invite-modal'
-import { CACHE_TIME, PATHS } from '@/constants'
+import { PATHS } from '@/constants'
 import { useInstance } from '@/hooks/use-instance'
 import useServer, { ServerType } from '@/hooks/use-server'
 
 import styles from './styles.module.scss'
-import { queryClient, withAuthAndUser } from '@/util/server'
+import { queryClient, withSSR } from '@/util/server'
 import { query } from '@/api/network'
 import { getAuth } from '@clerk/nextjs/server'
-import { ServerStatusType } from '@/types'
-import { useUser } from '@/hooks/use-user'
+import { UserType, useUser } from '@/hooks/use-user'
 
 const Panel: React.FC = () => {
     const { query } = useRouter()
@@ -93,20 +92,17 @@ const Panel: React.FC = () => {
     )
 }
 
-export const getServerSideProps = withAuthAndUser(async (ctx) => {
-    const { getToken } = getAuth(ctx.req)
+export const getServerSideProps = withSSR(async (ctx) => {
+    const { getToken, userId } = getAuth(ctx.req)
     const server = ctx.query.server as string
     const token = await getToken()
 
     await queryClient.prefetchQuery(
-        ['getServer', server],
-        () => query<ServerType>({ endpoint: `/servers/${server}`, token }),
-        { staleTime: CACHE_TIME },
+        ['getUser', userId],
+        async () => await query<UserType>({ endpoint: '/users/me', token }),
     )
-    await queryClient.prefetchQuery(
-        ['getInstance', server],
-        () => query<{ status: ServerStatusType }>({ endpoint: `/instance/${server}/status`, token }),
-        { staleTime: 5000 },
+    await queryClient.prefetchQuery(['getServer', server], () =>
+        query<ServerType>({ endpoint: `/servers/${server}`, token }),
     )
 })
 

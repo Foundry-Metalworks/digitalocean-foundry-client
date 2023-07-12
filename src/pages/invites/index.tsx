@@ -6,8 +6,10 @@ import { NextPage } from 'next'
 
 import RedirectTo from '@/components/kit/redirect'
 import { PATHS } from '@/constants'
-import useInvites from '@/hooks/use-invites'
-import { withAuthAndUser } from '@/util/server'
+import useInvites, { InviteType } from '@/hooks/use-invites'
+import { queryClient, withSSR } from '@/util/server'
+import { query } from '@/api/network'
+import { getAuth } from '@clerk/nextjs/server'
 
 const Invites: NextPage = () => {
     const { userId } = useAuth()
@@ -36,6 +38,15 @@ const Invites: NextPage = () => {
     )
 }
 
-export const getServerSideProps = withAuthAndUser()
+export const getServerSideProps = withSSR(async (context) => {
+    const { userId, getToken } = getAuth(context.req)
+    if (userId) {
+        const token = await getToken()
+        await queryClient.prefetchQuery(
+            ['getInvites', userId],
+            async () => await query<InviteType>({ endpoint: '/invites', token }),
+        )
+    }
+})
 
 export default Invites

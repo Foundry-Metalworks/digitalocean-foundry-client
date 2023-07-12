@@ -2,23 +2,19 @@ import React, { useEffect, useState } from 'react'
 
 import { Button, Group, rem, Select, Space, Stack, Text } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { GetServerSideProps, NextPage } from 'next'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { PATHS } from '@/constants'
 import useServer from '@/hooks/use-server'
 import { useUser } from '@/hooks/use-user'
 import CreateSetup from '@/pages/setup/create-setup'
-import { withAuthAndUser } from '@/util/server'
 import JoinSetup from '@/pages/setup/join-setup'
 
 type SetupType = 'dm' | 'player'
 
-type Props = {
-    type: 'dm' | 'player'
-}
-
-const Setup: NextPage<Props> = ({ type }) => {
-    const { push } = useRouter()
+const Setup: NextPage = () => {
+    const { push, query } = useRouter()
+    const type: SetupType = query.type as SetupType
     const { data } = useUser()
     const [setupType, setSetupType] = useState<'dm' | 'player'>(type)
     const {
@@ -53,10 +49,5 @@ const Setup: NextPage<Props> = ({ type }) => {
         </Stack>
     )
 }
-
-export const getServerSideProps: GetServerSideProps = withAuthAndUser(async ({ query }) => {
-    const type = query.type || 'dm'
-    return { props: { type } }
-})
 
 export default Setup
