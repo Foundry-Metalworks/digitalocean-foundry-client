@@ -12,7 +12,8 @@ import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from 'reac
 import NextNProgress from 'nextjs-progressbar'
 
 import MainLayout from '@/components/layouts/main'
-import { AUTH_PAGES, PATHS } from '@/constants'
+import { CLERK_PAGES, PATHS } from '@/constants'
+import { ModalsProvider } from '@mantine/modals'
 
 const queryClient = new QueryClient()
 
@@ -23,7 +24,11 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
         getInitialValueInEffect: true,
     })
     const { asPath } = useRouter()
-    const showLogo = !AUTH_PAGES.find((p) => asPath.includes(p)) && PATHS.HOME != asPath && PATHS.ROOT != asPath
+    const showLogo =
+        !CLERK_PAGES.find((p) => asPath.includes(p)) &&
+        PATHS.HOME != asPath &&
+        PATHS.ROOT != asPath &&
+        PATHS.DASHBOARD != asPath
 
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
@@ -46,12 +51,17 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
                             withGlobalStyles
                             withNormalizeCSS
                         >
-                            <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
-                                <MainLayout showLogo={showLogo}>
-                                    <NextNProgress />
-                                    <Notifications position="top-center" zIndex={1002} mt="4rem" />
-                                    <Component {...pageProps} />
-                                </MainLayout>
+                            <ClerkProvider
+                                {...pageProps}
+                                appearance={{ baseTheme: colorScheme == 'dark' ? dark : undefined }}
+                            >
+                                <ModalsProvider modalProps={{ zIndex: 1005 }}>
+                                    <MainLayout showLogo={showLogo}>
+                                        <NextNProgress showOnShallow={false} options={{ showSpinner: false }} />
+                                        <Notifications position="top-center" zIndex={1002} mt="4rem" />
+                                        <Component {...pageProps} />
+                                    </MainLayout>
+                                </ModalsProvider>
                             </ClerkProvider>
                         </MantineProvider>
                     </ColorSchemeProvider>

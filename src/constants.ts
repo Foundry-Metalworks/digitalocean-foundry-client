@@ -1,4 +1,4 @@
-export const AUTH_PAGES = ['/sign-in', '/sign-up']
+export const CLERK_PAGES = ['/sign-in', '/sign-up', '/account']
 export const PUBLIC_PAGES = ['/', '/home', '/join', '/sign-in', '/sign-up']
 
 export const PATHS = {
@@ -10,6 +10,8 @@ export const PATHS = {
     SIGN_UP: '/sign-up',
     JOIN: '/join',
     INVITES: '/invites',
+    ACCOUNT: '/account',
+    DASHBOARD: '/dashboard',
 }
 
 export const CACHE_TIME = 60000

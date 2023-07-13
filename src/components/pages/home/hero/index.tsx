@@ -55,7 +55,7 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = fal
                 </Text>
                 <List mt={30} spacing="sm" size="sm" icon={checkIcon} ta="left">
                     <List.Item>
-                        <b>Shareable</b> – give players easy access to start/stop your FoundryVTT server. Or don&apost,
+                        <b>Shareable</b> – give players easy access to start/stop your FoundryVTT server. Or don&apos;t,
                         the choice is yours!
                     </List.Item>
                     <List.Item>

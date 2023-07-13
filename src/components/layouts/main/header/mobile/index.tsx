@@ -2,12 +2,10 @@ import React from 'react'
 import { Group, Header, Text } from '@mantine/core'
 import Link from '@/components/kit/link'
 import { BREAKPOINTS, PATHS } from '@/constants'
-import PanelDropdown from '@/components/shared/panel-dropdown'
-import ThemeSwitch from '@/components/shared/theme-switch'
 import { HeaderProps } from '@/components/layouts/main/header/types'
 import { useViewportSize } from '@mantine/hooks'
 import FoundryLogo from '@/components/shared/foundry-logo'
-import { UserButton } from '@clerk/nextjs'
+import UserButton from '@/components/user-button'
 
 const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
     const { width } = useViewportSize()
@@ -25,15 +23,14 @@ const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
                             <Link href={PATHS.SETUP}>
                                 <Text>Setup</Text>
                             </Link>
-                            {hasServer && <PanelDropdown text="Panel" labelType="link" />}
+                            <Link href={PATHS.DASHBOARD}>
+                                <Text>Dashboard</Text>
+                            </Link>
                         </>
                     ) : (
                         <Link href={PATHS.SIGN_IN}>Sign In</Link>
                     )}
-                    <ThemeSwitch />
-                    {isSignedIn && (
-                        <UserButton appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }} />
-                    )}
+                    <UserButton />
                 </Group>
             </Group>
         </Header>

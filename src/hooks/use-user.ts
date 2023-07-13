@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { query, useQuery } from '@/api/network'
 import { PATHS } from '@/constants'
 import { PermissionsType, UseDataType } from '@/types'
+import { notifications } from '@mantine/notifications'
 
 export interface UserType {
     email: string
@@ -20,6 +21,7 @@ export interface UserServerType {
 
 type UserActions = {
     authorize: (code: string) => void
+    unauthorize: () => void
 }
 
 export const useUser = (): UseDataType<UserType, UserActions> => {
@@ -35,6 +37,7 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
         },
         [userId],
     )
+    console.log('useUser data: ' + JSON.stringify(data))
 
     return {
         isLoading: !isLoaded || isLoading,
@@ -52,6 +55,16 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
                 })
                 await refetch()
                 await push(PATHS.ROOT)
+            },
+            unauthorize: async () => {
+                const token = await getToken()
+                await query({
+                    endpoint: '/users/authorize',
+                    token,
+                    method: 'DELETE',
+                })
+                await refetch()
+                notifications.show({ message: 'Succesfully revoked DigitalOcean authorization' })
             },
         },
     }

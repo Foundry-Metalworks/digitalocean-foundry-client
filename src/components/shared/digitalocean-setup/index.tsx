@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Badge, Button, Group, rem, Stack, Title } from '@mantine/core'
 import process from 'process'
@@ -13,6 +13,10 @@ const DOSetup: React.FC = () => {
     const { isLoading, data } = useUser()
     const [setupStage, setSetupStage] = useState<number | undefined>(data?.authorized ? 3 : 0)
     const [hasDOAcc, setHasDOAcc] = useState<boolean | undefined>(undefined)
+
+    useEffect(() => {
+        if (!isLoading) setSetupStage(data?.authorized ? 3 : 0)
+    }, [data?.authorized])
 
     const updateData = (hasDoAcc: boolean, stage: number) => {
         setHasDOAcc(hasDoAcc)
@@ -40,7 +44,7 @@ const DOSetup: React.FC = () => {
                 size="md"
                 component="a"
                 href={hasDOAcc ? process.env.NEXT_PUBLIC_DO_URL : REFERRAL_LINK}
-                target={'_blank'}
+                target={hasDOAcc ? '_self' : '_blank'}
                 onClick={() => !hasDOAcc && setSetupStage(2)}
                 disabled={isLoading}
             >

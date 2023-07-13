@@ -6,14 +6,14 @@ import FoundryLogo from '@/components/shared/foundry-logo'
 import Dropdown from '@/components/kit/dropdown'
 import PanelDropdown from '@/components/shared/panel-dropdown'
 import ThemeSwitch from '@/components/shared/theme-switch'
-import { UserButton } from '@clerk/nextjs'
 import { HeaderProps } from '@/components/layouts/main/header/types'
+import UserButton from '@/components/user-button'
 
 const DesktopHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
     return (
         <Header height="4rem" px="2rem" mb="xl" pos="sticky">
             <Group h="inherit" pos="relative" position="apart">
-                <Group>
+                <Group h="inherit">
                     <Link href={PATHS.ROOT} legacyBehavior={false}>
                         <FoundryLogo size="48px" withText />
                     </Link>
@@ -29,12 +29,9 @@ const DesktopHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
                     )}
                     {isSignedIn && hasServer && <PanelDropdown text="Panel" labelType="link" />}
                 </Group>
-                <Group>
-                    {!isSignedIn && <Link href={PATHS.SIGN_IN}>Sign In</Link>}
+                <Group h="inherit">
                     <ThemeSwitch />
-                    {isSignedIn && (
-                        <UserButton appearance={{ elements: { avatarBox: { width: '2.5rem', height: '2.5rem' } } }} />
-                    )}
+                    <UserButton />
                 </Group>
             </Group>
         </Header>
