@@ -12,7 +12,7 @@ const FAQ: React.FC = () => {
                 <Accordion.Item value={'token-safety'}>
                     <Accordion.Control>{"What's DigitalOcean?"}</Accordion.Control>
                     <Accordion.Panel>
-                        {`DigitalOcean is a hosting provider! Metalworks uses it to get you the cheapest hosting possible`}
+                        {`DigitalOcean is a hosting provider! Metalworks uses it to provide you the cheapest hosting possible.`}
                     </Accordion.Panel>
                 </Accordion.Item>
                 <Accordion.Item value={'account-safety'}>
@@ -22,8 +22,9 @@ const FAQ: React.FC = () => {
                         <Link href="https://clerk.com/">
                             <strong>Clerk</strong>
                         </Link>
-                        , a trusted user auth toolkit. Your DigitalOcean token is encrypted and stored in a secure
-                        database
+                        . DigitalOcean auth data is stored encrypted in a secure database.
+                        <br />
+                        You can also revoke your DigitalOcean token at anytime
                     </Accordion.Panel>
                 </Accordion.Item>
                 <Accordion.Item value={'payment-info'}>
@@ -35,7 +36,7 @@ const FAQ: React.FC = () => {
                 <Accordion.Item value={'pricing'}>
                     <Accordion.Control>{'How much does it cost?'}</Accordion.Control>
                     <Accordion.Panel>
-                        {`We do not collect a penny from you, but the cost on DigitalOcean will vary based on your usage. If you play 4 4-hour sessions a month, it will cost less than $0.15 USD. Even if the server stays on all month, its still only $6 USD`}
+                        {`DigitalOcean charges $0.00893/hr. If you play for 4 4-hour sessions a month, it'll cost you just $0.14! `}
                     </Accordion.Panel>
                 </Accordion.Item>
             </Accordion>
