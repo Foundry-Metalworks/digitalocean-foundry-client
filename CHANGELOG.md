@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.20](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.19...v0.4.20) (2023-07-19)
+
+
+### Features
+
+* loading skeleton for DO setup ([018d087](https://github.com/Foundry-Metalworks/metalworks-client/commit/018d08715c2cfb75e3531e806719d069f3ed1a55))
+* make homepage appear more static ([5f50423](https://github.com/Foundry-Metalworks/metalworks-client/commit/5f504237d933e83d11a9c9d631c293df37522abd))
+* mobile user button ([67a5a60](https://github.com/Foundry-Metalworks/metalworks-client/commit/67a5a60c0a1069af7631c38e45a0f93026728686))
+* new dashboard and user button ([2e3afee](https://github.com/Foundry-Metalworks/metalworks-client/commit/2e3afeebf0b3a239c1717f5228743b9dd8accf82))
+* next 13 ([7577654](https://github.com/Foundry-Metalworks/metalworks-client/commit/7577654176008be75f1c812a85f44eac6229fa3c))
+* update faq ([7b03a05](https://github.com/Foundry-Metalworks/metalworks-client/commit/7b03a05c5f1c5e7f34e477d58505a87be5d56148))
+
+
+### Bug Fixes
+
+* auth middleware ([4780fdd](https://github.com/Foundry-Metalworks/metalworks-client/commit/4780fdd44802420813e31d53fb009789ad0c30fd))
+* default setup page selection ([aa4e18c](https://github.com/Foundry-Metalworks/metalworks-client/commit/aa4e18cb11a5456521295bc12191e0c063bfe238))
+* remove logs ([4a253c7](https://github.com/Foundry-Metalworks/metalworks-client/commit/4a253c7f00c693daf068f6b421b86420533cd1c4))
+* setup default dm ([f08a19a](https://github.com/Foundry-Metalworks/metalworks-client/commit/f08a19a564fa4c2ad70517623022085e70fb7335))
+* stepper complete content ([7c1b237](https://github.com/Foundry-Metalworks/metalworks-client/commit/7c1b237fd7b4d37bc5850ce9dcf5be361178bc3d))
+
 ### [0.4.19](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.18...v0.4.19) (2023-07-12)
 
 
