@@ -14,16 +14,17 @@ type SetupType = 'dm' | 'player'
 
 const Setup: NextPage = () => {
     const { push, query } = useRouter()
-    const type: SetupType = query.type as SetupType
+    const type: SetupType | undefined = query.type as SetupType | undefined
     const { data } = useUser()
-    const [setupType, setSetupType] = useState<'dm' | 'player'>(type)
+    const [setupType, setSetupType] = useState<SetupType>(type || 'dm')
+
     const {
         actions: { create, joinByToken },
     } = useServer(null)
     const focusTrapRef = useFocusTrap(data?.authorized)
 
     useEffect(() => {
-        if (type != setupType) setSetupType(type)
+        if (type && type != setupType) setSetupType(type)
     }, [type])
 
     return (
@@ -32,12 +33,11 @@ const Setup: NextPage = () => {
                 <Text>I am a:</Text>
                 <Select
                     value={setupType}
-                    defaultValue="dm"
                     data={[
                         { value: 'dm', label: 'Dungeon Master' },
                         { value: 'player', label: 'Player' },
                     ]}
-                    onChange={(value) => setSetupType(value as SetupType)}
+                    onChange={(value: SetupType) => setSetupType(value)}
                     w={rem(320)}
                 />
             </Group>
