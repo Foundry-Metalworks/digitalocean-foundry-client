@@ -47,7 +47,7 @@ const UserButton = () => {
                 opened={open}
                 position={isMobile ? 'bottom' : 'bottom-start'}
                 offset={isMobile ? 14 : 2}
-                width="100%"
+                width={isMobile ? '100vw' : '100%'}
             >
                 <Menu.Target>
                     {isMobile ? (

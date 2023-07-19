@@ -15,7 +15,7 @@ const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
         <Header height="4rem" px="1rem" mb="xl" pos="sticky">
             <Group h="inherit" pos="relative" position="apart">
                 <Link href={PATHS.ROOT}>
-                    <FoundryLogo size="42px" withText={!isSmall} center={false} />
+                    <FoundryLogo size="42px" withText center={false} />
                 </Link>
                 <Group>
                     {isSignedIn ? (

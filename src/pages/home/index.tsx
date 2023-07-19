@@ -9,15 +9,21 @@ import { useUser } from '@/hooks/use-user'
 import { useAuth } from '@clerk/nextjs'
 
 const Home: NextPage = () => {
-    const { data: user } = useUser()
+    const { data: user, isLoading } = useUser()
     const { isSignedIn } = useAuth()
     const hasServer = !!user?.servers?.length
     const isAuthorized = !!user?.authorized
 
     return (
         <div>
-            <HomepageHero isSignedIn={!!isSignedIn} hasServer={hasServer} isAuthorized={isAuthorized} />
-            <Steps isSignedIn={!!isSignedIn} hasServer={hasServer} isAuthorized={isAuthorized} />
+            <br />
+            <HomepageHero
+                isSignedIn={!!isSignedIn}
+                hasServer={hasServer}
+                isAuthorized={isAuthorized}
+                isLoading={isLoading}
+            />
+            <Steps isSignedIn={!!isSignedIn} hasServer={hasServer} isAuthorized={isAuthorized} isLoading={true} />
             <FAQ />
         </div>
     )

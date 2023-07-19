@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, LoadingOverlay, rem, Select, Stack, Stepper } from '@mantine/core'
+import { Button, LoadingOverlay, rem, Select, Skeleton, Stack, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 
 import Section from '@/components/pages/home/section'
@@ -13,28 +13,33 @@ import { HomeProps } from '@/components/pages/home/types'
 import NextLink from 'next/link'
 
 const getSetupStep = (isSignedIn: boolean, isAuthorized: boolean, hasServer: boolean, isDM: boolean) => {
-    if (hasServer) {
-        return isDM ? 3 : 2
+    console.log('getting setup step')
+    if (!isSignedIn) return 0
+    if (isDM) {
+        if (!isAuthorized) return 1
+        if (!hasServer) return 2
+        return 3
+    } else {
+        if (!hasServer) return 1
+        return 2
     }
-    if (isDM && isAuthorized) return 2
-    if (isSignedIn) return 1
-    return 0
 }
 
 const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => {
     const [isDM, setIsDM] = useState(true)
     const { push } = useRouter()
     const { isLoading } = useUser()
-    const initialStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
-    const [activeStep, setActiveStep] = useState(initialStep)
+    const [activeStep, setActiveStep] = useState(0)
 
     useEffect(() => {
-        const setupStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
-        if (setupStep != activeStep) setActiveStep(setupStep)
-    }, [hasServer, isSignedIn, isAuthorized, isDM])
+        if (!isLoading) {
+            const setupStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
+            if (setupStep != activeStep) setActiveStep(setupStep)
+        }
+    }, [hasServer, isSignedIn, isAuthorized, isDM, isLoading])
 
     return (
-        <Section title="Setup Guide">
+        <Section title="Setup Guide" id="setup">
             <LoadingOverlay visible={isLoading} />
             <Select
                 defaultValue="dm"
@@ -52,19 +57,26 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                 active={activeStep}
                 onStepClick={(step) => setActiveStep(step)}
                 breakpoint="sm"
-                maw={!isDM ? '40rem' : undefined}
                 mx="auto"
-                w="fit-content"
+                maw={800}
+                mih={180}
             >
-                <Stepper.Step label="Step 1" description="Create Metalworks Account">
-                    <NextLink href={`${PATHS.SIGN_UP}?redirectUrl=${PATHS.HOME}`}>
-                        <Button radius="xl" size="md">
-                            Sign Up
-                        </Button>
-                    </NextLink>
+                <Stepper.Step label="Step 1" description="Create Metalworks Account" loading={isLoading}>
+                    {!isLoading && (
+                        <NextLink href={`${PATHS.SIGN_UP}?redirectUrl=${PATHS.HOME}`}>
+                            <Button radius="xl" size="md">
+                                Sign Up
+                            </Button>
+                        </NextLink>
+                    )}
                 </Stepper.Step>
                 {isDM ? (
-                    <Stepper.Step label="Step 2" description="Connect DigitalOcean Account" disabled={!isSignedIn}>
+                    <Stepper.Step
+                        label="Step 2"
+                        description="Connect DigitalOcean Account"
+                        disabled={!isSignedIn}
+                        loading={isLoading}
+                    >
                         <DOSetup />
                     </Stepper.Step>
                 ) : null}
@@ -72,16 +84,25 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                     label={isDM ? 'Step 3' : 'Step 2'}
                     description={`${isDM ? 'Create' : 'Join'} Metalworks Server`}
                     disabled={!isAuthorized}
+                    loading={isLoading}
                 >
-                    <Button radius="xl" size="md" onClick={() => push(`${PATHS.SETUP}?type=${isDM ? 'dm' : 'player'}`)}>
-                        {isDM ? 'Create' : 'Join'} Metalworks Server
-                    </Button>
+                    {!isLoading && (
+                        <Button
+                            radius="xl"
+                            size="md"
+                            onClick={() => push(`${PATHS.SETUP}?type=${isDM ? 'dm' : 'player'}`)}
+                        >
+                            {isDM ? 'Create' : 'Join'} Metalworks Server
+                        </Button>
+                    )}
                 </Stepper.Step>
                 <Stepper.Completed>
-                    <Stack>
-                        {"Looks like you're a pro already!"}
-                        <PanelDropdown text="Panel" />
-                    </Stack>
+                    <Skeleton visible={isLoading} radius="xl" width="50%" height={48}>
+                        <Stack>
+                            {"Looks like you're a pro already!"}
+                            <PanelDropdown text="Panel" />
+                        </Stack>
+                    </Skeleton>
                 </Stepper.Completed>
             </Stepper>
         </Section>

@@ -69,7 +69,7 @@ const DOSetup: React.FC = () => {
     )
 
     const Stage3 = () => (
-        <Badge radius="xl" size="xl" color="green" w="max-content" mx="auto" tt="capitalize">
+        <Badge radius="xl" size="xl" h={42} color="green" w="max-content" mx="auto" tt="capitalize">
             <IconBrandDigitalOcean size={18} style={{ marginRight: rem(12) }} />
             DigitalOcean Connected
         </Badge>
@@ -91,7 +91,7 @@ const DOSetup: React.FC = () => {
     return (
         <Stack>
             {isLoading || setupStage === undefined ? (
-                <Skeleton height={30} width="60%" mx="auto" radius="xl" />
+                <Skeleton height={42} width="60%" mx="auto" radius="xl" />
             ) : (
                 <SetupContent />
             )}

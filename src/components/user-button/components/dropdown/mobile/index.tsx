@@ -9,7 +9,7 @@ import { SignInButton, SignUpButton } from '@clerk/nextjs'
 
 const DropdownMobile: React.FC<DropdownProps> = ({ isSignedIn, onSignOut }) => {
     return (
-        <Menu.Dropdown w="100%" pos="fixed">
+        <Menu.Dropdown w="100%">
             {isSignedIn ? (
                 <>
                     <Menu.Item h={64} closeMenuOnClick={false} icon={<IconPaint size={14} />}>
@@ -28,6 +28,11 @@ const DropdownMobile: React.FC<DropdownProps> = ({ isSignedIn, onSignOut }) => {
                 </>
             ) : (
                 <>
+                    <Menu.Item h={64} closeMenuOnClick={false} icon={<IconPaint size={14} />}>
+                        <Group>
+                            <Text size="md">Theme</Text> <ThemeSwitch />
+                        </Group>
+                    </Menu.Item>
                     <SignInButton>
                         <Menu.Item h={64} icon={<IconLogin size={14} />}>
                             Sign In

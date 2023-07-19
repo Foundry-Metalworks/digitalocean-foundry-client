@@ -7,22 +7,23 @@ import Section from '@/components/pages/home/section'
 
 const FAQ: React.FC = () => {
     return (
-        <Section title="Frequently Asked Questions">
+        <Section title="Frequently Asked Questions" id="faq">
             <Accordion variant="separated">
                 <Accordion.Item value={'token-safety'}>
-                    <Accordion.Control>{'Is my DigitalOcean account safe?'}</Accordion.Control>
+                    <Accordion.Control>{"What's DigitalOcean?"}</Accordion.Control>
                     <Accordion.Panel>
-                        {`Yes! All requests are encrypted with HTTPS, and the DigitalOcean API Token you give us is securely stored encrypted in a database`}
+                        {`DigitalOcean is a hosting provider! Metalworks uses it to get you the cheapest hosting possible`}
                     </Accordion.Panel>
                 </Accordion.Item>
                 <Accordion.Item value={'account-safety'}>
                     <Accordion.Control>{'Is my account info safe?'}</Accordion.Control>
                     <Accordion.Panel>
-                        Yes! All user auth is handled by{' '}
+                        Yes! User auth is handled by{' '}
                         <Link href="https://clerk.com/">
                             <strong>Clerk</strong>
                         </Link>
-                        , a trusted user auth toolkit
+                        , a trusted user auth toolkit. Your DigitalOcean token is encrypted and stored in a secure
+                        database
                     </Accordion.Panel>
                 </Accordion.Item>
                 <Accordion.Item value={'payment-info'}>

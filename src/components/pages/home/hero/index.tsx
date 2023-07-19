@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Button, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
+import { Button, Grid, Group, List, rem, Text, ThemeIcon, Title } from '@mantine/core'
 import { IconBrandGithub, IconCheck } from '@tabler/icons-react'
 import { NextPage } from 'next'
 
@@ -35,19 +35,15 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = fal
     }, [isSignedIn, hasServer])
 
     return (
-        <Group
+        <Grid
             className={styles.hero}
             py="16px"
             mb="32px"
             w={width >= BREAKPOINTS.TABLET ? '100%' : '80%'}
             style={width < BREAKPOINTS.TABLET ? { flexDirection: 'column-reverse' } : undefined}
-            spacing={width < BREAKPOINTS.TABLET ? '1rem' : 0}
             mx="auto"
         >
-            <Box
-                w={width >= BREAKPOINTS.TABLET ? '50%' : '100%'}
-                ta={width <= BREAKPOINTS.TABLET ? 'center' : undefined}
-            >
+            <Grid.Col sm={12} md={6} ta={width <= BREAKPOINTS.TABLET ? 'center' : undefined}>
                 <Title>Metalworks: Open-Source FoundryVTT Hosting</Title>
                 <Text color="dimmed" mt="md">
                     Get your FoundryVTT server up-and-running in no time. Metalworks is a toolkit to help you easily
@@ -78,11 +74,11 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = fal
                         Source code
                     </Button>
                 </Group>
-            </Box>
-            <Box w={width >= BREAKPOINTS.TABLET ? '40%' : '100%'}>
+            </Grid.Col>
+            <Grid.Col md={6} sm={12} display="flex">
                 <FoundryLogo size="75%" />
-            </Box>
-        </Group>
+            </Grid.Col>
+        </Grid>
     )
 }
 
