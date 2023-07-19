@@ -97,12 +97,13 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                     )}
                 </Stepper.Step>
                 <Stepper.Completed>
-                    <Skeleton visible={isLoading} radius="xl" width="50%" height={48}>
+                    {isLoading && <Skeleton radius="xl" width="50%" height={48} />}
+                    {!isLoading && (
                         <Stack>
                             {"Looks like you're a pro already!"}
                             <PanelDropdown text="Panel" />
                         </Stack>
-                    </Skeleton>
+                    )}
                 </Stepper.Completed>
             </Stepper>
         </Section>
