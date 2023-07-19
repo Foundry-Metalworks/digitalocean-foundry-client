@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.23](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.22...v0.4.23) (2023-07-19)
+
+
+### Features
+
+* byebye ssr ([7636cfc](https://github.com/Foundry-Metalworks/metalworks-client/commit/7636cfcd143d6f1ba4dbe0c993089e988eeb9ebf))
+
+
+### Bug Fixes
+
+* mobile signed in header ([55069f8](https://github.com/Foundry-Metalworks/metalworks-client/commit/55069f8c67884e4cecea6cede3cd105b06c06cb9))
+
 ### [0.4.22](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.21...v0.4.22) (2023-07-19)
 
 
