@@ -9,7 +9,8 @@ import Invites from '@/components/pages/dashboard/section/invites'
 import Games from '@/components/pages/dashboard/section/games'
 import Digitalocean from '@/components/pages/dashboard/section/digitalocean'
 import { useViewportSize } from '@mantine/hooks'
-import { BREAKPOINTS } from '@/constants'
+import { BREAKPOINTS, PATHS } from '@/constants'
+import { useRouter } from 'next/router'
 
 const DOIcon = () => <IconBrandDigitalOcean size={18} />
 
@@ -23,6 +24,7 @@ const Dashboard: NextPage = () => {
     const [active, setActive] = useState(0)
     const { user } = useUser()
     const { width } = useViewportSize()
+    const { push } = useRouter()
     const isMobile = width < BREAKPOINTS.TABLET
 
     const links = mockdata.map((link, index) => {
@@ -55,7 +57,7 @@ const Dashboard: NextPage = () => {
                 </Navbar.Section>
                 <Navbar.Section>
                     <Stack justify="center" spacing={0}>
-                        <SignOutButton>
+                        <SignOutButton signOutCallback={() => push(PATHS.ROOT)}>
                             <NavLink icon={<IconLogout />} label="Sign Out" />
                         </SignOutButton>
                     </Stack>

@@ -2,12 +2,14 @@ import { Avatar, Box, Burger, Group, Menu, Text, UnstyledButton } from '@mantine
 import { IconChevronDown } from '@tabler/icons-react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import useStyles from '@/components/user-button/style'
-import React, { useState } from 'react'
-import { BREAKPOINTS } from '@/constants'
+import React, { useCallback, useState } from 'react'
+import { BREAKPOINTS, PATHS } from '@/constants'
 import { useViewportSize } from '@mantine/hooks'
 import Dropdown from './components/dropdown'
+import { useRouter } from 'next/router'
 
 const UserButton = () => {
+    const { push } = useRouter()
     const { isLoaded, isSignedIn, user } = useUser()
     const { signOut } = useAuth()
     const [open, setIsOpen] = useState(false)
@@ -15,6 +17,11 @@ const UserButton = () => {
     const { classes } = useStyles()
     const { width } = useViewportSize()
     const isMobile = width < BREAKPOINTS.TABLET
+
+    const onSignOut = useCallback(async () => {
+        await signOut()
+        await push(PATHS.ROOT)
+    }, [push, signOut])
 
     const ButtonContent = () => (
         <>
@@ -63,7 +70,7 @@ const UserButton = () => {
                         </UnstyledButton>
                     )}
                 </Menu.Target>
-                <Dropdown isSignedIn={!!isSignedInUser} onSignOut={signOut} />
+                <Dropdown isSignedIn={!!isSignedInUser} onSignOut={onSignOut} />
             </Menu>
         </div>
     )
