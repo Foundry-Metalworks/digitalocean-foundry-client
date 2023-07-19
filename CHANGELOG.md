@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.22](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.21...v0.4.22) (2023-07-19)
+
+
+### Features
+
+*  remove invites page ([2e6272b](https://github.com/Foundry-Metalworks/metalworks-client/commit/2e6272bbc722e86584deb1ade1f955d379dc4355))
+
 ### [0.4.21](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.20...v0.4.21) (2023-07-19)
 
 
