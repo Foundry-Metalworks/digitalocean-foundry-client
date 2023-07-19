@@ -1,4 +1,4 @@
-import { Avatar, Burger, Group, Menu, Text, UnstyledButton } from '@mantine/core'
+import { Avatar, Box, Burger, Group, Menu, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import useStyles from '@/components/user-button/style'
@@ -20,16 +20,14 @@ const UserButton = () => {
         <>
             <Avatar src={user?.profileImageUrl} radius="xl" size={isSignedInUser ? 'sm' : 'md'} />
             {isSignedInUser ? (
-                <>
-                    <div style={{ flex: 1 }}>
-                        <Text size="sm" weight={500}>
-                            {user?.username}
-                        </Text>
-                        <Text color="dimmed" size="xs">
-                            {user?.primaryEmailAddress?.emailAddress}
-                        </Text>
-                    </div>
-                </>
+                <Box style={{ flex: 1 }} pos="relative">
+                    <Text size="sm" weight={500}>
+                        {user?.username}
+                    </Text>
+                    <Text color="dimmed" size={11} maw={140}>
+                        {user?.primaryEmailAddress?.emailAddress}
+                    </Text>
+                </Box>
             ) : (
                 <Text size="md" weight={500}>
                     Sign In / Sign Up
@@ -56,8 +54,8 @@ const UserButton = () => {
                         <Burger opened={open} />
                     ) : (
                         <UnstyledButton className={classes.userButton}>
-                            <Group w="100%" position="apart">
-                                <Group spacing="0.5rem">
+                            <Group w="100%" position="apart" noWrap>
+                                <Group spacing="0.5rem" noWrap>
                                     <ButtonContent />
                                 </Group>
                                 <IconChevronDown size="1rem" stroke={1.5} />
