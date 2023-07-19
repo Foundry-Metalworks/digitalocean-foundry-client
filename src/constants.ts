@@ -1,5 +1,5 @@
 export const CLERK_PAGES = ['/sign-in', '/sign-up', '/account']
-export const PUBLIC_PAGES = ['/', '/home', '/join', '/sign-in', '/sign-up']
+export const PUBLIC_PAGES = ['/', '/home', '/join']
 
 export const PATHS = {
     ROOT: '/',
