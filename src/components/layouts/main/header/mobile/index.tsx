@@ -19,14 +19,15 @@ const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
                 </Link>
                 <Group>
                     {isSignedIn ? (
-                        <>
-                            <Link href={PATHS.SETUP}>
-                                <Text>Setup</Text>
-                            </Link>
+                        hasServer ? (
                             <Link href={PATHS.DASHBOARD}>
                                 <Text>Dashboard</Text>
                             </Link>
-                        </>
+                        ) : (
+                            <Link href={PATHS.SETUP}>
+                                <Text>Setup</Text>
+                            </Link>
+                        )
                     ) : (
                         <Link href={PATHS.SIGN_IN}>Sign In</Link>
                     )}
