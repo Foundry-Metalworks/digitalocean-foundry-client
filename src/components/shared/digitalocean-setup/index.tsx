@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Badge, Button, Group, rem, Stack, Title } from '@mantine/core'
+import { Badge, Button, Group, rem, Skeleton, Stack, Title } from '@mantine/core'
 import process from 'process'
 
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
@@ -11,7 +11,7 @@ const REFERRAL_LINK =
 
 const DOSetup: React.FC = () => {
     const { isLoading, data } = useUser()
-    const [setupStage, setSetupStage] = useState<number | undefined>(data?.authorized ? 3 : 0)
+    const [setupStage, setSetupStage] = useState<number | undefined>(isLoading ? undefined : data?.authorized ? 3 : 0)
     const [hasDOAcc, setHasDOAcc] = useState<boolean | undefined>(undefined)
 
     useEffect(() => {
@@ -90,7 +90,11 @@ const DOSetup: React.FC = () => {
 
     return (
         <Stack>
-            <SetupContent />
+            {isLoading || setupStage === undefined ? (
+                <Skeleton height={30} width="60%" mx="auto" radius="xl" />
+            ) : (
+                <SetupContent />
+            )}
         </Stack>
     )
 }
