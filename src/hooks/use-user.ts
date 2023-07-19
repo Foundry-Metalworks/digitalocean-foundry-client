@@ -37,7 +37,6 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
         },
         [userId],
     )
-    console.log('useUser data: ' + JSON.stringify(data))
 
     return {
         isLoading: !isLoaded || isLoading,

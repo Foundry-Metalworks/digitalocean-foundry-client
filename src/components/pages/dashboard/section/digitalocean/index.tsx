@@ -17,7 +17,6 @@ const Digitalocean: React.FC = () => {
     const isAuthorized = !!user?.authorized
 
     const confirmationModal = () => {
-        console.log('confirm')
         modals.openConfirmModal({
             title: 'Delete your profile',
             centered: true,
