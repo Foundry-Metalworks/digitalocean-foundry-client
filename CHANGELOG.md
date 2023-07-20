@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.24](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.23...v0.4.24) (2023-07-20)
+
+
+### Features
+
+* context for useUser so it doesnt get spammed ([5b6378b](https://github.com/Foundry-Metalworks/metalworks-client/commit/5b6378b3ac2f1d7e7431b30b1414e765a7c0fda3))
+* loading state for homepage hero button ([437dd19](https://github.com/Foundry-Metalworks/metalworks-client/commit/437dd1916e8fe0b4e09146a4eed3ee06600b001c))
+* make homepage appear more static (again) ([a43374a](https://github.com/Foundry-Metalworks/metalworks-client/commit/a43374a5183073c67c2eef34f4961f2113cbd3a6))
+* persist dashboard tab on reload ([9accc0e](https://github.com/Foundry-Metalworks/metalworks-client/commit/9accc0e89c17b7bbf9e5c1d945dbf468afb0ce4b))
+* postFetch useQuery hook ([6f94ddf](https://github.com/Foundry-Metalworks/metalworks-client/commit/6f94ddfa0d79f3686b910da98a3663e14d1f7162))
+* redirect to home on sign out ([98bf5eb](https://github.com/Foundry-Metalworks/metalworks-client/commit/98bf5ebfd29398965558fe97c0213c4be8b15225))
+* replace useViewportSize hook with custom one ([132104b](https://github.com/Foundry-Metalworks/metalworks-client/commit/132104bc586353d53214915e89d858dc6c763859))
+
+
+### Bug Fixes
+
+* logo showing on dashboard w query tab ([833c30d](https://github.com/Foundry-Metalworks/metalworks-client/commit/833c30d35d634f71dbc00339167d657c55127387))
+
 ### [0.4.23](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.22...v0.4.23) (2023-07-19)
 
 
