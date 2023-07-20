@@ -23,7 +23,7 @@ const Home: NextPage = () => {
                 isAuthorized={isAuthorized}
                 isLoading={isLoading}
             />
-            <Steps isSignedIn={!!isSignedIn} hasServer={hasServer} isAuthorized={isAuthorized} isLoading={true} />
+            <Steps isSignedIn={!!user} hasServer={hasServer} isAuthorized={isAuthorized} isLoading={isLoading} />
             <FAQ />
         </div>
     )

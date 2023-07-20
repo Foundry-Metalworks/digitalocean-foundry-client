@@ -19,17 +19,16 @@ const UserContext = React.createContext<UseDataType<UserType, UserActions>>({
 })
 
 export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const { userId: authUserId, getToken, isLoaded } = useAuth()
+    const { userId: authUserId, getToken, isLoaded, isSignedIn } = useAuth()
     const [userId, setUserId] = useCachedId()
     const [cachedData, setCachedData] = useCachedUser()
     const { push } = useRouter()
 
     useEffect(() => {
         if (isLoaded) {
-            console.log('loaded updating user id')
             setUserId(authUserId || undefined)
         }
-    }, [isLoaded])
+    }, [isLoaded, isSignedIn])
 
     // fetch data
     const { isLoading, error, refetch } = useQuery<UserType>(
@@ -41,13 +40,16 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 setCachedData(data)
                 return data
             },
+            onSuccess: (data) => {
+                setCachedData(data)
+            },
         },
         [authUserId],
     )
 
     const contextValue = useMemo(
         () => ({
-            isLoading: !isLoaded || isLoading,
+            isLoading: !isLoaded || isLoading || userId != authUserId,
             data: userId ? cachedData : undefined,
             error,
             refetch,

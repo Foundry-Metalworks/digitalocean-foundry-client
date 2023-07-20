@@ -19,7 +19,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
     const hasServer = !!user?.servers.length
     const { type } = useViewportSize()
     const isMobile = isMobileViewport(type)
-    console.log('isMobile: ' + isMobile)
 
     return (
         <div>

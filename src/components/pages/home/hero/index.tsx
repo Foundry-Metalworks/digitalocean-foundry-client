@@ -32,7 +32,7 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = fal
                 </Button>
             </Link>
         )
-    }, [isSignedIn, hasServer])
+    }, [isSignedIn, hasServer, isLoading])
 
     return (
         <Grid

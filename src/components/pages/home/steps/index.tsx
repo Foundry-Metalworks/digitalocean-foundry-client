@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Button, LoadingOverlay, rem, Select, Skeleton, Stack, Stepper } from '@mantine/core'
+import { Button, rem, Select, Stack, Stepper } from '@mantine/core'
 import { useRouter } from 'next/router'
 
 import Section from '@/components/pages/home/section'
 import DOSetup from '@/components/shared/digitalocean-setup'
 import PanelDropdown from '@/components/shared/panel-dropdown'
 import { PATHS } from '@/constants'
-import { useUser } from '@/hooks/api/use-user'
 
 import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
@@ -24,22 +23,18 @@ const getSetupStep = (isSignedIn: boolean, isAuthorized: boolean, hasServer: boo
     }
 }
 
-const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => {
+const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer, isLoading }) => {
     const [isDM, setIsDM] = useState(true)
     const { push } = useRouter()
-    const { isLoading } = useUser()
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState<number | undefined>(undefined)
 
     useEffect(() => {
-        if (!isLoading) {
-            const setupStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
-            if (setupStep != activeStep) setActiveStep(setupStep)
-        }
+        const setupStep = getSetupStep(isSignedIn, isAuthorized, hasServer, isDM)
+        if (setupStep != activeStep) setActiveStep(setupStep)
     }, [hasServer, isSignedIn, isAuthorized, isDM, isLoading])
 
     return (
         <Section title="Setup Guide" id="setup">
-            <LoadingOverlay visible={isLoading} />
             <Select
                 defaultValue="dm"
                 data={[
@@ -53,7 +48,7 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
             />
             <Stepper
                 className={styles.stepper}
-                active={activeStep}
+                active={activeStep || 0}
                 onStepClick={(step) => setActiveStep(step)}
                 breakpoint="sm"
                 mx="auto"
@@ -96,13 +91,10 @@ const Steps: React.FC<HomeProps> = ({ isSignedIn, isAuthorized, hasServer }) => 
                     )}
                 </Stepper.Step>
                 <Stepper.Completed>
-                    {isLoading && <Skeleton radius="xl" width="50%" height={48} />}
-                    {!isLoading && (
-                        <Stack>
-                            {"Looks like you're a pro already!"}
-                            <PanelDropdown text="Panel" />
-                        </Stack>
-                    )}
+                    <Stack>
+                        {"Looks like you're a pro already!"}
+                        <PanelDropdown text="Panel" />
+                    </Stack>
                 </Stepper.Completed>
             </Stepper>
         </Section>
