@@ -28,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
         !CLERK_PAGES.find((p) => asPath.includes(p)) &&
         PATHS.HOME != asPath &&
         PATHS.ROOT != asPath &&
-        PATHS.DASHBOARD != asPath
+        !asPath.includes(PATHS.DASHBOARD)
 
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
