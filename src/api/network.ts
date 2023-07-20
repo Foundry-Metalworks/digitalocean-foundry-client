@@ -12,7 +12,7 @@ const bffService = axios.create({
     baseURL: bffEndpoint,
 })
 
-export type QueryDetails = {
+export type QueryDetails<T> = {
     endpoint: string
     token: string | null
     method?: Method
@@ -20,15 +20,16 @@ export type QueryDetails = {
     body?: any
 }
 
-export type UseQueryDetails<T> = Omit<QueryDetails, 'token'> & {
+export type UseQueryDetails<T> = Omit<QueryDetails<T>, 'token'> & {
     enabled?: boolean
     initialData?: T
+    postFetch?: (data: T) => T | Promise<T>
     onSuccess?: (data: T) => void
     refetchInterval?: number | false
     refetchOnRevisit?: boolean
 }
 
-export async function query<TQueryFnData>(details: QueryDetails): Promise<TQueryFnData> {
+export async function query<TQueryFnData>(details: QueryDetails<TQueryFnData>): Promise<TQueryFnData> {
     const { endpoint, method, token, params, body } = details
     try {
         const result = await bffService.request({
@@ -54,19 +55,32 @@ export function useQuery<TQueryFNData>(
     details: UseQueryDetails<TQueryFNData>,
     dependencies: any[],
 ): UseQueryResult<TQueryFNData, Error> {
-    const { endpoint, method, enabled, initialData, params, body, onSuccess, refetchInterval, refetchOnRevisit } =
-        details
+    const {
+        endpoint,
+        method,
+        enabled,
+        initialData,
+        params,
+        body,
+        onSuccess,
+        refetchInterval,
+        refetchOnRevisit,
+        postFetch,
+    } = details
     const { getToken } = useAuth()
 
     const func = async () => {
         const token = await getToken()
-        return await query<TQueryFNData>({ endpoint, method, params, body, token })
+        const fetchData = await query<TQueryFNData>({ endpoint, method, params, body, token })
+        return postFetch ? await postFetch(fetchData) : fetchData
     }
+
     return useQueryHook<TQueryFNData, Error>([key, ...dependencies], func, {
         keepPreviousData: true,
         initialData: initialData,
         refetchOnMount: refetchOnRevisit || false,
         refetchOnWindowFocus: refetchOnRevisit || false,
+        refetchOnReconnect: refetchOnRevisit || false,
         retry: false,
         retryOnMount: false,
         retryDelay: 0,
