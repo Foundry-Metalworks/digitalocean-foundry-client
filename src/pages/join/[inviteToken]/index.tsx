@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Loading from '@/components/kit/loading'
-import useServer from '@/hooks/use-server'
+import useServer from '@/hooks/api/use-server'
 
 const Join: NextPage = () => {
     const { asPath, query } = useRouter()

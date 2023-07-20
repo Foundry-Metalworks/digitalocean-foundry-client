@@ -6,14 +6,13 @@ import Section from '@/components/pages/home/section'
 import DOSetup from '@/components/shared/digitalocean-setup'
 import PanelDropdown from '@/components/shared/panel-dropdown'
 import { PATHS } from '@/constants'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 
 import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
 import NextLink from 'next/link'
 
 const getSetupStep = (isSignedIn: boolean, isAuthorized: boolean, hasServer: boolean, isDM: boolean) => {
-    console.log('getting setup step')
     if (!isSignedIn) return 0
     if (isDM) {
         if (!isAuthorized) return 1

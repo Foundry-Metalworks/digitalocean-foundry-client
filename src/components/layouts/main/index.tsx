@@ -3,13 +3,12 @@ import React, { PropsWithChildren } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { Container, Space } from '@mantine/core'
 import FoundryLogo from '@/components/shared/foundry-logo'
-import { BREAKPOINTS } from '@/constants'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 
 import styles from './styles.module.scss'
-import { useViewportSize } from '@mantine/hooks'
 import MobileHeader from '@/components/layouts/main/header/mobile'
 import DesktopHeader from '@/components/layouts/main/header/desktop'
+import useViewportSize, { isMobileViewport } from '@/hooks/use-viewport-size'
 
 export interface MainLayoutProps extends PropsWithChildren {
     showLogo?: boolean

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAuth } from '@clerk/nextjs'
-import useInvites from '@/hooks/use-invites'
+import useInvites from '@/hooks/api/use-invites'
 import { Button, LoadingOverlay, Stack, Text } from '@mantine/core'
 import DashboardSection from '@/components/pages/dashboard/section'
 import { DashboardSectionEnum } from '@/context/dashboard'

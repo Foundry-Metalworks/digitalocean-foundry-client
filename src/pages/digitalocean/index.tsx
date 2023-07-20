@@ -4,7 +4,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Loading from '@/components/kit/loading'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 import { RedirectToSignIn, useAuth } from '@clerk/nextjs'
 
 const DigitalOcean: NextPage = () => {

@@ -10,6 +10,7 @@ export interface UserType {
     email: string
     name: string
     id: string
+    imageUrl: string
     servers: UserServerType[]
     authorized: boolean
 }
@@ -24,23 +25,27 @@ type UserActions = {
     unauthorize: () => void
 }
 
+interface UseUser {
+    isSignedIn: boolean
+    user: UserType | undefined
+}
+
 export const useUser = (): UseDataType<UserType, UserActions> => {
-    const { isSignedIn, isLoaded, userId, getToken } = useAuth()
+    const { userId, getToken, isLoaded } = useAuth()
     const { push } = useRouter()
 
-    const shouldFetchUser = isLoaded && !!isSignedIn
     const { isLoading, data, error, refetch } = useQuery<UserType>(
         'getUser',
         {
             endpoint: '/users/me',
-            enabled: shouldFetchUser,
+            enabled: !!userId,
         },
         [userId],
     )
 
     return {
         isLoading: !isLoaded || isLoading,
-        data: userId ? data : undefined,
+        data,
         error,
         refetch,
         actions: {
@@ -68,3 +73,5 @@ export const useUser = (): UseDataType<UserType, UserActions> => {
         },
     }
 }
+
+export default useUser

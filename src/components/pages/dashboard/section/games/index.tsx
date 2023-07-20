@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, LoadingOverlay, Stack, Text } from '@mantine/core'
 import DashboardSection from '@/components/pages/dashboard/section'
 import { DashboardSectionEnum } from '@/context/dashboard'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 import { PATHS } from '@/constants'
 import Link from '@/components/kit/link'
 

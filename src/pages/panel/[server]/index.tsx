@@ -5,11 +5,11 @@ import { useDisclosure } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 import InviteModal from '@/components/pages/panel/invite-modal'
 import { PATHS } from '@/constants'
-import { useInstance } from '@/hooks/use-instance'
-import useServer from '@/hooks/use-server'
+import { useInstance } from '@/hooks/api/use-instance'
+import useServer from '@/hooks/api/use-server'
+import useUser from '@/hooks/api/use-user'
 
 import styles from './styles.module.scss'
-import { useUser } from '@/hooks/use-user'
 
 const Panel: React.FC = () => {
     const { query } = useRouter()

@@ -4,7 +4,7 @@ import { Box, Button, TextInput } from '@mantine/core'
 
 import { useQuery } from '@/api/network'
 import DOSetup from '@/components/shared/digitalocean-setup'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 
 type SetupCreateProps = {
     onSubmit: (name: string) => void

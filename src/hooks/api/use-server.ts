@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import { query, useQuery } from '@/api/network'
 import { PATHS } from '@/constants'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 import { PermissionsType, UseDataType } from '@/types'
 
 export interface ServerType {

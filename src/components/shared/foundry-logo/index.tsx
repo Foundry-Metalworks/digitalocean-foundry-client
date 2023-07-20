@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Title } from '@mantine/core'
+import styles from './styles.module.scss'
 
 type Props = {
     size: string
@@ -8,8 +9,6 @@ type Props = {
     withText?: boolean
     center?: boolean
 }
-
-import styles from './styles.module.scss'
 
 const FoundryLogo: React.FC<Props> = ({ size, hidden = false, withText = false, center = true }) => {
     return (

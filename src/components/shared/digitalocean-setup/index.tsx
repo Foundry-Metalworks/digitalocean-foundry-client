@@ -4,7 +4,7 @@ import { Badge, Button, Group, rem, Skeleton, Stack, Title } from '@mantine/core
 import process from 'process'
 
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
-import { useUser } from '@/hooks/use-user'
+import { useUser } from '@/hooks/api/use-user'
 
 const REFERRAL_LINK =
     'https://www.digitalocean.com/?refcode=d69d3faf8632&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge'
