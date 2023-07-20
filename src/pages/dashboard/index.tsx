@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import { Box, Group, Navbar, NavLink, Stack, Text } from '@mantine/core'
-import { IconDeviceGamepad, IconLogout, IconSocial } from '@tabler/icons-react'
+import { IconDeviceGamepad, IconLogout, IconSocial, TablerIconsProps } from '@tabler/icons-react'
 import { NextPage } from 'next'
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
 import { SignOutButton, useUser } from '@clerk/nextjs'
-import DashboardContext from '@/context/dashboard'
+import DashboardContext, { DashboardSectionEnum } from '@/context/dashboard'
 import Invites from '@/components/pages/dashboard/section/invites'
 import Games from '@/components/pages/dashboard/section/games'
 import Digitalocean from '@/components/pages/dashboard/section/digitalocean'
@@ -14,27 +14,34 @@ import { useRouter } from 'next/router'
 
 const DOIcon = () => <IconBrandDigitalOcean size={18} />
 
-const mockdata = [
-    { icon: IconDeviceGamepad, label: 'Games' },
-    { icon: IconSocial, label: 'Invites' },
-    { icon: DOIcon, label: 'DigitalOcean Integration' },
+type DashboardData = { icon: React.FC<TablerIconsProps>; label: string; id: DashboardSectionEnum }
+
+const dashboardData: DashboardData[] = [
+    { icon: IconDeviceGamepad, label: 'Games', id: DashboardSectionEnum.GAMES },
+    { icon: IconSocial, label: 'Invites', id: DashboardSectionEnum.INVITES },
+    { icon: DOIcon, label: 'DigitalOcean Integration', id: DashboardSectionEnum.DIGITALOCEAN },
 ]
 
 const Dashboard: NextPage = () => {
-    const [active, setActive] = useState(0)
+    const { push, query } = useRouter()
+    const tab: DashboardSectionEnum = useMemo(
+        () => (query.tab || DashboardSectionEnum.GAMES) as DashboardSectionEnum,
+        [query.tab],
+    )
     const { user } = useUser()
     const { width } = useViewportSize()
-    const { push } = useRouter()
     const isMobile = width < BREAKPOINTS.TABLET
 
-    const links = mockdata.map((link, index) => {
-        const { icon: Icon, label } = link
+    const links = dashboardData.map((link) => {
+        const { icon: Icon, label, id } = link
         return (
             <NavLink
                 icon={<Icon />}
                 key={`dashboard-link-${label}`}
-                active={index === active}
-                onClick={() => setActive(index)}
+                active={id === tab}
+                onClick={async () => {
+                    await push({ query: { ...query, tab: id } })
+                }}
                 label={label}
             />
         )
@@ -63,7 +70,7 @@ const Dashboard: NextPage = () => {
                     </Stack>
                 </Navbar.Section>
             </Navbar>
-            <DashboardContext.Provider value={{ section: active }}>
+            <DashboardContext.Provider value={{ section: tab }}>
                 <Box w="75%" h={750} pos="relative">
                     <Games />
                     <Invites />

@@ -1,9 +1,9 @@
 import React from 'react'
 
 export enum DashboardSectionEnum {
-    GAMES,
-    INVITES,
-    DIGITALOCEAN,
+    GAMES = 'games',
+    INVITES = 'invites',
+    DIGITALOCEAN = 'authorization',
 }
 
 type DashboardContextType = {
