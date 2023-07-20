@@ -8,12 +8,13 @@ import { Notifications } from '@mantine/notifications'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import { DehydratedState, QueryClient, QueryClientProvider } from 'react-query'
 import NextNProgress from 'nextjs-progressbar'
 
 import MainLayout from '@/components/layouts/main'
 import { CLERK_PAGES, PATHS } from '@/constants'
 import { ModalsProvider } from '@mantine/modals'
+import { UserProvider } from '@/hooks/api/use-user/context'
 
 const queryClient = new QueryClient()
 
@@ -24,6 +25,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
         getInitialValueInEffect: true,
     })
     const { asPath } = useRouter()
+
     const showLogo =
         !CLERK_PAGES.find((p) => asPath.includes(p)) &&
         PATHS.HOME != asPath &&
@@ -40,21 +42,21 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
             </Head>
             <QueryClientProvider client={queryClient}>
-                <Hydrate state={pageProps.dehydratedState}>
-                    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-                        <MantineProvider
-                            theme={{
-                                colorScheme,
-                                fontFamily: 'Signika, sans-serif',
-                                headings: { fontFamily: 'Domine, serif' },
-                            }}
-                            withGlobalStyles
-                            withNormalizeCSS
+                <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+                    <MantineProvider
+                        theme={{
+                            colorScheme,
+                            fontFamily: 'Signika, sans-serif',
+                            headings: { fontFamily: 'Domine, serif' },
+                        }}
+                        withGlobalStyles
+                        withNormalizeCSS
+                    >
+                        <ClerkProvider
+                            {...pageProps}
+                            appearance={{ baseTheme: colorScheme == 'dark' ? dark : undefined }}
                         >
-                            <ClerkProvider
-                                {...pageProps}
-                                appearance={{ baseTheme: colorScheme == 'dark' ? dark : undefined }}
-                            >
+                            <UserProvider>
                                 <ModalsProvider modalProps={{ zIndex: 1005 }}>
                                     <MainLayout showLogo={showLogo}>
                                         <NextNProgress showOnShallow={false} options={{ showSpinner: false }} />
@@ -62,10 +64,10 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
                                         <Component {...pageProps} />
                                     </MainLayout>
                                 </ModalsProvider>
-                            </ClerkProvider>
-                        </MantineProvider>
-                    </ColorSchemeProvider>
-                </Hydrate>
+                            </UserProvider>
+                        </ClerkProvider>
+                    </MantineProvider>
+                </ColorSchemeProvider>
             </QueryClientProvider>
         </>
     )

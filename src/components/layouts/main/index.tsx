@@ -1,6 +1,4 @@
 import React, { PropsWithChildren } from 'react'
-
-import { useAuth } from '@clerk/nextjs'
 import { Container, Space } from '@mantine/core'
 import FoundryLogo from '@/components/shared/foundry-logo'
 import { useUser } from '@/hooks/api/use-user'
@@ -9,6 +7,7 @@ import styles from './styles.module.scss'
 import MobileHeader from '@/components/layouts/main/header/mobile'
 import DesktopHeader from '@/components/layouts/main/header/desktop'
 import useViewportSize, { isMobileViewport } from '@/hooks/use-viewport-size'
+import { useAuth } from '@clerk/nextjs'
 
 export interface MainLayoutProps extends PropsWithChildren {
     showLogo?: boolean
@@ -20,6 +19,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
     const hasServer = !!user?.servers.length
     const { type } = useViewportSize()
     const isMobile = isMobileViewport(type)
+    console.log('isMobile: ' + isMobile)
 
     return (
         <div>

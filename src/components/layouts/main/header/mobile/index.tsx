@@ -1,15 +1,13 @@
 import React from 'react'
 import { Group, Header, Text } from '@mantine/core'
 import Link from '@/components/kit/link'
-import { BREAKPOINTS, PATHS } from '@/constants'
+import { PATHS } from '@/constants'
 import { HeaderProps } from '@/components/layouts/main/header/types'
-import { useViewportSize } from '@mantine/hooks'
 import FoundryLogo from '@/components/shared/foundry-logo'
 import UserButton from '@/components/user-button'
 
 const MobileHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
-    const { width } = useViewportSize()
-    const isSmall = width <= BREAKPOINTS.MOBILE_LG
+    console.log('rendering mobile header')
 
     return (
         <Header height="4rem" px="1rem" mb="xl" pos="sticky">
