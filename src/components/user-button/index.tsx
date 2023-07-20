@@ -3,11 +3,11 @@ import { IconChevronDown } from '@tabler/icons-react'
 import { useAuth } from '@clerk/nextjs'
 import useStyles from '@/components/user-button/style'
 import React, { useCallback, useState } from 'react'
-import { BREAKPOINTS, PATHS } from '@/constants'
-import { useViewportSize } from '@mantine/hooks'
+import { PATHS } from '@/constants'
 import Dropdown from './components/dropdown'
 import { useRouter } from 'next/router'
 import useUser from '@/hooks/api/use-user'
+import useViewportSize, { isMobileViewport } from '@/hooks/use-viewport-size'
 
 const UserButton = () => {
     const { push } = useRouter()
@@ -15,8 +15,8 @@ const UserButton = () => {
     const [open, setIsOpen] = useState(false)
     const { data: user } = useUser()
     const { classes } = useStyles()
-    const { width } = useViewportSize()
-    const isMobile = width < BREAKPOINTS.TABLET
+    const { type } = useViewportSize()
+    const isMobile = isMobileViewport(type)
 
     const onSignOut = useCallback(async () => {
         await signOut()
