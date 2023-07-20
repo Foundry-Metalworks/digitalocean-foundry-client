@@ -27,8 +27,12 @@ const Panel: React.FC = () => {
     const { push } = useRouter()
 
     useEffect(() => {
-        if (!isLoading && !user?.servers.find((s) => s.name === server)) push(`${PATHS.SETUP}?type=player`)
-    }, [user?.servers, server, isLoading])
+        if (!!user && !!data) {
+            if (!user.servers.find((s) => s.name === server)) {
+                push(`${PATHS.SETUP}?type=player`)
+            }
+        }
+    }, [user?.servers, data?.name])
 
     return (
         <Box maw="80%" w="40rem" pos="relative">
