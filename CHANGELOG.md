@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.25](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.24...v0.4.25) (2023-07-20)
+
+
+### Bug Fixes
+
+* user button flashing hamburger ([e0d8940](https://github.com/Foundry-Metalworks/metalworks-client/commit/e0d89404555b73cbc74ce8a8fc6c5dc997683d48))
+
 ### [0.4.24](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.23...v0.4.24) (2023-07-20)
 
 
