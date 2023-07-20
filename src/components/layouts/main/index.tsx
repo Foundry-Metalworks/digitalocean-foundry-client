@@ -18,8 +18,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
     const { data: user } = useUser()
     const { isSignedIn } = useAuth()
     const hasServer = !!user?.servers.length
-    const { width } = useViewportSize()
-    const isMobile = width < BREAKPOINTS.TABLET
+    const { type } = useViewportSize()
+    const isMobile = isMobileViewport(type)
 
     return (
         <div>
