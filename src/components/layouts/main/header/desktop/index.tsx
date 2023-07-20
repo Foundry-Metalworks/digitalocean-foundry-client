@@ -10,7 +10,6 @@ import { HeaderProps } from '@/components/layouts/main/header/types'
 import UserButton from '@/components/user-button'
 
 const scrollTo = async (id: string) => {
-    console.log('scrolling')
     const element = document.getElementById(id)
     if (element) {
         const scrollOffset = -3 * (window.innerWidth / 100) - 60
@@ -19,7 +18,7 @@ const scrollTo = async (id: string) => {
     }
 }
 
-const DesktopHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
+const DesktopHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer, isLoading }) => {
     const SignedInLinks = () => (
         <>
             <Dropdown
@@ -30,7 +29,7 @@ const DesktopHeader: React.FC<HeaderProps> = ({ isSignedIn, hasServer }) => {
                     { label: 'Player', href: `${PATHS.SETUP}?type=player` },
                 ]}
             />
-            {hasServer && <PanelDropdown text="Panel" labelType="link" />}
+            {(isLoading || hasServer) && <PanelDropdown text="Panel" labelType="link" />}
         </>
     )
 

@@ -1,19 +1,19 @@
 import { Avatar, Box, Burger, Group, Menu, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import { useAuth, useUser } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
 import useStyles from '@/components/user-button/style'
 import React, { useCallback, useState } from 'react'
 import { BREAKPOINTS, PATHS } from '@/constants'
 import { useViewportSize } from '@mantine/hooks'
 import Dropdown from './components/dropdown'
 import { useRouter } from 'next/router'
+import useUser from '@/hooks/api/use-user'
 
 const UserButton = () => {
     const { push } = useRouter()
-    const { isLoaded, isSignedIn, user } = useUser()
     const { signOut } = useAuth()
     const [open, setIsOpen] = useState(false)
-    const isSignedInUser = isLoaded && isSignedIn
+    const { data: user } = useUser()
     const { classes } = useStyles()
     const { width } = useViewportSize()
     const isMobile = width < BREAKPOINTS.TABLET
@@ -25,14 +25,14 @@ const UserButton = () => {
 
     const ButtonContent = () => (
         <>
-            <Avatar src={user?.profileImageUrl} radius="xl" size={isSignedInUser ? 'sm' : 'md'} />
-            {isSignedInUser ? (
+            <Avatar src={user?.imageUrl} radius="xl" size={!!user ? 'sm' : 'md'} />
+            {!!user ? (
                 <Box style={{ flex: 1 }} pos="relative">
                     <Text size="sm" weight={500}>
-                        {user?.username}
+                        {user.name}
                     </Text>
                     <Text color="dimmed" size={11} maw={140}>
-                        {user?.primaryEmailAddress?.emailAddress}
+                        {user.email}
                     </Text>
                 </Box>
             ) : (
@@ -70,7 +70,7 @@ const UserButton = () => {
                         </UnstyledButton>
                     )}
                 </Menu.Target>
-                <Dropdown isSignedIn={!!isSignedInUser} onSignOut={onSignOut} />
+                <Dropdown isSignedIn={!!user} onSignOut={onSignOut} />
             </Menu>
         </div>
     )

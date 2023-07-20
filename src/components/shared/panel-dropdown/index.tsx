@@ -10,10 +10,8 @@ type Props = {
 }
 
 const PanelButton: React.FC<Props> = ({ text, labelType = 'button' }) => {
-    const { data, isLoading } = useUser()
+    const { data } = useUser()
     const servers = data?.servers || []
-
-    if (isLoading) return null
 
     const links = servers.map((s) => ({ label: s.name, href: `${PATHS.PANEL}/${s.name}` }))
     return <Dropdown label={text} labelType={labelType} links={links} />

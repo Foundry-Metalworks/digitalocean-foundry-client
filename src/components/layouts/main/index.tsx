@@ -15,7 +15,7 @@ export interface MainLayoutProps extends PropsWithChildren {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: MainLayoutProps) => {
-    const { data: user } = useUser()
+    const { data: user, isLoading } = useUser()
     const { isSignedIn } = useAuth()
     const hasServer = !!user?.servers.length
     const { type } = useViewportSize()
@@ -24,9 +24,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, showLogo = true }: Ma
     return (
         <div>
             {isMobile ? (
-                <MobileHeader isSignedIn={!!isSignedIn} hasServer={hasServer} />
+                <MobileHeader isSignedIn={!!isSignedIn} hasServer={hasServer} isLoading={isLoading} />
             ) : (
-                <DesktopHeader isSignedIn={!!isSignedIn} hasServer={hasServer} />
+                <DesktopHeader isSignedIn={!!isSignedIn} hasServer={hasServer} isLoading={isLoading} />
             )}
             <Container display="flex" className={styles.mainContent} maw="100%" w="60rem">
                 {showLogo && (
