@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.27](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.26...v0.4.27) (2023-07-20)
+
+
+### Bug Fixes
+
+* redirect to setup on first time nav to server panel in session ([73d91c2](https://github.com/Foundry-Metalworks/metalworks-client/commit/73d91c2a4990c57c038e99a31b7d60b7d4921798))
+
 ### [0.4.26](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.25...v0.4.26) (2023-07-20)
 
 
