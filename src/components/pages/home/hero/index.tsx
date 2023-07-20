@@ -12,7 +12,7 @@ import styles from './styles.module.scss'
 import { HomeProps } from '@/components/pages/home/types'
 import { useViewportSize } from '@mantine/hooks'
 
-const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = false }) => {
+const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = false, isLoading }) => {
     const { width } = useViewportSize()
 
     const checkIcon = (
@@ -27,8 +27,8 @@ const HomepageHero: NextPage<HomeProps> = ({ isSignedIn = false, hasServer = fal
         }
         return (
             <Link href={isSignedIn ? PATHS.SETUP : PATHS.SIGN_IN}>
-                <Button radius="xl" size="md">
-                    Get started
+                <Button radius="xl" size="md" loading={isLoading}>
+                    {isLoading ? 'Loading...' : 'Get started'}
                 </Button>
             </Link>
         )
