@@ -4,6 +4,7 @@ export enum DashboardSectionEnum {
     GAMES = 'games',
     INVITES = 'invites',
     DIGITALOCEAN = 'authorization',
+    ACCOUNT = 'account',
 }
 
 type DashboardContextType = {

@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Box, Group, Navbar, NavLink, Stack, Text } from '@mantine/core'
-import { IconDeviceGamepad, IconLogout, IconSocial, TablerIconsProps } from '@tabler/icons-react'
+import { IconDeviceGamepad, IconLogout, IconSocial, IconUser, TablerIconsProps } from '@tabler/icons-react'
 import { NextPage } from 'next'
 import IconBrandDigitalOcean from '@/components/icons/digital-ocean'
-import { SignOutButton, useUser } from '@clerk/nextjs'
+import { SignOutButton, UserProfile, useUser } from '@clerk/nextjs'
 import DashboardContext, { DashboardSectionEnum } from '@/context/dashboard'
 import Invites from '@/components/pages/dashboard/section/invites'
 import Games from '@/components/pages/dashboard/section/games'
@@ -11,6 +11,7 @@ import Digitalocean from '@/components/pages/dashboard/section/digitalocean'
 import { useViewportSize } from '@mantine/hooks'
 import { BREAKPOINTS, PATHS } from '@/constants'
 import { useRouter } from 'next/router'
+import DashboardSection from '@/components/pages/dashboard/section'
 
 const DOIcon = () => <IconBrandDigitalOcean size={18} />
 
@@ -32,6 +33,13 @@ const Dashboard: NextPage = () => {
     const { width } = useViewportSize()
     const isMobile = width < BREAKPOINTS.TABLET
 
+    const pushTab = useCallback(
+        async (id: DashboardSectionEnum) => {
+            await push({ query: { ...query, tab: id } })
+        },
+        [push, query],
+    )
+
     const links = dashboardData.map((link) => {
         const { icon: Icon, label, id } = link
         return (
@@ -39,9 +47,7 @@ const Dashboard: NextPage = () => {
                 icon={<Icon />}
                 key={`dashboard-link-${label}`}
                 active={id === tab}
-                onClick={async () => {
-                    await push({ query: { ...query, tab: id } })
-                }}
+                onClick={() => pushTab(id)}
                 label={label}
             />
         )
@@ -64,6 +70,11 @@ const Dashboard: NextPage = () => {
                 </Navbar.Section>
                 <Navbar.Section>
                     <Stack justify="center" spacing={0}>
+                        <NavLink
+                            icon={<IconUser />}
+                            label="Account"
+                            onClick={() => pushTab(DashboardSectionEnum.ACCOUNT)}
+                        />
                         <SignOutButton signOutCallback={() => push(PATHS.ROOT)}>
                             <NavLink icon={<IconLogout />} label="Sign Out" />
                         </SignOutButton>
@@ -75,6 +86,18 @@ const Dashboard: NextPage = () => {
                     <Games />
                     <Invites />
                     <Digitalocean />
+                    <DashboardSection section={DashboardSectionEnum.ACCOUNT} title="Account">
+                        <UserProfile
+                            appearance={{
+                                elements: {
+                                    rootBox: { margin: '0 auto', height: '90%' },
+                                    card: { height: '100%' },
+                                    navbar: { display: 'none' },
+                                    header: { display: 'none' },
+                                },
+                            }}
+                        />
+                    </DashboardSection>
                 </Box>
             </DashboardContext.Provider>
         </Group>

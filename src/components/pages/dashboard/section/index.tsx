@@ -18,7 +18,9 @@ const DashboardSection: React.FC<DashboardSectionProps> = ({ section, title, chi
                 {title}
             </Title>
             <br />
-            <Box p={0}>{children}</Box>
+            <Box p={0} h="100%">
+                {children}
+            </Box>
         </Stack>
     )
 }
