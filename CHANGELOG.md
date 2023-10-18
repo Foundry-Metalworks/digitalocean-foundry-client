@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.29](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.12...v0.4.29) (2023-10-18)
+
+
+### Features
+
+*  remove invites page ([2e6272b](https://github.com/Foundry-Metalworks/metalworks-client/commit/2e6272bbc722e86584deb1ade1f955d379dc4355))
+*  responsive homepage (v0, ugly code) ([7d7e186](https://github.com/Foundry-Metalworks/metalworks-client/commit/7d7e18654809faf1e47a136ccf6507e244ed91aa))
+* account in dashboard ([c139668](https://github.com/Foundry-Metalworks/metalworks-client/commit/c139668ed614440ba69e0648adef31dfee5343cf))
+* byebye ssr ([7636cfc](https://github.com/Foundry-Metalworks/metalworks-client/commit/7636cfcd143d6f1ba4dbe0c993089e988eeb9ebf))
+* context for useUser so it doesnt get spammed ([5b6378b](https://github.com/Foundry-Metalworks/metalworks-client/commit/5b6378b3ac2f1d7e7431b30b1414e765a7c0fda3))
+* loading progress ([75186dd](https://github.com/Foundry-Metalworks/metalworks-client/commit/75186dd3394adc9b2afe32f6d0c8a34e536df6cf))
+* loading skeleton for DO setup ([018d087](https://github.com/Foundry-Metalworks/metalworks-client/commit/018d08715c2cfb75e3531e806719d069f3ed1a55))
+* loading state for homepage hero button ([437dd19](https://github.com/Foundry-Metalworks/metalworks-client/commit/437dd1916e8fe0b4e09146a4eed3ee06600b001c))
+* make homepage appear more static ([5f50423](https://github.com/Foundry-Metalworks/metalworks-client/commit/5f504237d933e83d11a9c9d631c293df37522abd))
+* make homepage appear more static (again) ([a43374a](https://github.com/Foundry-Metalworks/metalworks-client/commit/a43374a5183073c67c2eef34f4961f2113cbd3a6))
+* mobile user button ([67a5a60](https://github.com/Foundry-Metalworks/metalworks-client/commit/67a5a60c0a1069af7631c38e45a0f93026728686))
+* new dashboard and user button ([2e3afee](https://github.com/Foundry-Metalworks/metalworks-client/commit/2e3afeebf0b3a239c1717f5228743b9dd8accf82))
+* next 13 ([7577654](https://github.com/Foundry-Metalworks/metalworks-client/commit/7577654176008be75f1c812a85f44eac6229fa3c))
+* persist dashboard tab on reload ([9accc0e](https://github.com/Foundry-Metalworks/metalworks-client/commit/9accc0e89c17b7bbf9e5c1d945dbf468afb0ce4b))
+* postFetch useQuery hook ([6f94ddf](https://github.com/Foundry-Metalworks/metalworks-client/commit/6f94ddfa0d79f3686b910da98a3663e14d1f7162))
+* redirect to home on sign out ([98bf5eb](https://github.com/Foundry-Metalworks/metalworks-client/commit/98bf5ebfd29398965558fe97c0213c4be8b15225))
+* replace useViewportSize hook with custom one ([132104b](https://github.com/Foundry-Metalworks/metalworks-client/commit/132104bc586353d53214915e89d858dc6c763859))
+* responsive header ([b84bf47](https://github.com/Foundry-Metalworks/metalworks-client/commit/b84bf4745ff0f7071f0db4106662a0b9c34a8d66))
+* update faq ([7b03a05](https://github.com/Foundry-Metalworks/metalworks-client/commit/7b03a05c5f1c5e7f34e477d58505a87be5d56148))
+
+
+### Bug Fixes
+
+* auth middleware ([4780fdd](https://github.com/Foundry-Metalworks/metalworks-client/commit/4780fdd44802420813e31d53fb009789ad0c30fd))
+* broken logout ([b94f303](https://github.com/Foundry-Metalworks/metalworks-client/commit/b94f303c775a0e78700bac0d9f7433087f83c67b))
+* broken sign up ([f7494d9](https://github.com/Foundry-Metalworks/metalworks-client/commit/f7494d95c7de448b811870663826521494665772))
+* default setup page selection ([aa4e18c](https://github.com/Foundry-Metalworks/metalworks-client/commit/aa4e18cb11a5456521295bc12191e0c063bfe238))
+* deployment ([bc6ffcc](https://github.com/Foundry-Metalworks/metalworks-client/commit/bc6ffcc60a9bb69ad3f3f07a17dced2c1b8b8b99))
+* digitalocean button in new tab ([ee38db7](https://github.com/Foundry-Metalworks/metalworks-client/commit/ee38db7dc2a914a3877495a7a65ff505de1896cd))
+* jank on homepage ([09dbb58](https://github.com/Foundry-Metalworks/metalworks-client/commit/09dbb58ebb043a442bfbfb8629205cba4967a1a6))
+* last fix didnt work ([f67754b](https://github.com/Foundry-Metalworks/metalworks-client/commit/f67754b307c85c1ffa1652d9f7dcb69db2c7d0d5))
+* loading overlay on panel when pending action ([5003f96](https://github.com/Foundry-Metalworks/metalworks-client/commit/5003f965498e37fedab4458684f0482d55457423))
+* logo showing on dashboard w query tab ([833c30d](https://github.com/Foundry-Metalworks/metalworks-client/commit/833c30d35d634f71dbc00339167d657c55127387))
+* matcher breaking api route ([61e7314](https://github.com/Foundry-Metalworks/metalworks-client/commit/61e73143109773725ec759596a90ede5af316716))
+* mobile signed in header ([55069f8](https://github.com/Foundry-Metalworks/metalworks-client/commit/55069f8c67884e4cecea6cede3cd105b06c06cb9))
+* no ssr on homepage ([420a8b4](https://github.com/Foundry-Metalworks/metalworks-client/commit/420a8b4449e041b88c5a1ae9e63e88352bd42d96))
+* redirect to panel on join ([245f7dc](https://github.com/Foundry-Metalworks/metalworks-client/commit/245f7dcfe94b9211026ca1019b95471061f158aa))
+* redirect to setup on first time nav to server panel in session ([73d91c2](https://github.com/Foundry-Metalworks/metalworks-client/commit/73d91c2a4990c57c038e99a31b7d60b7d4921798))
+* remove logs ([4a253c7](https://github.com/Foundry-Metalworks/metalworks-client/commit/4a253c7f00c693daf068f6b421b86420533cd1c4))
+* setup default dm ([f08a19a](https://github.com/Foundry-Metalworks/metalworks-client/commit/f08a19a564fa4c2ad70517623022085e70fb7335))
+* smaller icon on mobile ([67f0b36](https://github.com/Foundry-Metalworks/metalworks-client/commit/67f0b36e45a296b976e7922bde7ffcff12038e01))
+* stepper complete content ([7c1b237](https://github.com/Foundry-Metalworks/metalworks-client/commit/7c1b237fd7b4d37bc5850ce9dcf5be361178bc3d))
+* too much ssr ([70d72f6](https://github.com/Foundry-Metalworks/metalworks-client/commit/70d72f6029d5924453fd3f9598f131385731bb4c))
+* user button flashing hamburger ([e0d8940](https://github.com/Foundry-Metalworks/metalworks-client/commit/e0d89404555b73cbc74ce8a8fc6c5dc997683d48))
+* user button in mobile ([1487350](https://github.com/Foundry-Metalworks/metalworks-client/commit/1487350abd1dfb1d53a223eb4109d0b98803c73c))
+
 ### [0.4.28](https://github.com/Foundry-Metalworks/metalworks-client/compare/v0.4.27...v0.4.28) (2023-07-20)
 
 
